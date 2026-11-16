@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ānanda Saṅgam — Kirtan à Québec</title>
+<meta name="description" content="Ānanda Saṅgam, collectif de kirtan basé à Québec : chant de mantras en groupe pour cultiver la paix du cœur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Tiro+Devanagari+Sanskrit&family=Mulish:wght@300;400&display=block" rel="stylesheet">
+<script>
+  // Cache la page jusqu'à ce que les polices soient prêtes, puis affiche tout d'un coup (max 3 s)
+  (function () {
+    var d = document.documentElement;
+    d.classList.add('loading');
+    function show() { d.classList.remove('loading'); }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(show);
+      setTimeout(show, 3000);
+    } else { show(); }
+  })();
+</script>
+<style>
+  :root {
+    --bg: #fbf8f2;
+    --bg-soft: #f5efe4;
+    --ink: #3d3833;
+    --ink-soft: #6f665c;
+    --line: #9a7f62;          /* instrument line colour */
+    --wood: #e9d9c2;          /* soft wood fill */
+    --brass: #ecd6a6;         /* brass fill */
+    --accent: #b9773a;        /* saffron */
+    --glow: rgba(233, 196, 140, .28);
+    --video-bg: #e8dfd1;
+    --shadow: rgba(80,60,30,.25);
+    --shadow-soft: rgba(80,60,30,.06);
+    --chip-bg: rgba(251,248,242,.9);
+    --accent-border: rgba(185,119,58,.35);
+    --tag-ink: rgba(61,56,51,.7);
+    --keys: #fbf8f2;
+    --ray: #c98a45;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html.loading body { visibility: hidden; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Mulish", system-ui, sans-serif;
+    font-weight: 300;
+    font-size: 1.075rem;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Hero / logo ---------- */
+  .hero {
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: 2rem 16px 3rem;
+    background: radial-gradient(ellipse 60% 50% at 50% 48%, var(--glow), transparent 70%);
+    position: relative;
+  }
+  .logo { width: min(1000px, 100%); height: auto; display: block; }
+  .scroll-cue {
+    position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 46px; background: linear-gradient(var(--line), transparent);
+    opacity: .5;
+  }
+
+  .ins { fill: none; stroke: var(--line); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .ins * { vector-effect: non-scaling-stroke; }
+  .ins .wood  { fill: var(--wood); }
+  .ins .brass { fill: var(--brass); }
+  .ins .dark  { fill: var(--line); fill-opacity: .55; }
+  .ins .fine  { stroke-width: .7; }
+  .ins .faint { opacity: .45; }
+
+  .word {
+    font-family: "Cormorant Garamond", serif; font-weight: 300;
+    font-size: 88px; letter-spacing: 2px; fill: var(--ink);
+  }
+  .skt { font-family: "Tiro Devanagari Sanskrit", serif; font-size: 50px; fill: var(--accent); }
+  .tag {
+    font-family: "Mulish", sans-serif; font-weight: 400; font-size: 21px; letter-spacing: 4px;
+    fill: var(--ink); opacity: .78; text-transform: uppercase;
+  }
+  @media (max-width: 600px) { .tag { font-size: 30px; letter-spacing: 3px; } }
+
+  /* gentle entrance + breathing */
+  .orbit > g { animation: drift 7s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .orbit > g:nth-child(1) { animation-delay: 1.8s }
+  .orbit > g:nth-child(2) { animation-delay: 2.6s }
+  .orbit > g:nth-child(3) { animation-delay: 3.4s }
+  .orbit > g:nth-child(4) { animation-delay: 2.2s }
+  .orbit > g:nth-child(5) { animation-delay: 3.0s }
+  .orbit > g:nth-child(6) { animation-delay: 1.9s }
+  .orbit > g:nth-child(7) { animation-delay: 2.8s }
+  .orbit > g:nth-child(8) { animation-delay: 3.6s }
+  .orbit > g:nth-child(9) { animation-delay: 2.4s }
+  .orbit > g:nth-child(10) { animation-delay: 3.2s }
+  .orbit > g:nth-child(11) { animation-delay: 2.1s }
+  .orbit > g:nth-child(12) { animation-delay: 2.9s }
+  @keyframes drift { 0%,100% { translate: 0 0 } 50% { translate: 0 -4px } }
+  @media (prefers-reduced-motion: reduce) {
+    .orbit > g { animation: none; }
+  }
+
+  /* ---------- Sections ---------- */
+  section.content { padding: 6rem 16px; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  .wrap-wide { max-width: 940px; margin: 0 auto; }
+  .ornament {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin: 0 auto 2.6rem; color: var(--accent);
+  }
+  .ornament span { width: 46px; height: 1px; background: var(--accent); opacity: .5; }
+  .ornament b { font-family: "Tiro Devanagari Sanskrit", serif; font-weight: 400; font-size: 1.7rem; line-height: 1; }
+  .about p { margin: 0 0 1.5rem; text-align: justify; hyphens: none; -webkit-hyphens: none; }
+  .about p.closing, .about p.contact { text-align: center; text-wrap: balance; }
+  .about p, .lede { text-wrap: pretty; }
+  .lede .u { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  h2, .chant-title { text-wrap: balance; }
+  .about .closing {
+    font-family: "Cormorant Garamond", serif; font-weight: 500;
+    font-size: 1.6rem; line-height: 1.5; color: var(--accent); margin-top: 2.4rem;
+  }
+  .about .contact { font-size: inherit; color: var(--ink); }
+  a.soft {
+    color: var(--ink); text-decoration: none;
+    border-bottom: 1px solid var(--accent); padding-bottom: 1px;
+    transition: color .3s, border-color .3s;
+  }
+  a.soft:hover { color: var(--accent); }
+  .icon-link { white-space: nowrap; }
+  .icon-link .ico { width: 1.05em; height: 1.05em; vertical-align: -0.17em; margin-right: .4em; color: var(--accent); }
+
+  .chants { background: var(--bg-soft); }
+  h2 {
+    font-family: "Cormorant Garamond", serif; font-weight: 300;
+    font-size: clamp(2.1rem, 5vw, 2.8rem); letter-spacing: 1px;
+    text-align: center; margin: 0 0 .8rem;
+  }
+  .lede {
+    font-family: "Mulish", sans-serif; font-weight: 400;
+    font-size: 1.05rem; line-height: 1.75; color: var(--ink);
+    text-align: justify; hyphens: none; -webkit-hyphens: none; max-width: 660px; margin: 0 auto 3.5rem;
+  }
+  .videos {
+    display: grid; gap: 2.4rem 1.6rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* nombre impair : la dernière vidéo est centrée */
+  .videos .chant:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - .8rem); }
+  .chant { margin: 0; min-width: 0; }
+  .chant figcaption {
+    display: flex; flex-direction: column; gap: .1rem;
+    padding: 0 .2rem .75rem; line-height: 1.3;
+  }
+  .chant-title {
+    font-family: "Cormorant Garamond", serif; font-weight: 500;
+    font-size: 1.35rem; color: var(--ink);
+  }
+  .chant-artist {
+    font-size: .72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft);
+  }
+  @media (max-width: 640px) {
+    .videos { grid-template-columns: 1fr; }
+    .videos .chant:last-child:nth-child(odd) { width: 100%; }
+  }
+  .video {
+    position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+    background: var(--video-bg); cursor: pointer; border: 0; padding: 0; width: 100%;
+    box-shadow: 0 1px 2px var(--shadow-soft), 0 12px 30px -14px var(--shadow);
+    transition: transform .5s ease, box-shadow .5s ease;
+  }
+  .video:hover { transform: translateY(-3px); box-shadow: 0 1px 2px var(--shadow-soft), 0 20px 40px -16px var(--shadow); }
+  .video img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: saturate(.75) sepia(.12); transition: filter .5s ease;
+  }
+  .video:hover img { filter: none; }
+  .video .play {
+    position: absolute; inset: 0; margin: auto; width: 62px; height: 62px; border-radius: 50%;
+    background: var(--chip-bg); display: grid; place-items: center;
+    backdrop-filter: blur(4px); transition: transform .4s ease;
+  }
+  .video:hover .play { transform: scale(1.08); }
+  .video .play svg { width: 20px; height: 20px; margin-left: 4px; fill: var(--accent); }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video[data-external]::after {
+    content: "Écouter sur YouTube ↗"; position: absolute; right: 10px; bottom: 10px;
+    font: 400 .72rem/1 "Mulish", sans-serif; letter-spacing: .5px; color: var(--ink);
+    background: var(--chip-bg); padding: .45rem .65rem; border-radius: 999px;
+  }
+  .video:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  footer {
+    text-align: center; padding: 3.5rem 16px 4rem;
+    display: flex; flex-direction: column; align-items: center; gap: .3rem;
+  }
+  footer .f-social { display: flex; justify-content: center; gap: 1.4rem; margin-top: 1.1rem; }
+  footer .f-social a {
+    display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+    color: var(--accent); border: 1px solid var(--accent-border);
+    transition: background .3s, color .3s, border-color .3s;
+  }
+  footer .f-social a:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  footer .f-social svg { width: 18px; height: 18px; }
+  footer .f-name { font-family: "Cormorant Garamond", serif; font-weight: 400; font-size: 1.5rem; letter-spacing: 1px; color: var(--ink); line-height: 1.2; }
+  footer .f-skt { font-family: "Tiro Devanagari Sanskrit", serif; font-size: 1.25rem; color: var(--accent); line-height: 1.4; }
+  footer .f-tag { font-size: .8rem; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--tag-ink); }
+
+  @media (max-width: 600px) {
+    section.content { padding: 4.5rem 16px; }
+    body { font-size: 1rem; }
+    .hero { min-height: auto; padding-top: 2rem; padding-bottom: 1rem; }
+    .scroll-cue { display: none; }
+    .about { padding-top: 2.5rem !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= LOGO ================= -->
+<header class="hero">
+  <svg class="logo" viewBox="0 40 1000 740" role="img" aria-labelledby="logoTitle">
+    <title id="logoTitle">Ānanda Saṅgam — आनन्द सङ्गम — entouré d'instruments de musique</title>
+
+    <!-- faint ring -->
+    <ellipse cx="500" cy="400" rx="400" ry="290" fill="none" stroke="var(--line)" stroke-width=".8" stroke-dasharray="1 9" stroke-linecap="round" opacity=".45"/>
+
+    <g class="orbit">
+
+      <!-- 1. Native American flute (top) -->
+      <g><g class="ins" transform="translate(500 112) scale(.8) rotate(-2) scale(.58)">
+        <rect class="wood" x="-160" y="-6" width="320" height="12" rx="6"/>
+        <rect class="wood" x="-176" y="-4" width="18" height="8" rx="3"/>
+        <path class="wood" d="M -112 -6 C -110 -16 -100 -21 -90 -19 L -76 -17 C -69 -16 -67 -10 -70 -6 Z"/>
+        <line x1="-106" y1="-9" x2="-106" y2="8"/><line x1="-102" y1="-9" x2="-102" y2="8"/>
+        <line x1="138" y1="-6" x2="138" y2="6" class="fine"/><line x1="144" y1="-6" x2="144" y2="6" class="fine"/>
+        <line x1="-140" y1="-6" x2="-140" y2="6" class="fine"/>
+        <rect x="-62" y="-3" width="10" height="5" rx="1.5" class="dark"/>
+        <circle cx="8" cy="0" r="2.8" class="dark"/><circle cx="30" cy="0" r="2.8" class="dark"/><circle cx="52" cy="0" r="2.8" class="dark"/>
+        <circle cx="84" cy="0" r="2.8" class="dark"/><circle cx="106" cy="0" r="2.8" class="dark"/><circle cx="128" cy="0" r="2.8" class="dark"/>
+        <path d="M -104 6 Q -106 22 -100 36"/>
+        <path class="brass" d="M -100 36 C -110 50 -108 70 -98 84 C -88 70 -90 50 -100 36 Z"/>
+        <line x1="-100" y1="40" x2="-98" y2="82" class="fine"/>
+      </g></g>
+
+      <!-- 2. Nylon (classical) guitar -->
+      <g><g class="ins" transform="translate(716 158) scale(.8) rotate(12) scale(.5) translate(0 65)">
+        <rect class="wood" x="-6" y="-178" width="12" height="112"/>
+        <path class="wood" d="M -9 -178 L -10 -214 Q 0 -220 10 -214 L 9 -178 Z"/>
+        <rect x="-5" y="-208" width="3" height="24" rx="1.5" class="fine"/><rect x="2" y="-208" width="3" height="24" rx="1.5" class="fine"/>
+        <line x1="-10" y1="-202" x2="-16" y2="-202"/><line x1="-10" y1="-194" x2="-16" y2="-194"/><line x1="-10" y1="-186" x2="-16" y2="-186"/>
+        <line x1="10" y1="-202" x2="16" y2="-202"/><line x1="10" y1="-194" x2="16" y2="-194"/><line x1="10" y1="-186" x2="16" y2="-186"/>
+        <path class="wood" d="M 0 -70 C 30 -70 38 -55 36 -40 C 34 -28 26 -22 27 -10 C 28 4 46 14 46 40 C 46 68 24 80 0 80 C -24 80 -46 68 -46 40 C -46 14 -28 4 -27 -10 C -26 -22 -34 -28 -36 -40 C -38 -55 -30 -70 0 -70 Z"/>
+        <circle cx="0" cy="-14" r="15" class="fine"/><circle cx="0" cy="-14" r="12.5" class="fine" stroke-dasharray="2 2"/>
+        <circle cx="0" cy="-14" r="9.5" class="dark"/>
+        <rect x="-16" y="42" width="32" height="6" rx="2" class="wood"/>
+        <g class="fine"><line x1="-6" y1="-166" x2="6" y2="-166"/><line x1="-6" y1="-154" x2="6" y2="-154"/><line x1="-6" y1="-142" x2="6" y2="-142"/><line x1="-6" y1="-131" x2="6" y2="-131"/><line x1="-6" y1="-120" x2="6" y2="-120"/><line x1="-6" y1="-110" x2="6" y2="-110"/><line x1="-6" y1="-100" x2="6" y2="-100"/><line x1="-6" y1="-91" x2="6" y2="-91"/></g>
+        <g class="fine faint"><line x1="-3.5" y1="45" x2="-3.5" y2="-178"/><line x1="-1.2" y1="45" x2="-1.2" y2="-178"/><line x1="1.2" y1="45" x2="1.2" y2="-178"/><line x1="3.5" y1="45" x2="3.5" y2="-178"/></g>
+      </g></g>
+
+      <!-- 3. Sitar -->
+      <g><g class="ins" transform="translate(864 282) scale(.8) rotate(20) scale(.45) translate(0 135)">
+        <circle class="wood" cx="0" cy="-300" r="20"/>
+        <rect class="wood" x="-11" y="-322" width="22" height="294" rx="3"/>
+        <path class="wood" d="M -16 -38 C -40 -36 -58 -10 -56 12 C -54 36 -30 50 0 50 C 30 50 54 36 56 12 C 58 -10 40 -36 16 -38 Z"/>
+        <ellipse cx="0" cy="12" rx="34" ry="20" class="fine" stroke-dasharray="3 3"/>
+        <rect x="-11" y="18" width="22" height="5" rx="1.5" class="wood"/>
+        <g class="fine">
+          <path d="M -11 -290 Q 0 -296 11 -290"/><path d="M -11 -270 Q 0 -276 11 -270"/><path d="M -11 -250 Q 0 -256 11 -250"/><path d="M -11 -230 Q 0 -236 11 -230"/><path d="M -11 -211 Q 0 -217 11 -211"/><path d="M -11 -192 Q 0 -198 11 -192"/><path d="M -11 -174 Q 0 -180 11 -174"/><path d="M -11 -156 Q 0 -162 11 -156"/><path d="M -11 -139 Q 0 -145 11 -139"/><path d="M -11 -122 Q 0 -128 11 -122"/><path d="M -11 -106 Q 0 -112 11 -106"/><path d="M -11 -90 Q 0 -96 11 -90"/><path d="M -11 -75 Q 0 -81 11 -75"/>
+        </g>
+        <line x1="-11" y1="-312" x2="-22" y2="-314"/><circle cx="-24" cy="-314" r="2.5" class="dark"/>
+        <line x1="-11" y1="-296" x2="-22" y2="-298"/><circle cx="-24" cy="-298" r="2.5" class="dark"/>
+        <line x1="11" y1="-306" x2="22" y2="-308"/><circle cx="24" cy="-308" r="2.5" class="dark"/>
+        <line x1="11" y1="-288" x2="22" y2="-290"/><circle cx="24" cy="-290" r="2.5" class="dark"/>
+        <g class="dark"><circle cx="14" cy="-250" r="1.6"/><circle cx="14" cy="-232" r="1.6"/><circle cx="14" cy="-214" r="1.6"/><circle cx="14" cy="-196" r="1.6"/><circle cx="14" cy="-178" r="1.6"/><circle cx="14" cy="-160" r="1.6"/></g>
+        <g class="fine faint"><line x1="-4" y1="20" x2="-4" y2="-318"/><line x1="0" y1="20" x2="0" y2="-318"/><line x1="4" y1="20" x2="4" y2="-318"/></g>
+      </g></g>
+
+      <!-- 4. Djembe -->
+      <g><g class="ins" transform="translate(896 443) scale(.8) rotate(-6) scale(.78)">
+        <path class="wood" d="M -40 -70 C -40 -20 -16 -5 -14 10 C -14 40 -30 60 -30 75 L 30 75 C 30 60 14 40 14 10 C 16 -5 40 -20 40 -70"/>
+        <ellipse cx="0" cy="-70" rx="40" ry="9" class="brass"/>
+        <path d="M -39 -60 Q 0 -52 39 -60"/>
+        <path d="M -30 -24 Q 0 -18 30 -24"/>
+        <polyline class="fine" points="-37,-58 -29,-23 -24,-57 -18,-21 -12,-56 -6,-20 0,-55 6,-20 12,-56 18,-21 24,-57 29,-23 37,-58"/>
+        <path d="M -14 14 Q 0 18 14 14" class="fine"/>
+        <path d="M -26 62 Q 0 66 26 62" class="fine"/>
+      </g></g>
+
+      <!-- 5. Tibetan singing bowls -->
+      <g><g class="ins" transform="translate(802 592) scale(.8) scale(.72) translate(-22 -12)">
+        <path class="faint" d="M -18 -18 Q 0 -27 18 -18"/><path class="faint" d="M -28 -30 Q 0 -43 28 -30"/>
+        <path class="brass" d="M -46 0 C -44 34 -22 46 0 46 C 22 46 44 34 46 0 Z"/>
+        <ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/>
+        <ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/>
+        <path d="M -40 14 Q 0 22 40 14" class="fine faint"/>
+        <g transform="translate(76 22) scale(.58)">
+          <path class="brass" d="M -46 0 C -44 34 -22 46 0 46 C 22 46 44 34 46 0 Z"/>
+          <ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/>
+          <ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/>
+        </g>
+        <g transform="translate(-68 22) rotate(-28)">
+          <rect class="wood" x="-4" y="-44" width="8" height="64" rx="4"/>
+          <rect x="-5" y="-44" width="10" height="16" rx="5" class="dark"/>
+        </g>
+      </g></g>
+
+      <!-- 6. Mridangam -->
+      <g><g class="ins" transform="translate(198 592) scale(.8) rotate(-5) scale(.72)">
+        <path class="wood" d="M -80 -36 C -40 -52 40 -54 85 -40 L 85 40 C 40 54 -40 52 -80 36 Z"/>
+        <g class="fine">
+          <path d="M -78 -28 C -30 -40 30 -42 83 -32"/>
+          <path d="M -78 -14 C -30 -20 30 -22 83 -16"/>
+          <path d="M -78 0 L 83 0"/>
+          <path d="M -78 14 C -30 20 30 22 83 16"/>
+          <path d="M -78 28 C -30 40 30 42 83 32"/>
+        </g>
+        <ellipse cx="-80" cy="0" rx="12" ry="36" class="wood"/>
+        <ellipse cx="-80" cy="0" rx="8" ry="27" class="fine"/>
+        <ellipse cx="85" cy="0" rx="14" ry="40" class="wood"/>
+        <ellipse cx="85" cy="0" rx="6" ry="16" class="dark"/>
+      </g></g>
+
+      <!-- 7. Kartals (hand cymbals) -->
+      <g><g class="ins" transform="translate(104 443) scale(.8) rotate(8) scale(1)">
+        <path d="M -28.1 -8.3 C -20 -50 22 -48 30.3 -0.4"/>
+        <circle cx="0" cy="-40" r="2.6" class="dark"/>
+        <path d="M 0 -38 L -4 -26 M 0 -38 L 0 -25 M 0 -38 L 4 -26" class="fine"/>
+        <g transform="translate(-26 0) rotate(-14)">
+          <ellipse cx="0" cy="0" rx="26" ry="7.5" class="brass"/>
+          <path class="brass" d="M -9 -2 Q 0 -15 9 -2"/>
+          <ellipse cx="0" cy="0" rx="18" ry="4.5" class="fine faint"/>
+        </g>
+        <g transform="translate(28 8) rotate(16)">
+          <ellipse cx="0" cy="0" rx="26" ry="7.5" class="brass"/>
+          <path class="brass" d="M -9 -2 Q 0 -15 9 -2"/>
+          <ellipse cx="0" cy="0" rx="18" ry="4.5" class="fine faint"/>
+        </g>
+      </g></g>
+
+      <!-- 8. Bass -->
+      <g><g class="ins" transform="translate(136 282) scale(.8) rotate(-20) scale(.42) translate(0 108)">
+        <rect class="wood" x="-5.5" y="-252" width="11" height="214"/>
+        <path class="wood" d="M -5.5 -252 L -8 -302 Q -2 -310 8 -303 L 11 -290 L 5.5 -252 Z"/>
+        <circle cx="-14" cy="-296" r="3.4" class="dark"/><circle cx="-14" cy="-283" r="3.4" class="dark"/><circle cx="-14" cy="-270" r="3.4" class="dark"/><circle cx="-14" cy="-257" r="3.4" class="dark"/>
+        <path class="wood" d="M -12 -50 C -20 -75 -38 -92 -46 -78 C -54 -62 -40 -44 -42 -24 C -44 -6 -60 10 -58 40 C -56 72 -30 90 0 90 C 30 90 56 74 56 44 C 56 16 40 0 42 -20 C 44 -40 56 -54 50 -66 C 44 -78 30 -70 14 -52 C 6 -46 -4 -44 -12 -50 Z"/>
+        <path d="M -30 -30 C -34 -6 -40 20 -24 30 L 26 30 C 36 10 30 -14 24 -36" class="fine faint"/>
+        <rect x="-15" y="-2" width="30" height="10" rx="3.5" class="dark"/>
+        <rect x="-14" y="52" width="28" height="9" rx="2" class="brass"/>
+        <g class="fine"><line x1="-5.5" y1="-236" x2="5.5" y2="-236"/><line x1="-5.5" y1="-218" x2="5.5" y2="-218"/><line x1="-5.5" y1="-201" x2="5.5" y2="-201"/><line x1="-5.5" y1="-185" x2="5.5" y2="-185"/><line x1="-5.5" y1="-170" x2="5.5" y2="-170"/><line x1="-5.5" y1="-156" x2="5.5" y2="-156"/><line x1="-5.5" y1="-143" x2="5.5" y2="-143"/><line x1="-5.5" y1="-131" x2="5.5" y2="-131"/></g>
+        <g class="fine faint"><line x1="-3.3" y1="56" x2="-3.3" y2="-252"/><line x1="-1.1" y1="56" x2="-1.1" y2="-252"/><line x1="1.1" y1="56" x2="1.1" y2="-252"/><line x1="3.3" y1="56" x2="3.3" y2="-252"/></g>
+      </g></g>
+
+      <!-- 9. Violin (with bow) -->
+      <g><g class="ins" transform="translate(284 158) scale(.8) rotate(-12) scale(.55) translate(0 45)">
+        <g transform="rotate(32)">
+          <line x1="-2" y1="-150" x2="-2" y2="78"/>
+          <line x1="3" y1="-146" x2="3" y2="72" class="fine"/>
+          <rect x="-4" y="62" width="9" height="12" rx="2" class="dark"/>
+        </g>
+        <path class="wood" d="M 0 -62 C 20 -62 31 -54 31 -38 C 31 -26 24 -22 19 -16 C 15 -12 15 4 19 8 C 26 14 36 22 36 40 C 36 60 20 70 0 70 C -20 70 -36 60 -36 40 C -36 22 -26 14 -19 8 C -15 4 -15 -12 -19 -16 C -24 -22 -31 -26 -31 -38 C -31 -54 -20 -62 0 -62 Z"/>
+        <path class="fine faint" d="M 0 -57 C 16 -57 26 -50 26 -38 C 26 -28 19 -23 14 -16 M 0 -57 C -16 -57 -26 -50 -26 -38 C -26 -28 -19 -23 -14 -16 M -14 12 C -22 18 -31 26 -31 40 C -31 56 -17 65 0 65 C 17 65 31 56 31 40 C 31 26 22 18 14 12"/>
+        <path d="M 11 -6 C 7 4 15 14 11 26" class="fine"/><circle cx="11" cy="-6" r="1.4" class="dark"/><circle cx="11" cy="26" r="1.4" class="dark"/>
+        <path d="M -11 -6 C -7 4 -15 14 -11 26" class="fine"/><circle cx="-11" cy="-6" r="1.4" class="dark"/><circle cx="-11" cy="26" r="1.4" class="dark"/>
+        <rect x="-4" y="-150" width="8" height="18" class="wood"/>
+        <rect x="-4.5" y="-132" width="9" height="122" rx="2" class="dark"/>
+        <path class="wood" d="M 0 -150 C -9 -152 -10 -166 -2 -169 C 6 -171 10 -163 5 -159 C 1 -157 -1 -161 1 -163"/>
+        <line x1="-4" y1="-146" x2="-11" y2="-147"/><line x1="-4" y1="-138" x2="-11" y2="-139"/>
+        <line x1="4" y1="-142" x2="11" y2="-143"/><line x1="4" y1="-134" x2="11" y2="-135"/>
+        <path d="M -11 20 Q 0 16 11 20" stroke-width="2"/>
+        <path class="dark" d="M -5 40 L -7 64 L 7 64 L 5 40 Z"/>
+        <g class="fine faint"><line x1="-3" y1="42" x2="-3" y2="-148"/><line x1="-1" y1="42" x2="-1" y2="-148"/><line x1="1" y1="42" x2="1" y2="-148"/><line x1="3" y1="42" x2="3" y2="-148"/></g>
+      </g></g>
+
+      <!-- 11. Harp -->
+      <g><g class="ins" transform="translate(387 680) scale(.8) rotate(-4) scale(.95) translate(0 -4)">
+        <g class="fine">
+          <line x1="-24" y1="-55" x2="-24" y2="50"/><line x1="-14" y1="-51" x2="-14" y2="34"/><line x1="-4" y1="-46" x2="-4" y2="17"/>
+          <line x1="6" y1="-45" x2="6" y2="1"/><line x1="16" y1="-48" x2="16" y2="-15"/><line x1="26" y1="-53" x2="26" y2="-32"/>
+          <line x1="-19" y1="-53" x2="-19" y2="42" class="faint"/><line x1="-9" y1="-48" x2="-9" y2="25" class="faint"/><line x1="1" y1="-45" x2="1" y2="9" class="faint"/><line x1="11" y1="-46" x2="11" y2="-7" class="faint"/><line x1="21" y1="-50" x2="21" y2="-24" class="faint"/>
+        </g>
+        <path class="wood" d="M 36 -50 L 45 -45 L -22 66 L -33 62 Z"/>
+        <circle cx="14" cy="-6" r="2.2" class="dark"/><circle cx="-4" cy="25" r="2.2" class="dark"/>
+        <path class="wood" d="M -41 -52 Q -47 4 -35 64 L -28 64 Q -40 4 -34 -50 Z"/>
+        <path class="wood" d="M -42 -54 C -24 -76 0 -50 14 -56 C 26 -61 36 -66 46 -50 L 38 -45 C 31 -56 24 -53 14 -49 C 0 -42 -20 -66 -34 -48 Z"/>
+        <circle cx="-40" cy="-56" r="3" class="dark"/>
+        <line x1="-40" y1="66" x2="-16" y2="66"/>
+      </g></g>
+
+      <!-- 12. Harmonium (kirtan style) -->
+      <g><g class="ins" transform="translate(613 680) scale(.8) scale(1)">
+        <path class="wood" d="M -54 -28 L 54 -28 L 50 -46 L -50 -46 Z"/>
+        <g class="fine faint"><line x1="-53" y1="-33" x2="53" y2="-33"/><line x1="-52" y1="-38" x2="52" y2="-38"/><line x1="-51" y1="-42" x2="51" y2="-42"/></g>
+        <path class="wood" d="M -70 -10 L 70 -10 L 60 -28 L -60 -28 Z"/>
+        <path d="M -48 -12 L 48 -12 L 42 -25 L -42 -25 Z" style="fill:var(--keys)"/>
+        <g class="fine"><line x1="-44.8" y1="-12" x2="-39.2" y2="-25"/><line x1="-39.2" y1="-12" x2="-34.3" y2="-25"/><line x1="-33.6" y1="-12" x2="-29.4" y2="-25"/><line x1="-28.0" y1="-12" x2="-24.5" y2="-25"/><line x1="-22.4" y1="-12" x2="-19.6" y2="-25"/><line x1="-16.8" y1="-12" x2="-14.7" y2="-25"/><line x1="-11.2" y1="-12" x2="-9.8" y2="-25"/><line x1="-5.6" y1="-12" x2="-4.9" y2="-25"/><line x1="0.0" y1="-12" x2="0.0" y2="-25"/><line x1="5.6" y1="-12" x2="4.9" y2="-25"/><line x1="11.2" y1="-12" x2="9.8" y2="-25"/><line x1="16.8" y1="-12" x2="14.7" y2="-25"/><line x1="22.4" y1="-12" x2="19.6" y2="-25"/><line x1="28.0" y1="-12" x2="24.5" y2="-25"/><line x1="33.6" y1="-12" x2="29.4" y2="-25"/><line x1="39.2" y1="-12" x2="34.3" y2="-25"/><line x1="44.8" y1="-12" x2="39.2" y2="-25"/></g>
+        <g class="dark" stroke="none"><path d="M -38.4 -25 L -35.1 -25 L -37.7 -18 L -41.1 -18 Z"/><path d="M -33.5 -25 L -30.2 -25 L -32.4 -18 L -35.8 -18 Z"/><path d="M -23.7 -25 L -20.4 -25 L -21.9 -18 L -25.3 -18 Z"/><path d="M -18.8 -25 L -15.6 -25 L -16.7 -18 L -20.1 -18 Z"/><path d="M -13.8 -25 L -10.7 -25 L -11.4 -18 L -14.8 -18 Z"/><path d="M -4.1 -25 L -0.9 -25 L -0.9 -18 L -4.3 -18 Z"/><path d="M 0.9 -25 L 4.1 -25 L 4.3 -18 L 0.9 -18 Z"/><path d="M 10.7 -25 L 13.8 -25 L 14.8 -18 L 11.4 -18 Z"/><path d="M 15.6 -25 L 18.8 -25 L 20.1 -18 L 16.7 -18 Z"/><path d="M 20.4 -25 L 23.7 -25 L 25.3 -18 L 21.9 -18 Z"/><path d="M 30.2 -25 L 33.5 -25 L 35.8 -18 L 32.4 -18 Z"/><path d="M 35.1 -25 L 38.4 -25 L 41.1 -18 L 37.7 -18 Z"/></g>
+        <rect class="wood" x="-70" y="-10" width="140" height="40" rx="2"/>
+        <line x1="-70" y1="2" x2="70" y2="2" class="fine"/>
+        <g class="dark"><circle cx="-56" cy="-4" r="2.2"/><circle cx="-42" cy="-4" r="2.2"/><circle cx="-28" cy="-4" r="2.2"/><circle cx="-14" cy="-4" r="2.2"/><circle cx="0" cy="-4" r="2.2"/><circle cx="14" cy="-4" r="2.2"/><circle cx="28" cy="-4" r="2.2"/><circle cx="42" cy="-4" r="2.2"/><circle cx="56" cy="-4" r="2.2"/></g>
+        <rect x="-50" y="8" width="100" height="16" rx="8" class="fine"/>
+        <g class="fine faint"><path d="M -40 16 Q -30 10 -20 16 Q -10 22 0 16 Q 10 10 20 16 Q 30 22 40 16"/></g>
+        <rect x="-66" y="30" width="10" height="4" rx="1" class="dark"/><rect x="56" y="30" width="10" height="4" rx="1" class="dark"/>
+      </g></g>
+
+    </g>
+
+    <!-- Wordmark -->
+    <g class="title-group">
+      <text class="word" x="500" y="400" text-anchor="middle">Ānanda Saṅgam</text>
+      <text class="skt" x="500" y="490" text-anchor="middle">आनन्द सङ्गम</text>
+      <text class="tag" x="500" y="540" text-anchor="middle">Kirtan à Québec</text>
+    </g>
+  </svg>
+  <div class="scroll-cue" aria-hidden="true"></div>
+</header>
+
+<main>
+  <!-- ================= PRÉSENTATION ================= -->
+  <section class="content about">
+    <div class="wrap">
+      <div class="ornament" aria-hidden="true"><span></span><b>ॐ</b><span></span></div>
+
+      <p>Ānanda Saṅgam, un nouveau collectif de Québec formé de musiciens d’expérience, vous invite à découvrir le kirtan : un chant collectif de mantras issus principalement des traditions hindoue et bouddhiste. Au fil des mélodies, nos voix s’unissent pour nous offrir un moment de communion par le son et révéler la paix du cœur.</p>
+
+      <p>Le kirtan est semblable à un feu que l’on allume ensemble. Portés par les chants et la musique de notre collectif, nous vous offrons un espace bienveillant, accueillant et sans jugement pour vous libérer de ce qui vous pèse, accueillir l’instant présent et repartir plus légers, libres et alignés avec votre essence véritable. Ensemble, nous élèverons nos voix et nos cœurs pour rejoindre une vibration harmonieuse qui transcende le temps et l’espace.</p>
+
+      <p>Tout le monde est bienvenu. Invitez vos amis et venez comme vous êtes, aucune expérience en chant n’est nécessaire.</p>
+
+      <p class="closing">Au grand plaisir d’être ensemble !</p>
+
+      <p class="contact">Événements à venir : visitez notre <a class="soft icon-link" href="https://www.facebook.com/" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg>page Facebook</a><br>
+      Pour organiser un kirtan, contactez : <a class="soft icon-link" href="mailto:raffael.jomphe@gmail.com?subject=Kirtan%20%C4%80nanda%20Sa%E1%B9%85gam"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 7 L12 13 L20.2 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>raffael.jomphe@gmail.com</a></p>
+      <!-- TODO: remplacer l'adresse Facebook ci-dessus quand la page existera -->
+    </div>
+  </section>
+
+  <!-- ================= EXEMPLES DE CHANTS ================= -->
+  <section class="content chants">
+    <div class="wrap-wide">
+      <h2>Exemples de chants</h2>
+      <p class="lede">Voici quelques <span class="u">exemples</span> tirés de YouTube pour vous donner un aperçu de notre univers musical et des mantras que nous chantons. Nous nous inspirons de certaines de ces pièces en les interprétant à notre manière, et notre répertoire s’enrichit aussi de compositions originales créées par nos musiciens. Vos suggestions sont toujours les bienvenues !</p>
+
+      <div class="videos">
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Gam Ganapataye Namaha</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
+          <button class="video" data-id="F6BcPj42bUg" data-start="3:41" aria-label="Écouter Om Gam Ganapataye Namaha">
+            <img src="https://i.ytimg.com/vi/F6BcPj42bUg/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Hara Mahadeva</span><span class="chant-artist">Prem &amp; Jai Sahaja!</span></figcaption>
+          <button class="video" data-id="zApCD-1LrdA" data-start="0:23" aria-label="Écouter Hara Mahadeva">
+            <img src="https://i.ytimg.com/vi/zApCD-1LrdA/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Mahamantra Meltdown</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="kzTGSITIckw" data-start="8:34" aria-label="Écouter Mahamantra Meltdown">
+            <img src="https://i.ytimg.com/vi/kzTGSITIckw/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Light of Your Grace</span><span class="chant-artist">Sam Garrett</span></figcaption>
+          <button class="video" data-id="M4AvH5E07wo" data-start="4:56" aria-label="Écouter Light of Your Grace">
+            <img src="https://i.ytimg.com/vi/M4AvH5E07wo/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Namah Shivaya</span><span class="chant-artist">JaiMa James &amp; Friends</span></figcaption>
+          <button class="video" data-id="fSXPbv76RjA" data-start="2:49" aria-label="Écouter Om Namah Shivaya">
+            <img src="https://i.ytimg.com/vi/fSXPbv76RjA/hq2.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Jaya Guru Namaha</span><span class="chant-artist">Sam Garrett</span></figcaption>
+          <button class="video" data-id="VwIEoZthORQ" data-start="3:41" aria-label="Écouter Jaya Guru Namaha">
+            <img src="https://i.ytimg.com/vi/VwIEoZthORQ/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Asatoma</span><span class="chant-artist">Sam Garrett &amp; Mollie Mendoza</span></figcaption>
+          <button class="video" data-id="N6-wM8j-Yqg" data-start="2:20" aria-label="Écouter Asatoma">
+            <img src="https://i.ytimg.com/vi/N6-wM8j-Yqg/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Ong Namo</span><span class="chant-artist">Snatam Kaur</span></figcaption>
+          <button class="video" data-id="wJbgCTq4rJQ" data-start="2:08" aria-label="Écouter Ong Namo">
+            <img src="https://i.ytimg.com/vi/wJbgCTq4rJQ/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Aad Guray Nameh</span><span class="chant-artist">Snatam Kaur</span></figcaption>
+          <button class="video" data-id="OOHOHs12HFc" data-start="1:47" aria-label="Écouter Aad Guray Nameh">
+            <img src="https://i.ytimg.com/vi/OOHOHs12HFc/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Narayani Om</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
+          <button class="video" data-id="e1bbTt_zFbc" data-start="2:46" aria-label="Écouter Narayani Om">
+            <img src="https://i.ytimg.com/vi/e1bbTt_zFbc/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Shiva Shambo</span><span class="chant-artist">Namaste</span></figcaption>
+          <button class="video" data-id="RNBB2aIwUR8" data-start="3:33" aria-label="Écouter Shiva Shambo">
+            <img src="https://i.ytimg.com/vi/RNBB2aIwUR8/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Jaya Shiva Shankara</span><span class="chant-artist">Namaste</span></figcaption>
+          <button class="video" data-id="6vh0jXcJy3k" data-start="2:17" aria-label="Écouter Jaya Shiva Shankara">
+            <img src="https://i.ytimg.com/vi/6vh0jXcJy3k/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Shankara Karunakara</span><span class="chant-artist">Mooji</span></figcaption>
+          <button class="video" data-id="8YcocxPjZ3o" data-start="4:34" aria-label="Écouter Shankara Karunakara">
+            <img src="https://i.ytimg.com/vi/8YcocxPjZ3o/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Sita Ram</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
+          <button class="video" data-id="Vqa-_XbmF5g" data-start="3:30" aria-label="Écouter Sita Ram">
+            <img src="https://i.ytimg.com/vi/Vqa-_XbmF5g/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Ganapati Om</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
+          <button class="video" data-id="dq9nWHN3y70" data-start="2:37" aria-label="Écouter Ganapati Om">
+            <img src="https://i.ytimg.com/vi/dq9nWHN3y70/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Omkar Guruji</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
+          <button class="video" data-id="LOXdt4NoxFw" data-start="4:10" aria-label="Écouter Omkar Guruji">
+            <img src="https://i.ytimg.com/vi/LOXdt4NoxFw/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Arunachala</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
+          <button class="video" data-id="o-hjpbrOt5E" data-start="2:09" aria-label="Écouter Om Arunachala">
+            <img src="https://i.ytimg.com/vi/o-hjpbrOt5E/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Maha Mantra (Hare Krishna)</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="rqk_blhpHRI" data-start="9:46" aria-label="Écouter Maha Mantra (Hare Krishna)">
+            <img src="https://i.ytimg.com/vi/rqk_blhpHRI/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Baba Hanuman</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="sDW8cPiBe3U" data-start="3:42" aria-label="Écouter Baba Hanuman">
+            <img src="https://i.ytimg.com/vi/sDW8cPiBe3U/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Ma Durga</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="Iy4gtPmgiFA" data-start="2:48" aria-label="Écouter Ma Durga">
+            <img src="https://i.ytimg.com/vi/Iy4gtPmgiFA/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Sri Argala Stotram / Show Me Love</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="7EgqG9kELZY" data-start="6:18" aria-label="Écouter Sri Argala Stotram / Show Me Love">
+            <img src="https://i.ytimg.com/vi/7EgqG9kELZY/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Shri Ram</span><span class="chant-artist">Krishna Das</span></figcaption>
+          <button class="video" data-id="NYirllZ4ly4" data-start="3:37" aria-label="Écouter Shri Ram">
+            <img src="https://i.ytimg.com/vi/NYirllZ4ly4/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Sarva Mangala</span><span class="chant-artist">Tina Malia</span></figcaption>
+          <button class="video" data-id="QqQ4YaVG-xQ" data-start="3:13" aria-label="Écouter Sarva Mangala">
+            <img src="https://i.ytimg.com/vi/QqQ4YaVG-xQ/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Hare Krishna</span><span class="chant-artist">Satyaa &amp; Pari</span></figcaption>
+          <button class="video" data-id="p1kyYXK-coQ" data-start="1:42" aria-label="Écouter Hare Krishna">
+            <img src="https://i.ytimg.com/vi/p1kyYXK-coQ/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Gayatri Mantra</span><span class="chant-artist">Tina Malia</span></figcaption>
+          <button class="video" data-id="9mySi7rhaLQ" data-start="4:22" aria-label="Écouter Gayatri Mantra">
+            <img src="https://i.ytimg.com/vi/9mySi7rhaLQ/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Govinda Jaya Jaya</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda Das</span></figcaption>
+          <button class="video" data-id="zkdRO0inTuU" data-start="1:18" aria-label="Écouter Govinda Jaya Jaya">
+            <img src="https://i.ytimg.com/vi/zkdRO0inTuU/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Sat Narayan</span><span class="chant-artist">GuruGanesha Singh &amp; Snatam Kaur</span></figcaption>
+          <button class="video" data-id="56CQDFipNc8" data-start="3:20" aria-label="Écouter Sat Narayan">
+            <img src="https://i.ytimg.com/vi/56CQDFipNc8/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Mata Om Kali</span><span class="chant-artist">Amy Barnes</span></figcaption>
+          <button class="video" data-id="NafeL00PtFk" aria-label="Écouter Om Mata Om Kali">
+            <img src="https://i.ytimg.com/vi/NafeL00PtFk/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Anandamayi</span><span class="chant-artist">Brenda McMorrow</span></figcaption>
+          <button class="video" data-id="gZmT3jmLjTM" data-start="1:17" aria-label="Écouter Anandamayi">
+            <img src="https://i.ytimg.com/vi/gZmT3jmLjTM/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Govinda Narayana</span><span class="chant-artist">Kristin Luna Ray</span></figcaption>
+          <button class="video" data-id="W9InlUWV0ao" data-start="3:40" aria-label="Écouter Govinda Narayana">
+            <img src="https://i.ytimg.com/vi/W9InlUWV0ao/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Shiva Parvati</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda</span></figcaption>
+          <button class="video" data-id="QMceXAnYiro" data-start="4:13" aria-label="Écouter Shiva Parvati">
+            <img src="https://i.ytimg.com/vi/QMceXAnYiro/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Omkaraya</span><span class="chant-artist">Karen St-Laurent &amp; Simon L’Espérance</span></figcaption>
+          <button class="video" data-id="F0iXmslbwH0" data-start="5:13" aria-label="Écouter Omkaraya">
+            <img src="https://i.ytimg.com/vi/F0iXmslbwH0/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Gum Ganapataye</span><span class="chant-artist">Karen St-Laurent</span></figcaption>
+          <button class="video" data-id="MU9XnE8unu8" data-start="2:13" aria-label="Écouter Gum Ganapataye">
+            <img src="https://i.ytimg.com/vi/MU9XnE8unu8/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Mani Padme Hum</span><span class="chant-artist">Boris Grebenshikov</span></figcaption>
+          <button class="video" data-id="15qsLSDx4b0" data-start="2:26" aria-label="Écouter Om Mani Padme Hum">
+            <img src="https://i.ytimg.com/vi/15qsLSDx4b0/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Mani Peme Hung</span><span class="chant-artist">Samanvaya Kirtan</span></figcaption>
+          <button class="video" data-id="_KmiW_kW-OU" data-start="2:42" aria-label="Écouter Om Mani Peme Hung">
+            <img src="https://i.ytimg.com/vi/_KmiW_kW-OU/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">He Maha Lakshmi</span><span class="chant-artist">David Newman</span></figcaption>
+          <button class="video" data-id="yUjCCOiRmAs" data-start="3:42" aria-label="Écouter He Maha Lakshmi">
+            <img src="https://i.ytimg.com/vi/yUjCCOiRmAs/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Purnamadah</span><span class="chant-artist">Shantala</span></figcaption>
+          <button class="video" data-id="S0nUTYWqlJA" data-start="4:37" aria-label="Écouter Purnamadah">
+            <img src="https://i.ytimg.com/vi/S0nUTYWqlJA/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Ra Ma Da Sa</span><span class="chant-artist">Ajeet Kaur</span></figcaption>
+          <button class="video" data-id="RKT06TyB58Q" data-start="4:32" aria-label="Écouter Ra Ma Da Sa">
+            <img src="https://i.ytimg.com/vi/RKT06TyB58Q/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">He Bhagavan</span><span class="chant-artist">Gurumayi Chidvilasananda</span></figcaption>
+          <button class="video" data-id="9eP_Isd8y7g" data-start="22:12" aria-label="Écouter He Bhagavan">
+            <img src="https://i.ytimg.com/vi/9eP_Isd8y7g/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Om Ganesha</span><span class="chant-artist">Sam Garrett</span></figcaption>
+          <button class="video" data-id="ZU5EhhroAfk" data-start="7:40" aria-label="Écouter Om Ganesha">
+            <img src="https://i.ytimg.com/vi/ZU5EhhroAfk/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Hari Om Namah Shivaya</span><span class="chant-artist">Songs for Sri Moojiji</span></figcaption>
+          <button class="video" data-id="4K2yIIE0i08" data-start="4:49" aria-label="Écouter Hari Om Namah Shivaya">
+            <img src="https://i.ytimg.com/vi/4K2yIIE0i08/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">One With You</span><span class="chant-artist">Stephen DeRuby</span></figcaption>
+          <button class="video" data-id="EAhduIQqP2k" data-start="1:53" aria-label="Écouter One With You">
+            <img src="https://i.ytimg.com/vi/EAhduIQqP2k/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Hara Hara Shankara</span><span class="chant-artist">Steve Ross</span></figcaption>
+          <button class="video" data-id="xIjtirgXVkI" data-start="1:33" aria-label="Écouter Hara Hara Shankara">
+            <img src="https://i.ytimg.com/vi/xIjtirgXVkI/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+        <figure class="chant">
+          <figcaption><span class="chant-title">Arunachala</span><span class="chant-artist">Steve Ross</span></figcaption>
+          <button class="video" data-id="NApx3JugLp0" data-start="2:30" aria-label="Écouter Arunachala">
+            <img src="https://i.ytimg.com/vi/NApx3JugLp0/hqdefault.jpg" alt="" loading="lazy">
+            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
+          </button>
+        </figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="f-name">Ānanda Saṅgam</span>
+  <span class="f-skt">आनन्द सङ्गम</span>
+  <span class="f-tag">Kirtan à Québec</span>
+  <div class="f-social">
+    <!-- TODO: remplacer par l'adresse de la page Facebook quand elle existera -->
+    <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Notre page Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg></a>
+    <a href="mailto:raffael.jomphe@gmail.com?subject=Kirtan%20%C4%80nanda%20Sa%E1%B9%85gam" aria-label="Nous écrire par courriel" title="Courriel"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 7 L12 13 L20.2 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></a>
+  </div>
+</footer>
+
+<script>
+  // Click-to-play: load the YouTube player only when a thumbnail is clicked
+  document.querySelectorAll('.video').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.querySelector('iframe')) return;
+      // Vidéos dont le propriétaire bloque la lecture intégrée : on les ouvre sur YouTube
+      if (btn.hasAttribute('data-external')) {
+        var t = 0, ts = btn.dataset.start;
+        if (ts) ts.split(':').forEach(function (n) { t = t * 60 + (parseInt(n, 10) || 0); });
+        window.open('https://www.youtube.com/watch?v=' + btn.dataset.id + (t ? '&t=' + t + 's' : ''), '_blank', 'noopener');
+        return;
+      }
+      var f = document.createElement('iframe');
+      // data-start="3:41" (ou "221") : commence la vidéo à ce moment
+      var start = 0, st = btn.dataset.start;
+      if (st) st.split(':').forEach(function (n) { start = start * 60 + (parseInt(n, 10) || 0); });
+      f.src = 'https://www.youtube.com/embed/' + btn.dataset.id + '?autoplay=1&rel=0&modestbranding=1' + (start ? '&start=' + start : '');
+      f.title = 'Vidéo YouTube';
+      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      f.allowFullscreen = true;
+      btn.innerHTML = '';
+      btn.appendChild(f);
+      btn.style.cursor = 'default';
+    });
+  });
+</script>
+</body>
+</html>
