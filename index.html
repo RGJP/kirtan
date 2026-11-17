@@ -57,6 +57,8 @@
     --tag-ink: rgba(61,56,51,.7);
     --keys: #fbf8f2;
     --ray: #c98a45;
+    --i-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3 1.5 L18 10 L3 18.5 Z'/%3E%3C/svg%3E");
+    --i-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='3.5' y='2' width='4.5' height='16' rx='1'/%3E%3Crect x='12' y='2' width='4.5' height='16' rx='1'/%3E%3C/svg%3E");
     color-scheme: light;
   }
   * { box-sizing: border-box; }
@@ -168,13 +170,6 @@
     font-size: 1.05rem; line-height: 1.75; color: var(--ink);
     text-align: justify; hyphens: none; -webkit-hyphens: none; max-width: 660px; margin: 0 auto 3.5rem;
   }
-  .tip-ico { width: 1.15em; height: 1.15em; vertical-align: -0.2em; margin-right: .4em; color: var(--accent); }
-  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .lede-note {
-    font-family: "Mulish", sans-serif; font-weight: 400;
-    font-size: 1.05rem; line-height: 1.75; color: var(--ink);
-    text-align: justify; max-width: 660px; margin: -2.4rem auto 3.5rem;
-  }
   .videos {
     display: grid; gap: 2.4rem 1.6rem;
     grid-template-columns: repeat(2, 1fr);
@@ -199,7 +194,7 @@
   }
   .video {
     position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
-    background: var(--video-bg); cursor: pointer; border: 0; padding: 0; width: 100%;
+    background: var(--video-bg); cursor: pointer;
     box-shadow: 0 1px 2px var(--shadow-soft), 0 12px 30px -14px var(--shadow);
     transition: transform .5s ease, box-shadow .5s ease;
   }
@@ -208,21 +203,53 @@
     width: 100%; height: 100%; object-fit: cover; display: block;
     filter: saturate(.75) sepia(.12); transition: filter .5s ease;
   }
-  .video:hover img { filter: none; }
+  .video:hover img, .video.active img { filter: none; }
   .video .play {
     position: absolute; inset: 0; margin: auto; width: 62px; height: 62px; border-radius: 50%;
+    border: 0; padding: 0; cursor: pointer;
     background: var(--chip-bg); display: grid; place-items: center;
-    backdrop-filter: blur(4px); transition: transform .4s ease;
+    backdrop-filter: blur(4px); transition: transform .4s ease, opacity .4s ease;
   }
   .video:hover .play { transform: scale(1.08); }
-  .video .play svg { width: 20px; height: 20px; margin-left: 4px; fill: var(--accent); }
-  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-  .video[data-external]::after {
-    content: "Écouter sur YouTube ↗"; position: absolute; right: 10px; bottom: 10px;
-    font: 400 .72rem/1 "Mulish", sans-serif; letter-spacing: .5px; color: var(--ink);
-    background: var(--chip-bg); padding: .45rem .65rem; border-radius: 999px;
+  .video .play::before {
+    content: ""; width: 20px; height: 20px; margin-left: 4px; background: var(--accent);
+    -webkit-mask: var(--i-play) center / contain no-repeat; mask: var(--i-play) center / contain no-repeat;
   }
-  .video:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .video.playing .play::before { margin-left: 0; -webkit-mask-image: var(--i-pause); mask-image: var(--i-pause); }
+  .video.playing:not(:hover) .play { opacity: .55; }
+  .video.loading .play::after {
+    content: ""; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid transparent; border-top-color: var(--accent);
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .video .play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+
+  /* barre de lecture (une seule, déplacée vers la carte active) */
+  .bar {
+    position: absolute; left: 0; right: 0; bottom: 0; cursor: default;
+    display: flex; align-items: center; gap: .75rem; padding: 2.2rem 1rem .8rem;
+    background: linear-gradient(transparent, rgba(30,22,12,.6));
+    font: 400 .72rem/1 "Mulish", sans-serif; letter-spacing: .5px; color: #fbf8f2;
+    font-variant-numeric: tabular-nums;
+  }
+  .bar time { white-space: nowrap; }
+  .bar input {
+    flex: 1; min-width: 0; height: 18px; margin: 0; background: none; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+  }
+  .bar input::-webkit-slider-runnable-track {
+    height: 3px; border-radius: 3px;
+    background: linear-gradient(to right, var(--ray) var(--p, 0%), rgba(251,248,242,.4) var(--p, 0%));
+  }
+  .bar input::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(251,248,242,.4); }
+  .bar input::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--ray); }
+  .bar input::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4.5px;
+    border-radius: 50%; background: #fbf8f2; border: 0;
+  }
+  .bar input::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fbf8f2; border: 0; }
+  .bar input:focus-visible { outline: 2px solid #fbf8f2; outline-offset: 2px; border-radius: 4px; }
 
   footer {
     text-align: center; padding: 3.5rem 16px 4rem;
@@ -477,316 +504,315 @@
     <div class="wrap-wide">
       <h2>Exemples de chants</h2>
       <p class="lede">Voici quelques <span class="u">exemples</span> tirés de YouTube pour vous donner un aperçu de notre univers musical et des mantras que nous chantons (liste non exhaustive). Nous nous inspirons de certaines de ces pièces en les interprétant à notre manière, et notre répertoire s’enrichit aussi de compositions originales créées par nos musiciens. Vos suggestions sont toujours les bienvenues !</p>
-      <p class="lede-note"><span class="visually-hidden">Astuce : </span><svg class="tip-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.6 10.8c.7.6 1.1 1.3 1.1 2.2V16h5v-.1c0-.9.4-1.6 1.1-2.2A6 6 0 0 0 12 3z"/></svg>Pour visionner sur YouTube sans publicités, le navigateur <a class="soft" href="https://brave.com/" target="_blank" rel="noopener">Brave</a> est recommandé.</p>
 
       <div class="videos">
         <figure class="chant">
           <figcaption><span class="chant-title">Om Gam Ganapataye Namaha</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
-          <button class="video" data-id="F6BcPj42bUg" data-start="3:41" aria-label="Écouter Om Gam Ganapataye Namaha">
-            <img src="https://i.ytimg.com/vi/F6BcPj42bUg/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="F6BcPj42bUg" data-start="3:41">
+            <img src="exc/F6BcPj42bUg.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Gam Ganapataye Namaha"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Hara Mahadeva</span><span class="chant-artist">Prem &amp; Jai Sahaja!</span></figcaption>
-          <button class="video" data-id="zApCD-1LrdA" data-start="0:23" aria-label="Écouter Hara Mahadeva">
-            <img src="https://i.ytimg.com/vi/zApCD-1LrdA/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="zApCD-1LrdA" data-start="0:23">
+            <img src="exc/zApCD-1LrdA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Hara Mahadeva"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Mahamantra Meltdown</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="kzTGSITIckw" data-start="8:34" aria-label="Écouter Mahamantra Meltdown">
-            <img src="https://i.ytimg.com/vi/kzTGSITIckw/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="kzTGSITIckw" data-start="8:34">
+            <img src="exc/kzTGSITIckw.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Mahamantra Meltdown"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Light of Your Grace</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <button class="video" data-id="M4AvH5E07wo" data-start="4:56" aria-label="Écouter Light of Your Grace">
-            <img src="https://i.ytimg.com/vi/M4AvH5E07wo/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="M4AvH5E07wo" data-start="4:56">
+            <img src="exc/M4AvH5E07wo.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Light of Your Grace"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Namah Shivaya</span><span class="chant-artist">JaiMa James &amp; Friends</span></figcaption>
-          <button class="video" data-id="fSXPbv76RjA" data-start="2:49" aria-label="Écouter Om Namah Shivaya">
-            <img src="https://i.ytimg.com/vi/fSXPbv76RjA/hq2.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="fSXPbv76RjA" data-start="2:49">
+            <img src="exc/fSXPbv76RjA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Namah Shivaya"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Jaya Guru Namaha</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <button class="video" data-id="VwIEoZthORQ" data-start="3:41" aria-label="Écouter Jaya Guru Namaha">
-            <img src="https://i.ytimg.com/vi/VwIEoZthORQ/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="VwIEoZthORQ" data-start="3:41">
+            <img src="exc/VwIEoZthORQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Jaya Guru Namaha"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Asatoma</span><span class="chant-artist">Sam Garrett &amp; Mollie Mendoza</span></figcaption>
-          <button class="video" data-id="N6-wM8j-Yqg" data-start="2:20" aria-label="Écouter Asatoma">
-            <img src="https://i.ytimg.com/vi/N6-wM8j-Yqg/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="N6-wM8j-Yqg" data-start="2:20">
+            <img src="exc/N6-wM8j-Yqg.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Asatoma"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Ong Namo</span><span class="chant-artist">Snatam Kaur</span></figcaption>
-          <button class="video" data-id="wJbgCTq4rJQ" data-start="2:08" aria-label="Écouter Ong Namo">
-            <img src="https://i.ytimg.com/vi/wJbgCTq4rJQ/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="wJbgCTq4rJQ" data-start="2:08">
+            <img src="exc/wJbgCTq4rJQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Ong Namo"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Aad Guray Nameh</span><span class="chant-artist">Snatam Kaur</span></figcaption>
-          <button class="video" data-id="OOHOHs12HFc" data-start="1:47" aria-label="Écouter Aad Guray Nameh">
-            <img src="https://i.ytimg.com/vi/OOHOHs12HFc/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="OOHOHs12HFc" data-start="1:47">
+            <img src="exc/OOHOHs12HFc.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Aad Guray Nameh"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Narayani Om</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
-          <button class="video" data-id="e1bbTt_zFbc" data-start="2:46" aria-label="Écouter Narayani Om">
-            <img src="https://i.ytimg.com/vi/e1bbTt_zFbc/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="e1bbTt_zFbc" data-start="2:46">
+            <img src="exc/e1bbTt_zFbc.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Narayani Om"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Shiva Shambo</span><span class="chant-artist">Namaste</span></figcaption>
-          <button class="video" data-id="RNBB2aIwUR8" data-start="3:33" aria-label="Écouter Shiva Shambo">
-            <img src="https://i.ytimg.com/vi/RNBB2aIwUR8/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="RNBB2aIwUR8" data-start="3:33">
+            <img src="exc/RNBB2aIwUR8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Shiva Shambo"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Jaya Shiva Shankara</span><span class="chant-artist">Namaste</span></figcaption>
-          <button class="video" data-id="6vh0jXcJy3k" data-start="2:17" aria-label="Écouter Jaya Shiva Shankara">
-            <img src="https://i.ytimg.com/vi/6vh0jXcJy3k/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="6vh0jXcJy3k" data-start="2:17">
+            <img src="exc/6vh0jXcJy3k.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Jaya Shiva Shankara"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Shankara Karunakara</span><span class="chant-artist">Mooji</span></figcaption>
-          <button class="video" data-id="8YcocxPjZ3o" data-start="4:34" aria-label="Écouter Shankara Karunakara">
-            <img src="https://i.ytimg.com/vi/8YcocxPjZ3o/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="8YcocxPjZ3o" data-start="4:34">
+            <img src="exc/8YcocxPjZ3o.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Shankara Karunakara"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Sita Ram</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
-          <button class="video" data-id="Vqa-_XbmF5g" data-start="3:30" aria-label="Écouter Sita Ram">
-            <img src="https://i.ytimg.com/vi/Vqa-_XbmF5g/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="Vqa-_XbmF5g" data-start="3:30">
+            <img src="exc/Vqa-_XbmF5g.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Sita Ram"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Ganapati Om</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
-          <button class="video" data-id="dq9nWHN3y70" data-start="2:37" aria-label="Écouter Ganapati Om">
-            <img src="https://i.ytimg.com/vi/dq9nWHN3y70/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="dq9nWHN3y70" data-start="2:37">
+            <img src="exc/dq9nWHN3y70.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Ganapati Om"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Omkar Guruji</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
-          <button class="video" data-id="LOXdt4NoxFw" data-start="4:10" aria-label="Écouter Omkar Guruji">
-            <img src="https://i.ytimg.com/vi/LOXdt4NoxFw/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="LOXdt4NoxFw" data-start="4:10">
+            <img src="exc/LOXdt4NoxFw.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Omkar Guruji"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Arunachala</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
-          <button class="video" data-id="o-hjpbrOt5E" data-start="2:09" aria-label="Écouter Om Arunachala">
-            <img src="https://i.ytimg.com/vi/o-hjpbrOt5E/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="o-hjpbrOt5E" data-start="2:09">
+            <img src="exc/o-hjpbrOt5E.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Arunachala"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Maha Mantra (Hare Krishna)</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="rqk_blhpHRI" data-start="9:46" aria-label="Écouter Maha Mantra (Hare Krishna)">
-            <img src="https://i.ytimg.com/vi/rqk_blhpHRI/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="rqk_blhpHRI" data-start="9:46">
+            <img src="exc/rqk_blhpHRI.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Maha Mantra (Hare Krishna)"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Baba Hanuman</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="sDW8cPiBe3U" data-start="3:42" aria-label="Écouter Baba Hanuman">
-            <img src="https://i.ytimg.com/vi/sDW8cPiBe3U/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="sDW8cPiBe3U" data-start="3:42">
+            <img src="exc/sDW8cPiBe3U.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Baba Hanuman"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Ma Durga</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="Iy4gtPmgiFA" data-start="2:48" aria-label="Écouter Ma Durga">
-            <img src="https://i.ytimg.com/vi/Iy4gtPmgiFA/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="Iy4gtPmgiFA" data-start="2:48">
+            <img src="exc/Iy4gtPmgiFA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Ma Durga"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Sri Argala Stotram / Show Me Love</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="7EgqG9kELZY" data-start="6:18" aria-label="Écouter Sri Argala Stotram / Show Me Love">
-            <img src="https://i.ytimg.com/vi/7EgqG9kELZY/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="7EgqG9kELZY" data-start="6:18">
+            <img src="exc/7EgqG9kELZY.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Sri Argala Stotram / Show Me Love"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Shri Ram</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <button class="video" data-id="NYirllZ4ly4" data-start="3:37" aria-label="Écouter Shri Ram">
-            <img src="https://i.ytimg.com/vi/NYirllZ4ly4/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="NYirllZ4ly4" data-start="3:37">
+            <img src="exc/NYirllZ4ly4.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Shri Ram"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Sarva Mangala</span><span class="chant-artist">Tina Malia</span></figcaption>
-          <button class="video" data-id="QqQ4YaVG-xQ" data-start="3:13" aria-label="Écouter Sarva Mangala">
-            <img src="https://i.ytimg.com/vi/QqQ4YaVG-xQ/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="QqQ4YaVG-xQ" data-start="3:13">
+            <img src="exc/QqQ4YaVG-xQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Sarva Mangala"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Hare Krishna</span><span class="chant-artist">Satyaa &amp; Pari</span></figcaption>
-          <button class="video" data-id="p1kyYXK-coQ" data-start="1:42" aria-label="Écouter Hare Krishna">
-            <img src="https://i.ytimg.com/vi/p1kyYXK-coQ/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="p1kyYXK-coQ" data-start="1:42">
+            <img src="exc/p1kyYXK-coQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Hare Krishna"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Gayatri Mantra</span><span class="chant-artist">Tina Malia</span></figcaption>
-          <button class="video" data-id="9mySi7rhaLQ" data-start="4:22" aria-label="Écouter Gayatri Mantra">
-            <img src="https://i.ytimg.com/vi/9mySi7rhaLQ/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="9mySi7rhaLQ" data-start="4:22">
+            <img src="exc/9mySi7rhaLQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Gayatri Mantra"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Govinda Jaya Jaya</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda Das</span></figcaption>
-          <button class="video" data-id="zkdRO0inTuU" data-start="1:18" aria-label="Écouter Govinda Jaya Jaya">
-            <img src="https://i.ytimg.com/vi/zkdRO0inTuU/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="zkdRO0inTuU" data-start="1:18">
+            <img src="exc/zkdRO0inTuU.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Govinda Jaya Jaya"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Sat Narayan</span><span class="chant-artist">GuruGanesha Singh &amp; Snatam Kaur</span></figcaption>
-          <button class="video" data-id="56CQDFipNc8" data-start="3:20" aria-label="Écouter Sat Narayan">
-            <img src="https://i.ytimg.com/vi/56CQDFipNc8/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="56CQDFipNc8" data-start="3:20">
+            <img src="exc/56CQDFipNc8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Sat Narayan"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Mata Om Kali</span><span class="chant-artist">Amy Barnes</span></figcaption>
-          <button class="video" data-id="NafeL00PtFk" aria-label="Écouter Om Mata Om Kali">
-            <img src="https://i.ytimg.com/vi/NafeL00PtFk/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="NafeL00PtFk">
+            <img src="exc/NafeL00PtFk.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Mata Om Kali"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Anandamayi</span><span class="chant-artist">Brenda McMorrow</span></figcaption>
-          <button class="video" data-id="gZmT3jmLjTM" data-start="1:17" aria-label="Écouter Anandamayi">
-            <img src="https://i.ytimg.com/vi/gZmT3jmLjTM/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="gZmT3jmLjTM" data-start="1:17">
+            <img src="exc/gZmT3jmLjTM.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Anandamayi"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Govinda Narayana</span><span class="chant-artist">Kristin Luna Ray</span></figcaption>
-          <button class="video" data-id="W9InlUWV0ao" data-start="3:40" aria-label="Écouter Govinda Narayana">
-            <img src="https://i.ytimg.com/vi/W9InlUWV0ao/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="W9InlUWV0ao" data-start="3:40">
+            <img src="exc/W9InlUWV0ao.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Govinda Narayana"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Shiva Parvati</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda</span></figcaption>
-          <button class="video" data-id="QMceXAnYiro" data-start="4:13" aria-label="Écouter Shiva Parvati">
-            <img src="https://i.ytimg.com/vi/QMceXAnYiro/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="QMceXAnYiro" data-start="4:13">
+            <img src="exc/QMceXAnYiro.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Shiva Parvati"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Omkaraya</span><span class="chant-artist">Karen St-Laurent &amp; Simon L’Espérance</span></figcaption>
-          <button class="video" data-id="F0iXmslbwH0" data-start="5:13" aria-label="Écouter Omkaraya">
-            <img src="https://i.ytimg.com/vi/F0iXmslbwH0/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="F0iXmslbwH0" data-start="5:13">
+            <img src="exc/F0iXmslbwH0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Omkaraya"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Gum Ganapataye</span><span class="chant-artist">Karen St-Laurent</span></figcaption>
-          <button class="video" data-id="MU9XnE8unu8" data-start="2:13" aria-label="Écouter Gum Ganapataye">
-            <img src="https://i.ytimg.com/vi/MU9XnE8unu8/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="MU9XnE8unu8" data-start="2:13">
+            <img src="exc/MU9XnE8unu8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Gum Ganapataye"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Mani Padme Hum</span><span class="chant-artist">Boris Grebenshikov</span></figcaption>
-          <button class="video" data-id="15qsLSDx4b0" data-start="2:26" aria-label="Écouter Om Mani Padme Hum">
-            <img src="https://i.ytimg.com/vi/15qsLSDx4b0/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="15qsLSDx4b0" data-start="2:26">
+            <img src="exc/15qsLSDx4b0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Mani Padme Hum"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Mani Peme Hung</span><span class="chant-artist">Samanvaya Kirtan</span></figcaption>
-          <button class="video" data-id="_KmiW_kW-OU" data-start="2:42" aria-label="Écouter Om Mani Peme Hung">
-            <img src="https://i.ytimg.com/vi/_KmiW_kW-OU/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="_KmiW_kW-OU" data-start="2:42">
+            <img src="exc/_KmiW_kW-OU.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Mani Peme Hung"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">He Maha Lakshmi</span><span class="chant-artist">David Newman</span></figcaption>
-          <button class="video" data-id="yUjCCOiRmAs" data-start="3:42" aria-label="Écouter He Maha Lakshmi">
-            <img src="https://i.ytimg.com/vi/yUjCCOiRmAs/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="yUjCCOiRmAs" data-start="3:42">
+            <img src="exc/yUjCCOiRmAs.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter He Maha Lakshmi"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Purnamadah</span><span class="chant-artist">Shantala</span></figcaption>
-          <button class="video" data-id="S0nUTYWqlJA" data-start="4:37" aria-label="Écouter Purnamadah">
-            <img src="https://i.ytimg.com/vi/S0nUTYWqlJA/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="S0nUTYWqlJA" data-start="4:37">
+            <img src="exc/S0nUTYWqlJA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Purnamadah"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Ra Ma Da Sa</span><span class="chant-artist">Ajeet Kaur</span></figcaption>
-          <button class="video" data-id="RKT06TyB58Q" data-start="4:32" aria-label="Écouter Ra Ma Da Sa">
-            <img src="https://i.ytimg.com/vi/RKT06TyB58Q/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="RKT06TyB58Q" data-start="4:32">
+            <img src="exc/RKT06TyB58Q.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Ra Ma Da Sa"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">He Bhagavan</span><span class="chant-artist">Gurumayi Chidvilasananda</span></figcaption>
-          <button class="video" data-id="9eP_Isd8y7g" data-start="22:12" aria-label="Écouter He Bhagavan">
-            <img src="https://i.ytimg.com/vi/9eP_Isd8y7g/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="9eP_Isd8y7g" data-start="22:12">
+            <img src="exc/9eP_Isd8y7g.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter He Bhagavan"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Om Ganesha</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <button class="video" data-id="ZU5EhhroAfk" data-start="7:40" aria-label="Écouter Om Ganesha">
-            <img src="https://i.ytimg.com/vi/ZU5EhhroAfk/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="ZU5EhhroAfk" data-start="7:40">
+            <img src="exc/ZU5EhhroAfk.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Om Ganesha"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Hari Om Namah Shivaya</span><span class="chant-artist">Songs for Sri Moojiji</span></figcaption>
-          <button class="video" data-id="4K2yIIE0i08" data-start="4:49" aria-label="Écouter Hari Om Namah Shivaya">
-            <img src="https://i.ytimg.com/vi/4K2yIIE0i08/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="4K2yIIE0i08" data-start="4:49">
+            <img src="exc/4K2yIIE0i08.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Hari Om Namah Shivaya"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">One With You</span><span class="chant-artist">Stephen DeRuby</span></figcaption>
-          <button class="video" data-id="EAhduIQqP2k" data-start="1:53" aria-label="Écouter One With You">
-            <img src="https://i.ytimg.com/vi/EAhduIQqP2k/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="EAhduIQqP2k" data-start="1:53">
+            <img src="exc/EAhduIQqP2k.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter One With You"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Hara Hara Shankara</span><span class="chant-artist">Steve Ross</span></figcaption>
-          <button class="video" data-id="xIjtirgXVkI" data-start="1:33" aria-label="Écouter Hara Hara Shankara">
-            <img src="https://i.ytimg.com/vi/xIjtirgXVkI/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="xIjtirgXVkI" data-start="1:33">
+            <img src="exc/xIjtirgXVkI.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Hara Hara Shankara"></button>
+          </div>
         </figure>
         <figure class="chant">
           <figcaption><span class="chant-title">Arunachala</span><span class="chant-artist">Steve Ross</span></figcaption>
-          <button class="video" data-id="NApx3JugLp0" data-start="2:30" aria-label="Écouter Arunachala">
-            <img src="https://i.ytimg.com/vi/NApx3JugLp0/hqdefault.jpg" alt="" loading="lazy">
-            <span class="play"><svg viewBox="0 0 20 20"><path d="M3 1.5 L18 10 L3 18.5 Z"/></svg></span>
-          </button>
+          <div class="video" data-id="NApx3JugLp0" data-start="2:30">
+            <img src="exc/NApx3JugLp0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+            <button class="play" aria-label="Écouter Arunachala"></button>
+          </div>
         </figure>
       </div>
     </div>
@@ -804,31 +830,86 @@
 </footer>
 
 <script>
-  // Click-to-play: load the YouTube player only when a thumbnail is clicked
-  document.querySelectorAll('.video').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      if (btn.querySelector('iframe')) return;
-      // Vidéos dont le propriétaire bloque la lecture intégrée : on les ouvre sur YouTube
-      if (btn.hasAttribute('data-external')) {
-        var t = 0, ts = btn.dataset.start;
-        if (ts) ts.split(':').forEach(function (n) { t = t * 60 + (parseInt(n, 10) || 0); });
-        window.open('https://www.youtube.com/watch?v=' + btn.dataset.id + (t ? '&t=' + t + 's' : ''), '_blank', 'noopener');
-        return;
+  // Lecteur audio : un seul élément <audio>, fichiers locaux dans exc/ (aucune pub, aucun chargement avant le clic)
+  (function () {
+    var audio = new Audio(), cur = null, seeking = false;
+    audio.preload = 'none';
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    bar.innerHTML = '<time>0:00</time><input type="range" min="0" max="0" step="1" value="0" aria-label="Position"><time>0:00</time>';
+    var range = bar.querySelector('input'), tNow = bar.firstChild, tEnd = bar.lastChild;
+
+    function secs(v) { var t = 0; if (v) v.split(':').forEach(function (n) { t = t * 60 + (parseInt(n, 10) || 0); }); return t; }
+    function fmt(t) {
+      t = Math.max(0, Math.floor(t || 0));
+      var h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60;
+      return (h ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    function paint(t) {
+      var d = audio.duration || 0;
+      range.value = t; tNow.textContent = fmt(t);
+      range.style.setProperty('--p', d ? (t / d * 100) + '%' : '0%');
+    }
+    function play() { var p = audio.play(); if (p) p.catch(function () {}); }
+    function state() {
+      if (!cur) return;
+      var on = !audio.paused;
+      cur.classList.toggle('playing', on);
+      cur.querySelector('.play').setAttribute('aria-pressed', on);
+    }
+
+    function select(card) {
+      if (cur) cur.classList.remove('active', 'playing', 'loading');
+      cur = card;
+      var start = secs(card.dataset.start);
+      card.classList.add('active', 'loading');
+      card.appendChild(bar);
+      range.max = 0; tEnd.textContent = '–'; paint(start);
+      audio.src = 'exc/' + card.dataset.id + '.m4a' + (start ? '#t=' + start : '');
+      audio.dataset.start = start;
+      play();
+      if ('mediaSession' in navigator) {
+        var fig = card.closest('.chant');
+        navigator.mediaSession.metadata = new MediaMetadata({
+          title: fig.querySelector('.chant-title').textContent,
+          artist: fig.querySelector('.chant-artist').textContent,
+          album: 'Ānanda Saṅgam',
+          artwork: [{ src: card.querySelector('img').src, sizes: '480x270', type: 'image/webp' }]
+        });
       }
-      var f = document.createElement('iframe');
-      // data-start="3:41" (ou "221") : commence la vidéo à ce moment
-      var start = 0, st = btn.dataset.start;
-      if (st) st.split(':').forEach(function (n) { start = start * 60 + (parseInt(n, 10) || 0); });
-      f.src = 'https://www.youtube.com/embed/' + btn.dataset.id + '?autoplay=1&rel=0&modestbranding=1' + (start ? '&start=' + start : '');
-      f.title = 'Vidéo YouTube';
-      f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      f.referrerPolicy = 'strict-origin-when-cross-origin';
-      f.allowFullscreen = true;
-      btn.innerHTML = '';
-      btn.appendChild(f);
-      btn.style.cursor = 'default';
+    }
+
+    document.querySelectorAll('.video').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('.bar')) return;
+        if (card !== cur) select(card);
+        else if (audio.paused) play();
+        else audio.pause();
+      });
     });
-  });
+
+    audio.addEventListener('loadedmetadata', function () {
+      var start = +audio.dataset.start || 0;
+      if (start && Math.abs(audio.currentTime - start) > 1) audio.currentTime = start;
+      range.max = Math.floor(audio.duration); tEnd.textContent = fmt(audio.duration);
+      paint(audio.currentTime);
+    });
+    audio.addEventListener('timeupdate', function () { if (!seeking) paint(audio.currentTime); });
+    audio.addEventListener('waiting', function () { cur && cur.classList.add('loading'); });
+    audio.addEventListener('playing', function () { cur && cur.classList.remove('loading'); state(); });
+    audio.addEventListener('pause', state);
+    audio.addEventListener('ended', state);
+    audio.addEventListener('error', function () { cur && cur.classList.remove('loading'); state(); });
+
+    range.addEventListener('input', function () { seeking = true; paint(+range.value); });
+    range.addEventListener('change', function () { audio.currentTime = +range.value; seeking = false; });
+
+    if ('mediaSession' in navigator) {
+      navigator.mediaSession.setActionHandler('play', play);
+      navigator.mediaSession.setActionHandler('pause', function () { audio.pause(); });
+      try { navigator.mediaSession.setActionHandler('seekto', function (d) { audio.currentTime = d.seekTime; }); } catch (err) {}
+    }
+  })();
 </script>
 </body>
 </html>
