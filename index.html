@@ -49,15 +49,14 @@
     --brass: #ecd6a6;         /* brass fill */
     --accent: #b9773a;        /* saffron */
     --glow: rgba(233, 196, 140, .28);
-    --video-bg: #e8dfd1;
     --shadow: rgba(80,60,30,.25);
     --shadow-soft: rgba(80,60,30,.06);
-    --chip-bg: rgba(251,248,242,.9);
     --accent-border: rgba(185,119,58,.35);
     --tag-ink: rgba(61,56,51,.7);
     --keys: #fbf8f2;
     --ray: #c98a45;
     --i-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3 1.5 L18 10 L3 18.5 Z'/%3E%3C/svg%3E");
+    --i-yt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 17'%3E%3Cpath fill-rule='evenodd' d='M23.5 2.65A3 3 0 0 0 21.38.5C19.5 0 12 0 12 0S4.5 0 2.62.5A3 3 0 0 0 .5 2.65C0 4.53 0 8.5 0 8.5s0 3.97.5 5.85a3 3 0 0 0 2.12 2.15C4.5 17 12 17 12 17s7.5 0 9.38-.5a3 3 0 0 0 2.12-2.15C24 12.47 24 8.5 24 8.5s0-3.97-.5-5.85zM9.6 12.14V4.86L15.83 8.5z'/%3E%3C/svg%3E");
     --i-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='3.5' y='2' width='4.5' height='16' rx='1'/%3E%3Crect x='12' y='2' width='4.5' height='16' rx='1'/%3E%3C/svg%3E");
     color-scheme: light;
   }
@@ -170,12 +169,12 @@
     font-size: 1.05rem; line-height: 1.75; color: var(--ink);
     text-align: justify; hyphens: none; -webkit-hyphens: none; max-width: 660px; margin: 0 auto 3.5rem;
   }
-  .videos {
-    display: grid; gap: 2.4rem 1.6rem;
+  .players {
+    display: grid; gap: 2.6rem 2.4rem;
     grid-template-columns: repeat(2, 1fr);
   }
-  /* nombre impair : la dernière vidéo est centrée */
-  .videos .chant:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - .8rem); }
+  /* nombre impair : le dernier chant est centré */
+  .players .chant:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 1.2rem); }
   .chant { margin: 0; min-width: 0; }
   .chant figcaption {
     display: flex; flex-direction: column; gap: .1rem;
@@ -189,67 +188,60 @@
     font-size: .72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--ink-soft);
   }
   @media (max-width: 640px) {
-    .videos { grid-template-columns: 1fr; }
-    .videos .chant:last-child:nth-child(odd) { width: 100%; }
+    .players { grid-template-columns: 1fr; }
+    .players .chant:last-child:nth-child(odd) { width: 100%; }
   }
-  .video {
-    position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
-    background: var(--video-bg); cursor: pointer;
-    box-shadow: 0 1px 2px var(--shadow-soft), 0 12px 30px -14px var(--shadow);
-    transition: transform .5s ease, box-shadow .5s ease;
+  .player {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .45rem 1.1rem .45rem .45rem; border-radius: 999px;
+    background: var(--bg); border: 1px solid var(--accent-border);
+    font: 400 .74rem/1 "Mulish", sans-serif; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums; transition: border-color .4s, box-shadow .4s;
   }
-  .video:hover { transform: translateY(-3px); box-shadow: 0 1px 2px var(--shadow-soft), 0 20px 40px -16px var(--shadow); }
-  .video img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-    filter: saturate(.75) sepia(.12); transition: filter .5s ease;
+  .chant.active .player { border-color: var(--accent); box-shadow: 0 8px 24px -14px var(--shadow); }
+  .player time { white-space: nowrap; min-width: 2.6em; }
+  .player time:last-child { text-align: right; }
+  .play {
+    position: relative; flex: none; width: 42px; height: 42px; border-radius: 50%;
+    border: 0; padding: 0; cursor: pointer; display: grid; place-items: center;
+    background: var(--accent); transition: transform .3s ease, filter .3s;
   }
-  .video:hover img, .video.active img { filter: none; }
-  .video .play {
-    position: absolute; inset: 0; margin: auto; width: 62px; height: 62px; border-radius: 50%;
-    border: 0; padding: 0; cursor: pointer;
-    background: var(--chip-bg); display: grid; place-items: center;
-    backdrop-filter: blur(4px); transition: transform .4s ease, opacity .4s ease;
-  }
-  .video:hover .play { transform: scale(1.08); }
-  .video .play::before {
-    content: ""; width: 20px; height: 20px; margin-left: 4px; background: var(--accent);
+  .play:hover { transform: scale(1.06); filter: brightness(1.06); }
+  .play::before {
+    content: ""; width: 15px; height: 15px; margin-left: 3px; background: var(--bg);
     -webkit-mask: var(--i-play) center / contain no-repeat; mask: var(--i-play) center / contain no-repeat;
   }
-  .video.playing .play::before { margin-left: 0; -webkit-mask-image: var(--i-pause); mask-image: var(--i-pause); }
-  .video.playing:not(:hover) .play { opacity: .55; }
-  .video.loading .play::after {
+  .chant.playing .play::before { margin-left: 0; -webkit-mask-image: var(--i-pause); mask-image: var(--i-pause); }
+  .chant.loading .play::after {
     content: ""; position: absolute; inset: -4px; border-radius: 50%;
     border: 2px solid transparent; border-top-color: var(--accent);
     animation: spin 1s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .video .play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
-
-  /* barre de lecture (une seule, déplacée vers la carte active) */
-  .bar {
-    position: absolute; left: 0; right: 0; bottom: 0; cursor: default;
-    display: flex; align-items: center; gap: .75rem; padding: 2.2rem 1rem .8rem;
-    background: linear-gradient(transparent, rgba(30,22,12,.6));
-    font: 400 .72rem/1 "Mulish", sans-serif; letter-spacing: .5px; color: #fbf8f2;
-    font-variant-numeric: tabular-nums;
-  }
-  .bar time { white-space: nowrap; }
-  .bar input {
+  .play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .player input {
     flex: 1; min-width: 0; height: 18px; margin: 0; background: none; cursor: pointer;
     -webkit-appearance: none; appearance: none;
   }
-  .bar input::-webkit-slider-runnable-track {
+  .player input::-webkit-slider-runnable-track {
     height: 3px; border-radius: 3px;
-    background: linear-gradient(to right, var(--ray) var(--p, 0%), rgba(251,248,242,.4) var(--p, 0%));
+    background: linear-gradient(to right, var(--accent) var(--p, 0%), var(--wood) var(--p, 0%));
   }
-  .bar input::-moz-range-track { height: 3px; border-radius: 3px; background: rgba(251,248,242,.4); }
-  .bar input::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--ray); }
-  .bar input::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 12px; height: 12px; margin-top: -4.5px;
-    border-radius: 50%; background: #fbf8f2; border: 0;
+  .player input::-moz-range-track { height: 3px; border-radius: 3px; background: var(--wood); }
+  .player input::-moz-range-progress { height: 3px; border-radius: 3px; background: var(--accent); }
+  .player input::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 11px; height: 11px; margin-top: -4px;
+    border-radius: 50%; background: var(--accent); border: 0;
   }
-  .bar input::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fbf8f2; border: 0; }
-  .bar input:focus-visible { outline: 2px solid #fbf8f2; outline-offset: 2px; border-radius: 4px; }
+  .player input::-moz-range-thumb { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); border: 0; }
+  .player input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .yt {
+    display: block; width: 22px; height: 16px; margin: .65rem 0 0 .2rem;
+    background: var(--ink-soft); opacity: .55; transition: opacity .3s, background-color .3s;
+    -webkit-mask: var(--i-yt) center / contain no-repeat; mask: var(--i-yt) center / contain no-repeat;
+  }
+  .yt:hover, .yt:focus-visible { opacity: 1; background: var(--accent); }
+  .yt:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
   footer {
     text-align: center; padding: 3.5rem 16px 4rem;
@@ -505,314 +497,446 @@
       <h2>Exemples de chants</h2>
       <p class="lede">Voici quelques <span class="u">exemples</span> tirés de YouTube pour vous donner un aperçu de notre univers musical et des mantras que nous chantons (liste non exhaustive). Nous nous inspirons de certaines de ces pièces en les interprétant à notre manière avec nos instruments, et notre répertoire s’enrichit aussi de compositions originales créées par nos musiciens. Vos suggestions sont toujours les bienvenues !</p>
 
-      <div class="videos">
-        <figure class="chant">
+      <div class="players">
+        <figure class="chant" data-id="F6BcPj42bUg" data-start="3:41">
           <figcaption><span class="chant-title">Om Gam Ganapataye Namaha</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
-          <div class="video" data-id="F6BcPj42bUg" data-start="3:41">
-            <img src="exc/F6BcPj42bUg.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Gam Ganapataye Namaha"></button>
+            <time>3:41</time>
+            <input type="range" min="0" max="568" step="1" value="221" style="--p:38.91%" aria-label="Position : Om Gam Ganapataye Namaha">
+            <time>9:28</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=F6BcPj42bUg&amp;t=221s" target="_blank" rel="noopener" aria-label="Om Gam Ganapataye Namaha sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="zApCD-1LrdA" data-start="0:23">
           <figcaption><span class="chant-title">Hara Mahadeva</span><span class="chant-artist">Prem &amp; Jai Sahaja!</span></figcaption>
-          <div class="video" data-id="zApCD-1LrdA" data-start="0:23">
-            <img src="exc/zApCD-1LrdA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Hara Mahadeva"></button>
+            <time>0:23</time>
+            <input type="range" min="0" max="519" step="1" value="23" style="--p:4.43%" aria-label="Position : Hara Mahadeva">
+            <time>8:39</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=zApCD-1LrdA&amp;t=23s" target="_blank" rel="noopener" aria-label="Hara Mahadeva sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="kzTGSITIckw" data-start="8:34">
           <figcaption><span class="chant-title">Mahamantra Meltdown</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="kzTGSITIckw" data-start="8:34">
-            <img src="exc/kzTGSITIckw.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Mahamantra Meltdown"></button>
+            <time>8:34</time>
+            <input type="range" min="0" max="965" step="1" value="514" style="--p:53.26%" aria-label="Position : Mahamantra Meltdown">
+            <time>16:05</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=kzTGSITIckw&amp;t=514s" target="_blank" rel="noopener" aria-label="Mahamantra Meltdown sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="M4AvH5E07wo" data-start="4:56">
           <figcaption><span class="chant-title">Light of Your Grace</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <div class="video" data-id="M4AvH5E07wo" data-start="4:56">
-            <img src="exc/M4AvH5E07wo.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Light of Your Grace"></button>
+            <time>4:56</time>
+            <input type="range" min="0" max="437" step="1" value="296" style="--p:67.73%" aria-label="Position : Light of Your Grace">
+            <time>7:17</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=M4AvH5E07wo&amp;t=296s" target="_blank" rel="noopener" aria-label="Light of Your Grace sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="fSXPbv76RjA" data-start="2:49">
           <figcaption><span class="chant-title">Om Namah Shivaya</span><span class="chant-artist">JaiMa James &amp; Friends</span></figcaption>
-          <div class="video" data-id="fSXPbv76RjA" data-start="2:49">
-            <img src="exc/fSXPbv76RjA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Namah Shivaya"></button>
+            <time>2:49</time>
+            <input type="range" min="0" max="614" step="1" value="169" style="--p:27.52%" aria-label="Position : Om Namah Shivaya">
+            <time>10:14</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=fSXPbv76RjA&amp;t=169s" target="_blank" rel="noopener" aria-label="Om Namah Shivaya sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="VwIEoZthORQ" data-start="3:41">
           <figcaption><span class="chant-title">Jaya Guru Namaha</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <div class="video" data-id="VwIEoZthORQ" data-start="3:41">
-            <img src="exc/VwIEoZthORQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Jaya Guru Namaha"></button>
+            <time>3:41</time>
+            <input type="range" min="0" max="413" step="1" value="221" style="--p:53.51%" aria-label="Position : Jaya Guru Namaha">
+            <time>6:53</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=VwIEoZthORQ&amp;t=221s" target="_blank" rel="noopener" aria-label="Jaya Guru Namaha sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="N6-wM8j-Yqg" data-start="2:20">
           <figcaption><span class="chant-title">Asatoma</span><span class="chant-artist">Sam Garrett &amp; Mollie Mendoza</span></figcaption>
-          <div class="video" data-id="N6-wM8j-Yqg" data-start="2:20">
-            <img src="exc/N6-wM8j-Yqg.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Asatoma"></button>
+            <time>2:20</time>
+            <input type="range" min="0" max="408" step="1" value="140" style="--p:34.31%" aria-label="Position : Asatoma">
+            <time>6:48</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=N6-wM8j-Yqg&amp;t=140s" target="_blank" rel="noopener" aria-label="Asatoma sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="wJbgCTq4rJQ" data-start="2:08">
           <figcaption><span class="chant-title">Ong Namo</span><span class="chant-artist">Snatam Kaur</span></figcaption>
-          <div class="video" data-id="wJbgCTq4rJQ" data-start="2:08">
-            <img src="exc/wJbgCTq4rJQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Ong Namo"></button>
+            <time>2:08</time>
+            <input type="range" min="0" max="601" step="1" value="128" style="--p:21.3%" aria-label="Position : Ong Namo">
+            <time>10:01</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=wJbgCTq4rJQ&amp;t=128s" target="_blank" rel="noopener" aria-label="Ong Namo sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="OOHOHs12HFc" data-start="1:47">
           <figcaption><span class="chant-title">Aad Guray Nameh</span><span class="chant-artist">Snatam Kaur</span></figcaption>
-          <div class="video" data-id="OOHOHs12HFc" data-start="1:47">
-            <img src="exc/OOHOHs12HFc.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Aad Guray Nameh"></button>
+            <time>1:47</time>
+            <input type="range" min="0" max="642" step="1" value="107" style="--p:16.67%" aria-label="Position : Aad Guray Nameh">
+            <time>10:42</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=OOHOHs12HFc&amp;t=107s" target="_blank" rel="noopener" aria-label="Aad Guray Nameh sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="e1bbTt_zFbc" data-start="2:46">
           <figcaption><span class="chant-title">Narayani Om</span><span class="chant-artist">Edo &amp; Jö</span></figcaption>
-          <div class="video" data-id="e1bbTt_zFbc" data-start="2:46">
-            <img src="exc/e1bbTt_zFbc.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Narayani Om"></button>
+            <time>2:46</time>
+            <input type="range" min="0" max="369" step="1" value="166" style="--p:44.99%" aria-label="Position : Narayani Om">
+            <time>6:09</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=e1bbTt_zFbc&amp;t=166s" target="_blank" rel="noopener" aria-label="Narayani Om sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="RNBB2aIwUR8" data-start="3:33">
           <figcaption><span class="chant-title">Shiva Shambo</span><span class="chant-artist">Namaste</span></figcaption>
-          <div class="video" data-id="RNBB2aIwUR8" data-start="3:33">
-            <img src="exc/RNBB2aIwUR8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Shiva Shambo"></button>
+            <time>3:33</time>
+            <input type="range" min="0" max="574" step="1" value="213" style="--p:37.11%" aria-label="Position : Shiva Shambo">
+            <time>9:34</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=RNBB2aIwUR8&amp;t=213s" target="_blank" rel="noopener" aria-label="Shiva Shambo sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="6vh0jXcJy3k" data-start="2:17">
           <figcaption><span class="chant-title">Jaya Shiva Shankara</span><span class="chant-artist">Namaste</span></figcaption>
-          <div class="video" data-id="6vh0jXcJy3k" data-start="2:17">
-            <img src="exc/6vh0jXcJy3k.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Jaya Shiva Shankara"></button>
+            <time>2:17</time>
+            <input type="range" min="0" max="644" step="1" value="137" style="--p:21.27%" aria-label="Position : Jaya Shiva Shankara">
+            <time>10:44</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=6vh0jXcJy3k&amp;t=137s" target="_blank" rel="noopener" aria-label="Jaya Shiva Shankara sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="8YcocxPjZ3o" data-start="4:34">
           <figcaption><span class="chant-title">Shankara Karunakara</span><span class="chant-artist">Mooji</span></figcaption>
-          <div class="video" data-id="8YcocxPjZ3o" data-start="4:34">
-            <img src="exc/8YcocxPjZ3o.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Shankara Karunakara"></button>
+            <time>4:34</time>
+            <input type="range" min="0" max="601" step="1" value="274" style="--p:45.59%" aria-label="Position : Shankara Karunakara">
+            <time>10:01</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=8YcocxPjZ3o&amp;t=274s" target="_blank" rel="noopener" aria-label="Shankara Karunakara sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="Vqa-_XbmF5g" data-start="3:30">
           <figcaption><span class="chant-title">Sita Ram</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
-          <div class="video" data-id="Vqa-_XbmF5g" data-start="3:30">
-            <img src="exc/Vqa-_XbmF5g.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Sita Ram"></button>
+            <time>3:30</time>
+            <input type="range" min="0" max="492" step="1" value="210" style="--p:42.68%" aria-label="Position : Sita Ram">
+            <time>8:12</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=Vqa-_XbmF5g&amp;t=210s" target="_blank" rel="noopener" aria-label="Sita Ram sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="dq9nWHN3y70" data-start="2:37">
           <figcaption><span class="chant-title">Ganapati Om</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
-          <div class="video" data-id="dq9nWHN3y70" data-start="2:37">
-            <img src="exc/dq9nWHN3y70.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Ganapati Om"></button>
+            <time>2:37</time>
+            <input type="range" min="0" max="479" step="1" value="157" style="--p:32.78%" aria-label="Position : Ganapati Om">
+            <time>7:59</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=dq9nWHN3y70&amp;t=157s" target="_blank" rel="noopener" aria-label="Ganapati Om sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="LOXdt4NoxFw" data-start="4:10">
           <figcaption><span class="chant-title">Omkar Guruji</span><span class="chant-artist">Krishnabai &amp; Jai Sahaja!</span></figcaption>
-          <div class="video" data-id="LOXdt4NoxFw" data-start="4:10">
-            <img src="exc/LOXdt4NoxFw.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Omkar Guruji"></button>
+            <time>4:10</time>
+            <input type="range" min="0" max="453" step="1" value="250" style="--p:55.19%" aria-label="Position : Omkar Guruji">
+            <time>7:33</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=LOXdt4NoxFw&amp;t=250s" target="_blank" rel="noopener" aria-label="Omkar Guruji sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="o-hjpbrOt5E" data-start="2:09">
           <figcaption><span class="chant-title">Om Arunachala</span><span class="chant-artist">Omkara &amp; Jai Sahaja!</span></figcaption>
-          <div class="video" data-id="o-hjpbrOt5E" data-start="2:09">
-            <img src="exc/o-hjpbrOt5E.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Arunachala"></button>
+            <time>2:09</time>
+            <input type="range" min="0" max="412" step="1" value="129" style="--p:31.31%" aria-label="Position : Om Arunachala">
+            <time>6:52</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=o-hjpbrOt5E&amp;t=129s" target="_blank" rel="noopener" aria-label="Om Arunachala sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="rqk_blhpHRI" data-start="9:46">
           <figcaption><span class="chant-title">Maha Mantra (Hare Krishna)</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="rqk_blhpHRI" data-start="9:46">
-            <img src="exc/rqk_blhpHRI.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Maha Mantra (Hare Krishna)"></button>
+            <time>9:46</time>
+            <input type="range" min="0" max="1108" step="1" value="586" style="--p:52.89%" aria-label="Position : Maha Mantra (Hare Krishna)">
+            <time>18:28</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=rqk_blhpHRI&amp;t=586s" target="_blank" rel="noopener" aria-label="Maha Mantra (Hare Krishna) sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="sDW8cPiBe3U" data-start="3:42">
           <figcaption><span class="chant-title">Baba Hanuman</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="sDW8cPiBe3U" data-start="3:42">
-            <img src="exc/sDW8cPiBe3U.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Baba Hanuman"></button>
+            <time>3:42</time>
+            <input type="range" min="0" max="388" step="1" value="222" style="--p:57.22%" aria-label="Position : Baba Hanuman">
+            <time>6:28</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=sDW8cPiBe3U&amp;t=222s" target="_blank" rel="noopener" aria-label="Baba Hanuman sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="Iy4gtPmgiFA" data-start="2:48">
           <figcaption><span class="chant-title">Ma Durga</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="Iy4gtPmgiFA" data-start="2:48">
-            <img src="exc/Iy4gtPmgiFA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Ma Durga"></button>
+            <time>2:48</time>
+            <input type="range" min="0" max="1029" step="1" value="168" style="--p:16.33%" aria-label="Position : Ma Durga">
+            <time>17:09</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=Iy4gtPmgiFA&amp;t=168s" target="_blank" rel="noopener" aria-label="Ma Durga sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="7EgqG9kELZY" data-start="6:18">
           <figcaption><span class="chant-title">Sri Argala Stotram / Show Me Love</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="7EgqG9kELZY" data-start="6:18">
-            <img src="exc/7EgqG9kELZY.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Sri Argala Stotram / Show Me Love"></button>
+            <time>6:18</time>
+            <input type="range" min="0" max="738" step="1" value="378" style="--p:51.22%" aria-label="Position : Sri Argala Stotram / Show Me Love">
+            <time>12:18</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=7EgqG9kELZY&amp;t=378s" target="_blank" rel="noopener" aria-label="Sri Argala Stotram / Show Me Love sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="NYirllZ4ly4" data-start="3:37">
           <figcaption><span class="chant-title">Shri Ram</span><span class="chant-artist">Krishna Das</span></figcaption>
-          <div class="video" data-id="NYirllZ4ly4" data-start="3:37">
-            <img src="exc/NYirllZ4ly4.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Shri Ram"></button>
+            <time>3:37</time>
+            <input type="range" min="0" max="335" step="1" value="217" style="--p:64.78%" aria-label="Position : Shri Ram">
+            <time>5:35</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=NYirllZ4ly4&amp;t=217s" target="_blank" rel="noopener" aria-label="Shri Ram sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="QqQ4YaVG-xQ" data-start="3:13">
           <figcaption><span class="chant-title">Sarva Mangala</span><span class="chant-artist">Tina Malia</span></figcaption>
-          <div class="video" data-id="QqQ4YaVG-xQ" data-start="3:13">
-            <img src="exc/QqQ4YaVG-xQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Sarva Mangala"></button>
+            <time>3:13</time>
+            <input type="range" min="0" max="351" step="1" value="193" style="--p:54.99%" aria-label="Position : Sarva Mangala">
+            <time>5:51</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=QqQ4YaVG-xQ&amp;t=193s" target="_blank" rel="noopener" aria-label="Sarva Mangala sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="p1kyYXK-coQ" data-start="1:42">
           <figcaption><span class="chant-title">Hare Krishna</span><span class="chant-artist">Satyaa &amp; Pari</span></figcaption>
-          <div class="video" data-id="p1kyYXK-coQ" data-start="1:42">
-            <img src="exc/p1kyYXK-coQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Hare Krishna"></button>
+            <time>1:42</time>
+            <input type="range" min="0" max="633" step="1" value="102" style="--p:16.11%" aria-label="Position : Hare Krishna">
+            <time>10:33</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=p1kyYXK-coQ&amp;t=102s" target="_blank" rel="noopener" aria-label="Hare Krishna sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="9mySi7rhaLQ" data-start="4:22">
           <figcaption><span class="chant-title">Gayatri Mantra</span><span class="chant-artist">Tina Malia</span></figcaption>
-          <div class="video" data-id="9mySi7rhaLQ" data-start="4:22">
-            <img src="exc/9mySi7rhaLQ.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Gayatri Mantra"></button>
+            <time>4:22</time>
+            <input type="range" min="0" max="456" step="1" value="262" style="--p:57.46%" aria-label="Position : Gayatri Mantra">
+            <time>7:36</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=9mySi7rhaLQ&amp;t=262s" target="_blank" rel="noopener" aria-label="Gayatri Mantra sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="zkdRO0inTuU" data-start="1:18">
           <figcaption><span class="chant-title">Govinda Jaya Jaya</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda Das</span></figcaption>
-          <div class="video" data-id="zkdRO0inTuU" data-start="1:18">
-            <img src="exc/zkdRO0inTuU.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Govinda Jaya Jaya"></button>
+            <time>1:18</time>
+            <input type="range" min="0" max="599" step="1" value="78" style="--p:13.02%" aria-label="Position : Govinda Jaya Jaya">
+            <time>9:59</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=zkdRO0inTuU&amp;t=78s" target="_blank" rel="noopener" aria-label="Govinda Jaya Jaya sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="56CQDFipNc8" data-start="3:20">
           <figcaption><span class="chant-title">Sat Narayan</span><span class="chant-artist">GuruGanesha Singh &amp; Snatam Kaur</span></figcaption>
-          <div class="video" data-id="56CQDFipNc8" data-start="3:20">
-            <img src="exc/56CQDFipNc8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Sat Narayan"></button>
+            <time>3:20</time>
+            <input type="range" min="0" max="531" step="1" value="200" style="--p:37.66%" aria-label="Position : Sat Narayan">
+            <time>8:51</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=56CQDFipNc8&amp;t=200s" target="_blank" rel="noopener" aria-label="Sat Narayan sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="NafeL00PtFk">
           <figcaption><span class="chant-title">Om Mata Om Kali</span><span class="chant-artist">Amy Barnes</span></figcaption>
-          <div class="video" data-id="NafeL00PtFk">
-            <img src="exc/NafeL00PtFk.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Mata Om Kali"></button>
+            <time>0:00</time>
+            <input type="range" min="0" max="366" step="1" value="0" style="--p:0%" aria-label="Position : Om Mata Om Kali">
+            <time>6:06</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=NafeL00PtFk" target="_blank" rel="noopener" aria-label="Om Mata Om Kali sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="gZmT3jmLjTM" data-start="1:17">
           <figcaption><span class="chant-title">Anandamayi</span><span class="chant-artist">Brenda McMorrow</span></figcaption>
-          <div class="video" data-id="gZmT3jmLjTM" data-start="1:17">
-            <img src="exc/gZmT3jmLjTM.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Anandamayi"></button>
+            <time>1:17</time>
+            <input type="range" min="0" max="241" step="1" value="77" style="--p:31.95%" aria-label="Position : Anandamayi">
+            <time>4:01</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=gZmT3jmLjTM&amp;t=77s" target="_blank" rel="noopener" aria-label="Anandamayi sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="W9InlUWV0ao" data-start="3:40">
           <figcaption><span class="chant-title">Govinda Narayana</span><span class="chant-artist">Kristin Luna Ray</span></figcaption>
-          <div class="video" data-id="W9InlUWV0ao" data-start="3:40">
-            <img src="exc/W9InlUWV0ao.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Govinda Narayana"></button>
+            <time>3:40</time>
+            <input type="range" min="0" max="391" step="1" value="220" style="--p:56.27%" aria-label="Position : Govinda Narayana">
+            <time>6:31</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=W9InlUWV0ao&amp;t=220s" target="_blank" rel="noopener" aria-label="Govinda Narayana sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="QMceXAnYiro" data-start="4:13">
           <figcaption><span class="chant-title">Shiva Parvati</span><span class="chant-artist">Jaya Lakshmi &amp; Ananda</span></figcaption>
-          <div class="video" data-id="QMceXAnYiro" data-start="4:13">
-            <img src="exc/QMceXAnYiro.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Shiva Parvati"></button>
+            <time>4:13</time>
+            <input type="range" min="0" max="453" step="1" value="253" style="--p:55.85%" aria-label="Position : Shiva Parvati">
+            <time>7:33</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=QMceXAnYiro&amp;t=253s" target="_blank" rel="noopener" aria-label="Shiva Parvati sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="F0iXmslbwH0" data-start="5:13">
           <figcaption><span class="chant-title">Omkaraya</span><span class="chant-artist">Karen St-Laurent &amp; Simon L’Espérance</span></figcaption>
-          <div class="video" data-id="F0iXmslbwH0" data-start="5:13">
-            <img src="exc/F0iXmslbwH0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Omkaraya"></button>
+            <time>5:13</time>
+            <input type="range" min="0" max="419" step="1" value="313" style="--p:74.7%" aria-label="Position : Omkaraya">
+            <time>6:59</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=F0iXmslbwH0&amp;t=313s" target="_blank" rel="noopener" aria-label="Omkaraya sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="MU9XnE8unu8" data-start="2:13">
           <figcaption><span class="chant-title">Gum Ganapataye</span><span class="chant-artist">Karen St-Laurent</span></figcaption>
-          <div class="video" data-id="MU9XnE8unu8" data-start="2:13">
-            <img src="exc/MU9XnE8unu8.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Gum Ganapataye"></button>
+            <time>2:13</time>
+            <input type="range" min="0" max="382" step="1" value="133" style="--p:34.82%" aria-label="Position : Gum Ganapataye">
+            <time>6:22</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=MU9XnE8unu8&amp;t=133s" target="_blank" rel="noopener" aria-label="Gum Ganapataye sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="15qsLSDx4b0" data-start="2:26">
           <figcaption><span class="chant-title">Om Mani Padme Hum</span><span class="chant-artist">Boris Grebenshikov</span></figcaption>
-          <div class="video" data-id="15qsLSDx4b0" data-start="2:26">
-            <img src="exc/15qsLSDx4b0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Mani Padme Hum"></button>
+            <time>2:26</time>
+            <input type="range" min="0" max="618" step="1" value="146" style="--p:23.62%" aria-label="Position : Om Mani Padme Hum">
+            <time>10:18</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=15qsLSDx4b0&amp;t=146s" target="_blank" rel="noopener" aria-label="Om Mani Padme Hum sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="_KmiW_kW-OU" data-start="2:42">
           <figcaption><span class="chant-title">Om Mani Peme Hung</span><span class="chant-artist">Samanvaya Kirtan</span></figcaption>
-          <div class="video" data-id="_KmiW_kW-OU" data-start="2:42">
-            <img src="exc/_KmiW_kW-OU.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Mani Peme Hung"></button>
+            <time>2:42</time>
+            <input type="range" min="0" max="414" step="1" value="162" style="--p:39.13%" aria-label="Position : Om Mani Peme Hung">
+            <time>6:54</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=_KmiW_kW-OU&amp;t=162s" target="_blank" rel="noopener" aria-label="Om Mani Peme Hung sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="yUjCCOiRmAs" data-start="3:42">
           <figcaption><span class="chant-title">He Maha Lakshmi</span><span class="chant-artist">David Newman</span></figcaption>
-          <div class="video" data-id="yUjCCOiRmAs" data-start="3:42">
-            <img src="exc/yUjCCOiRmAs.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter He Maha Lakshmi"></button>
+            <time>3:42</time>
+            <input type="range" min="0" max="383" step="1" value="222" style="--p:57.96%" aria-label="Position : He Maha Lakshmi">
+            <time>6:23</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=yUjCCOiRmAs&amp;t=222s" target="_blank" rel="noopener" aria-label="He Maha Lakshmi sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="S0nUTYWqlJA" data-start="4:37">
           <figcaption><span class="chant-title">Purnamadah</span><span class="chant-artist">Shantala</span></figcaption>
-          <div class="video" data-id="S0nUTYWqlJA" data-start="4:37">
-            <img src="exc/S0nUTYWqlJA.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Purnamadah"></button>
+            <time>4:37</time>
+            <input type="range" min="0" max="515" step="1" value="277" style="--p:53.79%" aria-label="Position : Purnamadah">
+            <time>8:35</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=S0nUTYWqlJA&amp;t=277s" target="_blank" rel="noopener" aria-label="Purnamadah sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="RKT06TyB58Q" data-start="4:32">
           <figcaption><span class="chant-title">Ra Ma Da Sa</span><span class="chant-artist">Ajeet Kaur</span></figcaption>
-          <div class="video" data-id="RKT06TyB58Q" data-start="4:32">
-            <img src="exc/RKT06TyB58Q.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Ra Ma Da Sa"></button>
+            <time>4:32</time>
+            <input type="range" min="0" max="685" step="1" value="272" style="--p:39.71%" aria-label="Position : Ra Ma Da Sa">
+            <time>11:25</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=RKT06TyB58Q&amp;t=272s" target="_blank" rel="noopener" aria-label="Ra Ma Da Sa sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="9eP_Isd8y7g" data-start="22:12">
           <figcaption><span class="chant-title">He Bhagavan</span><span class="chant-artist">Gurumayi Chidvilasananda</span></figcaption>
-          <div class="video" data-id="9eP_Isd8y7g" data-start="22:12">
-            <img src="exc/9eP_Isd8y7g.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter He Bhagavan"></button>
+            <time>22:12</time>
+            <input type="range" min="0" max="2570" step="1" value="1332" style="--p:51.83%" aria-label="Position : He Bhagavan">
+            <time>42:50</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=9eP_Isd8y7g&amp;t=1332s" target="_blank" rel="noopener" aria-label="He Bhagavan sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="ZU5EhhroAfk" data-start="7:40">
           <figcaption><span class="chant-title">Om Ganesha</span><span class="chant-artist">Sam Garrett</span></figcaption>
-          <div class="video" data-id="ZU5EhhroAfk" data-start="7:40">
-            <img src="exc/ZU5EhhroAfk.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Om Ganesha"></button>
+            <time>7:40</time>
+            <input type="range" min="0" max="1172" step="1" value="460" style="--p:39.25%" aria-label="Position : Om Ganesha">
+            <time>19:32</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=ZU5EhhroAfk&amp;t=460s" target="_blank" rel="noopener" aria-label="Om Ganesha sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="4K2yIIE0i08" data-start="4:49">
           <figcaption><span class="chant-title">Hari Om Namah Shivaya</span><span class="chant-artist">Songs for Sri Moojiji</span></figcaption>
-          <div class="video" data-id="4K2yIIE0i08" data-start="4:49">
-            <img src="exc/4K2yIIE0i08.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Hari Om Namah Shivaya"></button>
+            <time>4:49</time>
+            <input type="range" min="0" max="549" step="1" value="289" style="--p:52.64%" aria-label="Position : Hari Om Namah Shivaya">
+            <time>9:09</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=4K2yIIE0i08&amp;t=289s" target="_blank" rel="noopener" aria-label="Hari Om Namah Shivaya sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="EAhduIQqP2k" data-start="1:53">
           <figcaption><span class="chant-title">One With You</span><span class="chant-artist">Stephen DeRuby</span></figcaption>
-          <div class="video" data-id="EAhduIQqP2k" data-start="1:53">
-            <img src="exc/EAhduIQqP2k.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter One With You"></button>
+            <time>1:53</time>
+            <input type="range" min="0" max="345" step="1" value="113" style="--p:32.75%" aria-label="Position : One With You">
+            <time>5:45</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=EAhduIQqP2k&amp;t=113s" target="_blank" rel="noopener" aria-label="One With You sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="xIjtirgXVkI" data-start="1:33">
           <figcaption><span class="chant-title">Hara Hara Shankara</span><span class="chant-artist">Steve Ross</span></figcaption>
-          <div class="video" data-id="xIjtirgXVkI" data-start="1:33">
-            <img src="exc/xIjtirgXVkI.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Hara Hara Shankara"></button>
+            <time>1:33</time>
+            <input type="range" min="0" max="288" step="1" value="93" style="--p:32.29%" aria-label="Position : Hara Hara Shankara">
+            <time>4:48</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=xIjtirgXVkI&amp;t=93s" target="_blank" rel="noopener" aria-label="Hara Hara Shankara sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
-        <figure class="chant">
+        <figure class="chant" data-id="NApx3JugLp0" data-start="2:30">
           <figcaption><span class="chant-title">Arunachala</span><span class="chant-artist">Steve Ross</span></figcaption>
-          <div class="video" data-id="NApx3JugLp0" data-start="2:30">
-            <img src="exc/NApx3JugLp0.webp" alt="" loading="lazy" decoding="async" width="480" height="270">
+          <div class="player">
             <button class="play" aria-label="Écouter Arunachala"></button>
+            <time>2:30</time>
+            <input type="range" min="0" max="421" step="1" value="150" style="--p:35.63%" aria-label="Position : Arunachala">
+            <time>7:01</time>
           </div>
+          <a class="yt" href="https://www.youtube.com/watch?v=NApx3JugLp0&amp;t=150s" target="_blank" rel="noopener" aria-label="Arunachala sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
       </div>
     </div>
@@ -830,14 +954,10 @@
 </footer>
 
 <script>
-  // Lecteur audio : un seul élément <audio>, fichiers locaux dans exc/ (aucune pub, aucun chargement avant le clic)
+  // Lecteur audio : un seul élément <audio> partagé, fichiers locaux dans exc/ (rien n'est chargé avant le clic)
   (function () {
     var audio = new Audio(), cur = null, seeking = false;
     audio.preload = 'none';
-    var bar = document.createElement('div');
-    bar.className = 'bar';
-    bar.innerHTML = '<time>0:00</time><input type="range" min="0" max="0" step="1" value="0" aria-label="Position"><time>0:00</time>';
-    var range = bar.querySelector('input'), tNow = bar.firstChild, tEnd = bar.lastChild;
 
     function secs(v) { var t = 0; if (v) v.split(':').forEach(function (n) { t = t * 60 + (parseInt(n, 10) || 0); }); return t; }
     function fmt(t) {
@@ -845,10 +965,11 @@
       var h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, s = t % 60;
       return (h ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s;
     }
-    function paint(t) {
-      var d = audio.duration || 0;
-      range.value = t; tNow.textContent = fmt(t);
-      range.style.setProperty('--p', d ? (t / d * 100) + '%' : '0%');
+    function paint(card, t) {
+      var r = card.querySelector('input');
+      r.value = t;
+      card.querySelector('time').textContent = fmt(t);
+      r.style.setProperty('--p', (t / (+r.max || 1) * 100) + '%');
     }
     function play() { var p = audio.play(); if (p) p.catch(function () {}); }
     function state() {
@@ -858,51 +979,57 @@
       cur.querySelector('.play').setAttribute('aria-pressed', on);
     }
 
-    function select(card) {
-      if (cur) cur.classList.remove('active', 'playing', 'loading');
+    function select(card, at) {
+      if (cur) {
+        cur.classList.remove('active', 'playing', 'loading');
+        cur.querySelector('.play').setAttribute('aria-pressed', false);
+        paint(cur, secs(cur.dataset.start));
+      }
       cur = card;
-      var start = secs(card.dataset.start);
+      var start = at != null ? at : secs(card.dataset.start);
       card.classList.add('active', 'loading');
-      card.appendChild(bar);
-      range.max = 0; tEnd.textContent = '–'; paint(start);
-      audio.src = 'exc/' + card.dataset.id + '.m4a' + (start ? '#t=' + start : '');
+      paint(card, start);
       audio.dataset.start = start;
+      audio.src = 'exc/' + card.dataset.id + '.m4a' + (start ? '#t=' + start : '');
       play();
       if ('mediaSession' in navigator) {
-        var fig = card.closest('.chant');
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: fig.querySelector('.chant-title').textContent,
-          artist: fig.querySelector('.chant-artist').textContent,
+          title: card.querySelector('.chant-title').textContent,
+          artist: card.querySelector('.chant-artist').textContent,
           album: 'Ānanda Saṅgam',
-          artwork: [{ src: card.querySelector('img').src, sizes: '480x270', type: 'image/webp' }]
+          artwork: [{ src: 'lotus.png', type: 'image/png' }]
         });
       }
     }
 
-    document.querySelectorAll('.video').forEach(function (card) {
-      card.addEventListener('click', function (e) {
-        if (e.target.closest('.bar')) return;
+    document.querySelectorAll('.chant[data-id]').forEach(function (card) {
+      var range = card.querySelector('input');
+      card.querySelector('.play').addEventListener('click', function () {
         if (card !== cur) select(card);
         else if (audio.paused) play();
         else audio.pause();
+      });
+      range.addEventListener('input', function () {
+        if (card === cur) seeking = true;
+        paint(card, +range.value);
+      });
+      range.addEventListener('change', function () {
+        if (card !== cur) return select(card, +range.value);
+        audio.currentTime = +range.value; seeking = false;
+        if (audio.paused) play();
       });
     });
 
     audio.addEventListener('loadedmetadata', function () {
       var start = +audio.dataset.start || 0;
       if (start && Math.abs(audio.currentTime - start) > 1) audio.currentTime = start;
-      range.max = Math.floor(audio.duration); tEnd.textContent = fmt(audio.duration);
-      paint(audio.currentTime);
     });
-    audio.addEventListener('timeupdate', function () { if (!seeking) paint(audio.currentTime); });
+    audio.addEventListener('timeupdate', function () { if (cur && !seeking) paint(cur, audio.currentTime); });
     audio.addEventListener('waiting', function () { cur && cur.classList.add('loading'); });
     audio.addEventListener('playing', function () { cur && cur.classList.remove('loading'); state(); });
     audio.addEventListener('pause', state);
     audio.addEventListener('ended', state);
     audio.addEventListener('error', function () { cur && cur.classList.remove('loading'); state(); });
-
-    range.addEventListener('input', function () { seeking = true; paint(+range.value); });
-    range.addEventListener('change', function () { audio.currentTime = +range.value; seeking = false; });
 
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', play);
