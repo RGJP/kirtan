@@ -65,6 +65,7 @@
     --i-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3 1.5 L18 10 L3 18.5 Z'/%3E%3C/svg%3E");
     --i-yt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 17'%3E%3Cpath fill-rule='evenodd' d='M23.5 2.65A3 3 0 0 0 21.38.5C19.5 0 12 0 12 0S4.5 0 2.62.5A3 3 0 0 0 .5 2.65C0 4.53 0 8.5 0 8.5s0 3.97.5 5.85a3 3 0 0 0 2.12 2.15C4.5 17 12 17 12 17s7.5 0 9.38-.5a3 3 0 0 0 2.12-2.15C24 12.47 24 8.5 24 8.5s0-3.97-.5-5.85zM9.6 12.14V4.86L15.83 8.5z'/%3E%3C/svg%3E");
     --i-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='3.5' y='2' width='4.5' height='16' rx='1'/%3E%3Crect x='12' y='2' width='4.5' height='16' rx='1'/%3E%3C/svg%3E");
+    --i-acc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16'%3E%3Cpath d='M1 1h12v1.6H1z'/%3E%3Cpath fill='none' stroke='%23000' stroke-width='1' d='M1.5 2v13.5M5 2v13.5M9 2v13.5M12.5 2v13.5M1.5 6.5h11M1.5 11h11M1.5 15.5h11'/%3E%3Ccircle cx='5' cy='8.75' r='1.9'/%3E%3Ccircle cx='9' cy='13.25' r='1.9'/%3E%3Ccircle cx='12.5' cy='4.25' r='1.9'/%3E%3C/svg%3E");
     color-scheme: light;
   }
   * { box-sizing: border-box; }
@@ -333,6 +334,99 @@
   @media (max-width: 600px) {
     .roll { padding: 16px 12px; }
     .roll-panel { padding: 2.4rem 1.1rem 2rem; border-radius: 16px; }
+  }
+  /* ---------- Accords (overlay pour les musiciens) ---------- */
+  .chant-links { display: flex; align-items: center; gap: 1.2rem; margin: .65rem 0 0 .2rem; }
+  .chant-links .yt { margin: 0; }
+  .acc-btn {
+    display: inline-flex; align-items: center; gap: .5em; padding: .2rem 0; border: 0; background: none; cursor: pointer;
+    font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--ink-soft); opacity: .7; transition: opacity .3s, color .3s;
+  }
+  .acc-btn::before {
+    content: ""; width: 13px; height: 15px; background: currentColor;
+    -webkit-mask: var(--i-acc) center / contain no-repeat; mask: var(--i-acc) center / contain no-repeat;
+  }
+  .acc-btn:hover, .acc-btn:focus-visible { opacity: 1; color: var(--accent); }
+  .acc-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 3px; }
+  .acc-ov { z-index: 110; }
+  .acc-panel { max-width: 660px; text-align: left; padding: 2.5rem 2rem 2.1rem; }
+  .acc-kicker {
+    margin: 0 0 .35rem; text-align: center; font-weight: 400; font-size: .7rem;
+    letter-spacing: 3px; text-transform: uppercase; color: var(--accent);
+  }
+  .acc-panel h2 { margin: 0 0 .3rem; padding: 0 2rem; }
+  .acc-artist {
+    margin: 0 0 1.7rem; text-align: center; font-size: .72rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--ink-soft); line-height: 1.4;
+  }
+  .acc-bar {
+    display: flex; flex-wrap: wrap; align-items: center; gap: .9rem 1.2rem;
+    padding: .8rem 1rem .8rem .8rem; border-radius: 16px;
+    background: var(--bg); border: 1px solid var(--accent-border);
+  }
+  .acc-play {
+    flex: none; width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 0; cursor: pointer;
+    display: grid; place-items: center; background: var(--accent); transition: transform .3s, filter .3s;
+  }
+  .acc-play::before {
+    content: ""; width: 16px; height: 16px; margin-left: 3px; background: var(--bg);
+    -webkit-mask: var(--i-play) center / contain no-repeat; mask: var(--i-play) center / contain no-repeat;
+  }
+  .acc-play.on::before { margin-left: 0; -webkit-mask-image: var(--i-pause); mask-image: var(--i-pause); }
+  .acc-play:hover { transform: scale(1.06); filter: brightness(1.06); }
+  .acc-play:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+  .acc-now { flex: 1; min-width: 9rem; display: flex; align-items: baseline; gap: .8rem; line-height: 1.1; }
+  .acc-cur { font: 400 2.3rem/1 "Mulish", sans-serif; color: var(--ink); min-width: 1.5ch; }
+  .acc-next { font-size: .82rem; color: var(--ink-soft); white-space: nowrap; }
+  .acc-next b { font-weight: 400; color: var(--ink); }
+  .acc-tr {
+    display: flex; align-items: center; gap: .45rem; font-size: .66rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+  .acc-tr button {
+    width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--accent-border); background: none;
+    color: var(--accent); cursor: pointer; font: 400 1rem/1 "Mulish", sans-serif; padding: 0;
+    transition: background .25s, color .25s;
+  }
+  .acc-tr button:hover, .acc-tr button:focus-visible { background: var(--accent); color: var(--bg); }
+  .acc-tr output {
+    min-width: 2.2em; text-align: center; font-size: .9rem; letter-spacing: 0;
+    color: var(--ink); font-variant-numeric: tabular-nums;
+  }
+  .acc-key { margin: .9rem 0 0; font-size: .9rem; color: var(--ink-soft); text-align: center; }
+  .acc-key b { font-weight: 400; color: var(--ink); }
+  .acc-panel h3 {
+    margin: 2rem 0 .8rem; font-weight: 400; font-size: .7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .acc-set { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .acc-set span {
+    padding: .3em .95em; border-radius: 999px; background: var(--bg); border: 1px solid var(--accent-border);
+    font-size: 1.15rem; font-weight: 400; color: var(--ink); line-height: 1.5;
+  }
+  .acc-hint { margin: -.3rem 0 .8rem; font-size: .8rem; color: var(--ink-soft); line-height: 1.5; }
+  .acc-seq { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .acc-seq button {
+    display: flex; flex-direction: column; align-items: flex-start; gap: .1rem; min-width: 3.7rem;
+    padding: .35rem .65rem .3rem; border-radius: 10px; border: 1px solid transparent;
+    background: var(--bg); color: var(--ink); cursor: pointer; font: inherit; text-align: left;
+    transition: background .2s, border-color .2s, color .2s;
+  }
+  .acc-seq b { font-weight: 400; font-size: 1.05rem; line-height: 1.2; }
+  .acc-seq time { font-size: .62rem; line-height: 1; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .acc-seq button:hover { border-color: var(--accent-border); }
+  .acc-seq button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .acc-seq .nc b { color: var(--ink-soft); }
+  .acc-seq .on button { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .acc-seq .on time { color: inherit; opacity: .8; }
+  .acc-status { text-align: center; color: var(--ink-soft); margin: 2rem 0 .5rem; }
+  .acc-note { margin: 2rem 0 0; font-size: .78rem; line-height: 1.6; color: var(--ink-soft); text-align: center; }
+  @media (max-width: 600px) {
+    .acc-panel { padding: 2.4rem 1rem 1.8rem; }
+    .acc-panel h2 { padding: 0 1.6rem; }
+    .acc-bar { padding: .7rem .8rem .7rem .7rem; }
+    .acc-cur { font-size: 2rem; }
   }
   footer .f-name { font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 400; font-size: 1.5rem; letter-spacing: 1px; color: var(--ink); line-height: 1.2; }
   footer .f-skt { font-family: "Tiro Devanagari Sanskrit", serif; font-size: 1.25rem; color: var(--accent); line-height: 1.4; }
@@ -1248,6 +1342,31 @@
   </div>
 </div>
 
+<!-- Accords d'un chant (détectés par BTC, fichiers chords/<id>.lrc) -->
+<div class="roll acc-ov" id="acc" role="dialog" aria-modal="true" aria-labelledby="acc-title" hidden>
+  <div class="roll-panel acc-panel">
+    <button class="roll-close" type="button" aria-label="Fermer"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+    <p class="acc-kicker">Accords</p>
+    <h2 id="acc-title"></h2>
+    <p class="acc-artist"></p>
+    <div class="acc-body">
+      <div class="acc-bar">
+        <button class="acc-play" type="button" aria-label="Écouter avec les accords"></button>
+        <div class="acc-now" aria-live="off"><span class="acc-cur">–</span><span class="acc-next"></span></div>
+        <div class="acc-tr"><span>Transposer</span><button type="button" data-tr="-1" aria-label="Descendre d'un demi-ton">−</button><output aria-live="polite">0</output><button type="button" data-tr="1" aria-label="Monter d'un demi-ton">+</button></div>
+      </div>
+      <p class="acc-key"></p>
+      <h3>Les accords du chant</h3>
+      <div class="acc-set"></div>
+      <h3>Déroulement</h3>
+      <p class="acc-hint">Touchez un accord pour écouter le chant à partir de ce moment.</p>
+      <ol class="acc-seq"></ol>
+      <p class="acc-note">Accords détectés automatiquement à partir de l'enregistrement : c'est un point de départ, l'oreille a toujours le dernier mot.</p>
+    </div>
+    <p class="acc-status" hidden></p>
+  </div>
+</div>
+
 <script>
   // Lecteur audio : un seul élément <audio> partagé, fichiers locaux dans exc/ (rien n'est chargé avant le clic)
   (function () {
@@ -1361,7 +1480,171 @@
     roll.querySelector('.roll-close').addEventListener('click', closeRoll);
     roll.querySelector('.roll-again').addEventListener('click', deal);
     roll.addEventListener('click', function (e) { if (e.target === roll) closeRoll(); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !roll.hidden) closeRoll(); });
+    // Accords : bouton à côté de YouTube, overlay qui lit chords/<id>.lrc et suit la lecture
+    var acc = document.getElementById('acc'), accSeq = acc.querySelector('.acc-seq'),
+        accPlay = acc.querySelector('.acc-play'), accCur = acc.querySelector('.acc-cur'),
+        accNext = acc.querySelector('.acc-next'), accOut = acc.querySelector('.acc-tr output'),
+        accCache = {}, accCard = null, accData = null, accTr = 0, accOn = -1, accReq = 0;
+    var ROOTS = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'],
+        FR = ['Do', 'Do♯', 'Ré', 'Mi♭', 'Mi', 'Fa', 'Fa♯', 'Sol', 'La♭', 'La', 'Si♭', 'Si'],
+        ALIAS = { 'Db': 'C#', 'D#': 'Eb', 'Gb': 'F#', 'G#': 'Ab', 'A#': 'Bb', 'Cb': 'B', 'Fb': 'E', 'E#': 'F', 'B#': 'C' };
+
+    document.querySelectorAll('.chant[data-id] > .yt').forEach(function (yt) {
+      var card = yt.parentNode, row = document.createElement('div'), b = document.createElement('button');
+      row.className = 'chant-links';
+      card.insertBefore(row, yt); row.appendChild(yt);
+      b.type = 'button'; b.className = 'acc-btn'; b.textContent = 'Accords'; b.title = 'Voir les accords';
+      b.setAttribute('aria-label', 'Accords de ' + card.querySelector('.chant-title').textContent);
+      row.appendChild(b);
+    });
+
+    function rootIdx(r) { var i = ROOTS.indexOf(ALIAS[r] || r); return i; }
+    function shift(r, n) { var i = rootIdx(r); return i < 0 ? r : ROOTS[((i + n) % 12 + 12) % 12]; }
+    function nice(name) { return name.replace(/#/g, '♯').replace(/^([A-G])b/, '$1♭').replace(/b(\d)/g, '♭$1'); }
+    function chord(c) {
+      if (c === 'N.C.') return '—';
+      var m = c.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/);
+      if (!m) return c;
+      return nice(shift(m[1], accTr) + m[2] + (m[3] ? '/' + shift(m[3], accTr) : ''));
+    }
+    function lrcTime(v) { var p = v.split(':'); return (+p[0] || 0) * 60 + (parseFloat(p[1]) || 0); }
+    function parseLrc(txt) {
+      var meta = {}, raw = [];
+      txt.split(/\r?\n/).forEach(function (l) {
+        var m = l.match(/^\[(\d+):(\d+(?:\.\d+)?)\](.*)$/);
+        if (m) return raw.push({ t: +m[1] * 60 + parseFloat(m[2]), c: m[3].trim() });
+        m = l.match(/^\[([a-z]+):(.*)\]$/i);
+        if (m) meta[m[1]] = m[2].trim();
+      });
+      var len = meta.length ? lrcTime(meta.length) : (raw.length ? raw[raw.length - 1].t + 4 : 0), seq = [];
+      raw.forEach(function (s, i) {
+        var e = i + 1 < raw.length ? raw[i + 1].t : len, d = e - s.t, last = seq[seq.length - 1];
+        // les accords très brefs (souvent des erreurs de détection) sont absorbés par le précédent
+        if (last && (d < 0.6 || (s.c === 'N.C.' && d < 2) || last.c === s.c)) { last.e = e; return; }
+        seq.push({ t: s.t, e: e, c: s.c });
+      });
+      return { meta: meta, seq: seq };
+    }
+
+    function accKey() {
+      var p = acc.querySelector('.acc-key'), k = accData && accData.meta.key, m = k && k.match(/^([A-G][#b]?)\s+(major|minor)$/i);
+      if (!m) { p.textContent = ''; return; }
+      var i = rootIdx(m[1]), minor = /min/i.test(m[2]);
+      if (i < 0) { p.textContent = ''; return; }
+      i = ((i + accTr) % 12 + 12) % 12;
+      p.innerHTML = 'Tonalité : <b>' + FR[i] + (minor ? ' mineur' : ' majeur') + '</b> (' + nice(ROOTS[i] + (minor ? 'm' : '')) + ')';
+    }
+    function accRender() {
+      var seq = accData.seq, tot = {}, all = 0;
+      accOut.textContent = accTr > 0 ? '+' + accTr : String(accTr);
+      accKey();
+      seq.forEach(function (s) { if (s.c !== 'N.C.') { tot[s.c] = (tot[s.c] || 0) + s.e - s.t; all += s.e - s.t; } });
+      var set = acc.querySelector('.acc-set');
+      set.textContent = '';
+      Object.keys(tot).sort(function (a, b) { return tot[b] - tot[a]; })
+        .filter(function (c, i) { return i < 4 || tot[c] / all >= 0.015; }).slice(0, 12)
+        .forEach(function (c) { var sp = document.createElement('span'); sp.textContent = chord(c); set.appendChild(sp); });
+      accSeq.textContent = '';
+      seq.forEach(function (s, i) {
+        var li = document.createElement('li'), b = document.createElement('button');
+        if (s.c === 'N.C.') li.className = 'nc';
+        b.type = 'button'; b.dataset.i = i;
+        b.innerHTML = '<b></b><time></time>';
+        b.firstChild.textContent = chord(s.c);
+        b.lastChild.textContent = fmt(s.t);
+        b.setAttribute('aria-label', (s.c === 'N.C.' ? 'Sans accord' : chord(s.c)) + ' à ' + fmt(s.t));
+        li.appendChild(b); accSeq.appendChild(li);
+      });
+      accOn = -1; accSync(true);
+    }
+    function mine() { return accCard && cur && cur.dataset.id === accCard.dataset.id; }
+    function accSync(force) {
+      if (!accData || acc.hidden) return;
+      var on = mine() && !audio.paused;
+      accPlay.classList.toggle('on', on);
+      accPlay.setAttribute('aria-label', on ? 'Pause' : 'Écouter avec les accords');
+      var seq = accData.seq, t = mine() ? audio.currentTime : -1, i = -1;
+      if (t >= 0) for (var k = 0; k < seq.length; k++) { if (seq[k].t <= t + 0.05) i = k; else break; }
+      if (i === accOn && !force) return;
+      if (accOn >= 0 && accSeq.children[accOn]) accSeq.children[accOn].classList.remove('on');
+      accOn = i;
+      if (i < 0) { accCur.textContent = '–'; accNext.textContent = ''; return; }
+      var li = accSeq.children[i];
+      li.classList.add('on');
+      accCur.textContent = chord(seq[i].c);
+      accNext.innerHTML = seq[i + 1] ? 'puis <b></b>' : '';
+      if (seq[i + 1]) accNext.lastChild.textContent = chord(seq[i + 1].c);
+      if (on) {
+        var r = li.getBoundingClientRect();
+        if (r.top < 0 || r.bottom > window.innerHeight) li.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+    function accState(msg) {
+      var st = acc.querySelector('.acc-status');
+      acc.querySelector('.acc-body').hidden = !!msg;
+      st.hidden = !msg; st.textContent = msg || '';
+    }
+    function openAcc(card) {
+      var id = card.dataset.id, req = ++accReq;
+      accCard = card; accData = null;
+      try { accTr = +localStorage.getItem('acc-tr-' + id) || 0; } catch (err) { accTr = 0; }
+      document.getElementById('acc-title').textContent = card.querySelector('.chant-title').textContent;
+      acc.querySelector('.acc-artist').textContent = card.querySelector('.chant-artist').textContent;
+      accState('Chargement des accords…');
+      acc.hidden = false; acc.classList.add('open'); acc.scrollTop = 0;
+      document.documentElement.classList.add('roll-lock');
+      acc.querySelector('.roll-close').focus({ preventScroll: true });
+      var got = accCache[id] ? Promise.resolve(accCache[id]) : fetch('chords/' + id + '.lrc').then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+      }).then(function (txt) { return (accCache[id] = parseLrc(txt)); });
+      got.then(function (data) {
+        if (req !== accReq) return;
+        if (!data.seq.length) throw new Error('vide');
+        accData = data; accState(''); accRender();
+      }).catch(function () {
+        if (req === accReq) accState('Les accords de ce chant ne sont pas encore disponibles.');
+      });
+    }
+    function closeAcc() {
+      acc.classList.remove('open'); acc.hidden = true; accCard = null; accData = null;
+      if (roll.hidden) document.documentElement.classList.remove('roll-lock');
+    }
+    function accSeek(t) {
+      if (mine()) { audio.currentTime = t; if (audio.paused) play(); }
+      else select(accCard, t);
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.acc-btn'), card = b && cardOf(b);
+      if (card) openAcc(card);
+    });
+    acc.querySelector('.roll-close').addEventListener('click', closeAcc);
+    acc.addEventListener('click', function (e) { if (e.target === acc) closeAcc(); });
+    accPlay.addEventListener('click', function () {
+      if (!accCard) return;
+      if (!mine()) select(accCard);
+      else if (audio.paused) play();
+      else audio.pause();
+    });
+    accSeq.addEventListener('click', function (e) {
+      var b = e.target.closest('button');
+      if (b && accData) accSeek(accData.seq[+b.dataset.i].t);
+    });
+    acc.querySelector('.acc-tr').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-tr]');
+      if (!b || !accData) return;
+      accTr = Math.max(-11, Math.min(11, accTr + +b.dataset.tr));
+      try { localStorage.setItem('acc-tr-' + accCard.dataset.id, accTr); } catch (err) {}
+      accRender();
+    });
+    ['timeupdate', 'play', 'pause', 'ended', 'seeked'].forEach(function (ev) {
+      audio.addEventListener(ev, function () { accSync(ev === 'seeked'); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (!acc.hidden) closeAcc();
+      else if (!roll.hidden) closeRoll();
+    });
 
     audio.addEventListener('loadedmetadata', function () {
       var start = +audio.dataset.start || 0;
