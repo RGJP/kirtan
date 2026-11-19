@@ -336,6 +336,7 @@
   .find-list li[aria-selected="true"] { background: var(--bg-soft); }
   .find-list .t { font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 500; font-size: 1.15rem; color: var(--ink); }
   .find-list .a { font-size: .66rem; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink-soft); }
+  .find-list .l { font-size: .8rem; font-style: italic; color: var(--ink-soft); margin-top: .15rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .find-list .none { cursor: default; font-size: .9rem; color: var(--ink-soft); }
   .chants .chant { scroll-margin: 30vh 0; }
   .chant.found .player { animation: found 2.4s ease; }
@@ -740,8 +741,8 @@
       <div class="find" role="search">
         <label class="find-box">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6"/><path d="M13 13l5 5"/></svg>
-          <input type="search" id="find-input" placeholder="Trouver un chant ou un artiste" autocomplete="off" spellcheck="false"
-                 role="combobox" aria-expanded="false" aria-controls="find-list" aria-autocomplete="list" aria-label="Trouver un chant ou un artiste">
+          <input type="search" id="find-input" placeholder="Titre, artiste ou paroles" autocomplete="off" spellcheck="false"
+                 role="combobox" aria-expanded="false" aria-controls="find-list" aria-autocomplete="list" aria-label="Trouver un chant par titre, artiste ou paroles">
         </label>
         <ul class="find-list" id="find-list" role="listbox" aria-label="Chants trouvés" hidden></ul>
       </div>
@@ -1831,9 +1832,28 @@
     var norm = function (t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); };
     var cards = Array.prototype.map.call(document.querySelectorAll('.chants .chant[data-id]'), function (c) {
       var t = c.querySelector('.chant-title').textContent, a = c.querySelector('.chant-artist').textContent;
-      return { el: c, t: t, a: a, key: norm(t + ' ' + a) };
+      return { el: c, id: c.dataset.id, t: t, a: a, key: norm(t + ' ' + a), lyr: null, lines: [] };
     });
-    var hits = [], sel = -1;
+    var hits = [], sel = -1, loading = false;
+    // Paroles : chargées une fois (paroles/<id>.txt) pour chercher aussi dans le texte des chants
+    function loadLyrics() {
+      if (loading) return; loading = true;
+      cards.forEach(function (c) {
+        fetch('paroles/' + c.id + '.txt').then(function (r) { return r.ok ? r.text() : ''; }).then(function (txt) {
+          c.lines = txt.split('\n').filter(function (l) { return l.trim() && l.charAt(0) !== '#'; });
+          c.lyr = norm(c.lines.join(' '));
+          if (input.value && document.activeElement === input) render();
+        }).catch(function () {});
+      });
+    }
+    function bestLine(c, words) {
+      var best = '', n = 0;
+      c.lines.forEach(function (l) {
+        var k = norm(l), m = words.filter(function (w) { return k.indexOf(w) !== -1; }).length;
+        if (m > n) { n = m; best = l; }
+      });
+      return best;
+    }
     function close() { list.hidden = true; input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-activedescendant'); sel = -1; }
     function mark(i) {
       sel = i;
@@ -1845,7 +1865,9 @@
       list.textContent = '';
       if (!q) { close(); return; }
       var words = q.split(' ');
-      hits = cards.filter(function (c) { return words.every(function (w) { return c.key.indexOf(w) !== -1; }); });
+      var has = function (k) { return k && words.every(function (w) { return k.indexOf(w) !== -1; }); };
+      hits = cards.filter(function (c) { return has(c.key); });
+      cards.forEach(function (c) { if (hits.indexOf(c) === -1 && has(c.lyr)) { c.snip = bestLine(c, words); hits.push(c); } else c.snip = ''; });
       if (!hits.length) {
         var none = document.createElement('li'); none.className = 'none'; none.textContent = 'Aucun chant trouvé';
         list.appendChild(none);
@@ -1855,6 +1877,7 @@
         var t = document.createElement('span'); t.className = 't'; t.textContent = c.t;
         var a = document.createElement('span'); a.className = 'a'; a.textContent = c.a;
         li.appendChild(t); li.appendChild(a);
+        if (c.snip) { var l = document.createElement('span'); l.className = 'l'; l.textContent = '« ' + c.snip + ' »'; li.appendChild(l); }
         li.addEventListener('mousedown', function (e) { e.preventDefault(); go(c); });
         list.appendChild(li);
       });
@@ -1867,8 +1890,8 @@
       c.el.classList.remove('found'); void c.el.offsetWidth; c.el.classList.add('found');
       setTimeout(function () { c.el.classList.remove('found'); }, 2600);
     }
-    input.addEventListener('input', render);
-    input.addEventListener('focus', function () { if (input.value) render(); });
+    input.addEventListener('input', function () { loadLyrics(); render(); });
+    input.addEventListener('focus', function () { loadLyrics(); if (input.value) render(); });
     input.addEventListener('blur', close);
     input.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowDown' && hits.length) { e.preventDefault(); if (list.hidden) render(); mark((sel + 1) % hits.length); }
