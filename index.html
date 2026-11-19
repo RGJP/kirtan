@@ -65,6 +65,7 @@
     --i-play: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M3 1.5 L18 10 L3 18.5 Z'/%3E%3C/svg%3E");
     --i-yt: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 17'%3E%3Cpath fill-rule='evenodd' d='M23.5 2.65A3 3 0 0 0 21.38.5C19.5 0 12 0 12 0S4.5 0 2.62.5A3 3 0 0 0 .5 2.65C0 4.53 0 8.5 0 8.5s0 3.97.5 5.85a3 3 0 0 0 2.12 2.15C4.5 17 12 17 12 17s7.5 0 9.38-.5a3 3 0 0 0 2.12-2.15C24 12.47 24 8.5 24 8.5s0-3.97-.5-5.85zM9.6 12.14V4.86L15.83 8.5z'/%3E%3C/svg%3E");
     --i-pause: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Crect x='3.5' y='2' width='4.5' height='16' rx='1'/%3E%3Crect x='12' y='2' width='4.5' height='16' rx='1'/%3E%3C/svg%3E");
+    --i-lyr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='1.3' stroke-linecap='round' d='M1.5 2.5h11M1.5 6h11M1.5 9.5h7.5M1.5 13h9'/%3E%3C/svg%3E");
     --i-acc: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 16'%3E%3Cpath d='M1 1h12v1.6H1z'/%3E%3Cpath fill='none' stroke='%23000' stroke-width='1' d='M1.5 2v13.5M5 2v13.5M9 2v13.5M12.5 2v13.5M1.5 6.5h11M1.5 11h11M1.5 15.5h11'/%3E%3Ccircle cx='5' cy='8.75' r='1.9'/%3E%3Ccircle cx='9' cy='13.25' r='1.9'/%3E%3Ccircle cx='12.5' cy='4.25' r='1.9'/%3E%3C/svg%3E");
     color-scheme: light;
   }
@@ -428,6 +429,21 @@
     .acc-bar { padding: .7rem .8rem .7rem .7rem; }
     .acc-cur { font-size: 2rem; }
   }
+  /* ---------- Paroles ---------- */
+  .acc-btn.lyr-btn::before { width: 13px; -webkit-mask-image: var(--i-lyr); mask-image: var(--i-lyr); }
+  .lyr-ov { z-index: 110; }
+  .lyr-panel { max-width: 620px; padding: 2.5rem 2rem 2.1rem; }
+  .lyr-text { text-align: center; }
+  .lyr-text .st { margin: 0 0 1.5rem; font-size: 1.12rem; line-height: 1.75; color: var(--ink); }
+  .lyr-text h3 {
+    margin: 2.2rem 0 .8rem; font-weight: 400; font-size: .7rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .lyr-text h3:first-child { margin-top: 0; }
+  @media (max-width: 600px) {
+    .lyr-panel { padding: 2.4rem 1rem 1.8rem; }
+    .lyr-text .st { font-size: 1.05rem; }
+  }
   footer .f-name { font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 400; font-size: 1.5rem; letter-spacing: 1px; color: var(--ink); line-height: 1.2; }
   footer .f-skt { font-family: "Tiro Devanagari Sanskrit", serif; font-size: 1.25rem; color: var(--accent); line-height: 1.4; }
   footer .f-tag { font-size: .8rem; font-weight: 400; letter-spacing: 3px; text-transform: uppercase; color: var(--tag-ink); }
@@ -716,14 +732,14 @@
           <a class="yt" href="https://www.youtube.com/watch?v=kzTGSITIckw&amp;t=514s" target="_blank" rel="noopener" aria-label="Mahamantra Meltdown sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
         <figure class="chant" data-id="M4AvH5E07wo" data-start="4:56">
-          <figcaption><span class="chant-title">Light of Your Grace</span><span class="chant-artist">Sam Garrett</span></figcaption>
+          <figcaption><span class="chant-title">Light of Your Grace / Gayatri</span><span class="chant-artist">Sam Garrett</span></figcaption>
           <div class="player">
-            <button class="play" aria-label="Écouter Light of Your Grace"></button>
+            <button class="play" aria-label="Écouter Light of Your Grace / Gayatri"></button>
             <time>4:56</time>
-            <input type="range" min="0" max="437" step="1" value="296" style="--p:67.73%" aria-label="Position : Light of Your Grace">
+            <input type="range" min="0" max="437" step="1" value="296" style="--p:67.73%" aria-label="Position : Light of Your Grace / Gayatri">
             <time>7:17</time>
           </div>
-          <a class="yt" href="https://www.youtube.com/watch?v=M4AvH5E07wo&amp;t=296s" target="_blank" rel="noopener" aria-label="Light of Your Grace sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
+          <a class="yt" href="https://www.youtube.com/watch?v=M4AvH5E07wo&amp;t=296s" target="_blank" rel="noopener" aria-label="Light of Your Grace / Gayatri sur YouTube (nouvel onglet)" title="Voir sur YouTube"></a>
         </figure>
         <figure class="chant" data-id="fSXPbv76RjA" data-start="2:49">
           <figcaption><span class="chant-title">Om Namah Shivaya</span><span class="chant-artist">JaiMa James &amp; Friends</span></figcaption>
@@ -1362,6 +1378,18 @@
   </div>
 </div>
 
+<!-- Paroles d'un chant (fichiers paroles/<id>.txt) -->
+<div class="roll lyr-ov" id="lyr" role="dialog" aria-modal="true" aria-labelledby="lyr-title" hidden>
+  <div class="roll-panel lyr-panel">
+    <button class="roll-close" type="button" aria-label="Fermer"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+    <p class="acc-kicker">Paroles</p>
+    <h2 id="lyr-title"></h2>
+    <p class="acc-artist"></p>
+    <div class="lyr-text"></div>
+    <p class="acc-status" hidden></p>
+  </div>
+</div>
+
 <!-- Accords d'un chant (détectés par BTC, fichiers chords/<id>.lrc) -->
 <div class="roll acc-ov" id="acc" role="dialog" aria-modal="true" aria-labelledby="acc-title" hidden>
   <div class="roll-panel acc-panel">
@@ -1516,6 +1544,10 @@
       b.type = 'button'; b.className = 'acc-btn'; b.textContent = 'Accords'; b.title = 'Voir les accords';
       b.setAttribute('aria-label', 'Accords de ' + card.querySelector('.chant-title').textContent);
       row.appendChild(b);
+      b = document.createElement('button');
+      b.type = 'button'; b.className = 'acc-btn lyr-btn'; b.textContent = 'Paroles'; b.title = 'Voir les paroles';
+      b.setAttribute('aria-label', 'Paroles de ' + card.querySelector('.chant-title').textContent);
+      row.appendChild(b);
     });
 
     function rootIdx(r) { var i = ROOTS.indexOf(ALIAS[r] || r); return i; }
@@ -1628,14 +1660,14 @@
     }
     function closeAcc() {
       acc.classList.remove('open'); acc.hidden = true; accCard = null; accData = null;
-      if (roll.hidden) document.documentElement.classList.remove('roll-lock');
+      if (roll.hidden && lyr.hidden) document.documentElement.classList.remove('roll-lock');
     }
     function accSeek(t) {
       if (mine()) { audio.currentTime = t; if (audio.paused) play(); }
       else select(accCard, t);
     }
     document.addEventListener('click', function (e) {
-      var b = e.target.closest && e.target.closest('.acc-btn'), card = b && cardOf(b);
+      var b = e.target.closest && e.target.closest('.acc-btn:not(.lyr-btn)'), card = b && cardOf(b);
       if (card) openAcc(card);
     });
     acc.querySelector('.roll-close').addEventListener('click', closeAcc);
@@ -1660,9 +1692,60 @@
     ['timeupdate', 'play', 'pause', 'ended', 'seeked'].forEach(function (ev) {
       audio.addEventListener(ev, function () { accSync(ev === 'seeked'); });
     });
+    // Paroles : overlay qui lit paroles/<id>.txt
+    // Format : ligne vide = nouvelle strophe ; « # titre » = intertitre
+    var lyr = document.getElementById('lyr'), lyrText = lyr.querySelector('.lyr-text'), lyrCache = {}, lyrReq = 0;
+    function lyrState(msg) {
+      var st = lyr.querySelector('.acc-status');
+      lyrText.hidden = !!msg; st.hidden = !msg; st.textContent = msg || '';
+    }
+    function lyrRender(txt) {
+      lyrText.textContent = '';
+      var st = null;
+      function el(tag, cls, parent) { var e = document.createElement(tag); if (cls) e.className = cls; (parent || lyrText).appendChild(e); return e; }
+      txt.split(/\r?\n/).forEach(function (l) {
+        l = l.replace(/\s+$/, '');
+        if (!l) { st = null; return; }
+        var m;
+        if ((m = l.match(/^#\s*(.*)$/))) { st = null; el('h3').textContent = m[1]; return; }
+        if (!st) st = el('p', 'st'); else st.appendChild(document.createElement('br'));
+        st.appendChild(document.createTextNode(l));
+      });
+    }
+    function openLyr(card) {
+      var id = card.dataset.id, req = ++lyrReq;
+      document.getElementById('lyr-title').textContent = card.querySelector('.chant-title').textContent;
+      lyr.querySelector('.acc-artist').textContent = card.querySelector('.chant-artist').textContent;
+      lyrState('Chargement des paroles…');
+      lyr.hidden = false; lyr.classList.add('open'); lyr.scrollTop = 0;
+      document.documentElement.classList.add('roll-lock');
+      lyr.querySelector('.roll-close').focus({ preventScroll: true });
+      var got = lyrCache[id] ? Promise.resolve(lyrCache[id]) : fetch('paroles/' + id + '.txt').then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.text();
+      }).then(function (txt) { return (lyrCache[id] = txt); });
+      got.then(function (txt) {
+        if (req !== lyrReq) return;
+        if (!txt.trim()) throw new Error('vide');
+        lyrState(''); lyrRender(txt);
+      }).catch(function () {
+        if (req === lyrReq) lyrState('Pas de paroles affichées pour ce chant.');
+      });
+    }
+    function closeLyr() {
+      lyr.classList.remove('open'); lyr.hidden = true;
+      if (roll.hidden && acc.hidden) document.documentElement.classList.remove('roll-lock');
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.lyr-btn'), card = b && cardOf(b);
+      if (card) openLyr(card);
+    });
+    lyr.querySelector('.roll-close').addEventListener('click', closeLyr);
+    lyr.addEventListener('click', function (e) { if (e.target === lyr) closeLyr(); });
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
-      if (!acc.hidden) closeAcc();
+      if (!lyr.hidden) closeLyr();
+      else if (!acc.hidden) closeAcc();
       else if (!roll.hidden) closeRoll();
     });
 
