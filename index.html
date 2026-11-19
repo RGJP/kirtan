@@ -169,6 +169,19 @@
   .events h2 { font-size: clamp(1.9rem, 4.6vw, 2.4rem); line-height: 1.1; margin: 0 0 1rem; }
   .events .ornament { margin: 0 auto 1.9rem; }
   .lotus-line { width: 44px; height: auto; display: block; color: var(--accent); }
+  /* Mandala qui se dessine, se dé-dessine et change de forme (script en bas de page) */
+  .mandala-wrap { display: block; position: relative; width: 92px; height: 92px; margin: .2rem auto 1.3rem; }
+  .mandala { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .mandala .s {
+    fill: none; stroke: var(--accent); stroke-width: .8; stroke-linejoin: round; stroke-linecap: round;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.2s ease-in-out; transition-delay: calc(var(--i) * .06s);
+  }
+  .mandala .s.thin { stroke-width: .5; opacity: .65; }
+  .mandala.on .s { stroke-dashoffset: 0; }
+  .mandala .dot { fill: var(--accent); transform-origin: 50px 50px; transform: scale(0); transition: transform .6s ease; }
+  .mandala.on .dot { transform: scale(1); transition-delay: var(--dd, 1.2s); }
+  @media (prefers-reduced-motion: reduce) { .mandala .s, .mandala .dot { transition: none; } }
   .event-list { list-style: none; margin: 0; padding: 0; }
   .event-list li { padding: 1.1rem 0; font-weight: 400; font-size: 1.08rem; line-height: 1.55; color: var(--ink); text-wrap: balance; }
   .event-list li:first-child { padding-top: 0; }
@@ -733,7 +746,7 @@
         <h2>Prochain Kirtan</h2>
         <div class="ornament" aria-hidden="true"><span></span><svg class="lotus-line" viewBox="0 0 48 32"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 3.5 C19 9.5 19 19.5 24 26 C29 19.5 29 9.5 24 3.5 Z"/><path d="M24 26 C17.5 24 12.5 18 11.5 10 C17.5 12 22 17.5 24 26"/><path d="M24 26 C30.5 24 35.5 18 36.5 10 C30.5 12 26 17.5 24 26"/><path d="M23 26.8 C15 27.2 7.5 23.5 3.5 17.5 C10.5 16.5 18 20 23 26.8"/><path d="M25 26.8 C33 27.2 40.5 23.5 44.5 17.5 C37.5 16.5 30 20 25 26.8"/><path d="M15 29.8 Q24 31.6 33 29.8"/></g></svg><span></span></div>
         <ul class="event-list">
-          <li class="event-empty">En préparation,<br>date à venir bientôt&nbsp;!</li>
+          <li class="event-empty"><span class="mandala-wrap" aria-hidden="true"><svg class="mandala" viewBox="0 0 100 100"></svg><svg class="mandala" viewBox="0 0 100 100"></svg></span>En préparation,<br>date à venir bientôt&nbsp;!</li>
         </ul>
       </div>
     </div>
@@ -1916,6 +1929,72 @@
       else if (e.key === 'Escape') { if (list.hidden) input.value = ''; close(); }
     });
   })();
+</script>
+<script>
+// Mandala « En préparation » : se dessine, tient, se dé-dessine, puis une autre forme prend sa place
+(function () {
+  var layers = document.querySelectorAll('.mandala'); if (layers.length < 2) return;
+  var svg = layers[0], L = 0;
+  var C = 50, i = 0;
+  function petal(n, r0, len, w, off, cls) {
+    var out = '';
+    for (var k = 0; k < n; k++) {
+      var a = off + k * 360 / n, y0 = C - r0, y1 = y0 - len, m = (y0 + y1) / 2;
+      out += '<path class="s ' + (cls || '') + '" style="--i:' + (i++) + '" pathLength="1" transform="rotate(' + a + ' 50 50)" d="M50 ' + y0 +
+        ' C' + (C - w) + ' ' + m + ' ' + (C - w * .6) + ' ' + (y1 + len * .15) + ' 50 ' + y1 +
+        ' C' + (C + w * .6) + ' ' + (y1 + len * .15) + ' ' + (C + w) + ' ' + m + ' 50 ' + y0 + '"/>';
+    }
+    return out;
+  }
+  function circ(r, cls, cx, cy) { return '<circle class="s ' + (cls || '') + '" style="--i:' + (i++) + '" pathLength="1" cx="' + (cx || C) + '" cy="' + (cy || C) + '" r="' + r + '"/>'; }
+  function poly(n, r, off, cls) {
+    var pts = [];
+    for (var k = 0; k < n; k++) { var a = (off + k * 360 / n - 90) * Math.PI / 180; pts.push((C + r * Math.cos(a)).toFixed(2) + ' ' + (C + r * Math.sin(a)).toFixed(2)); }
+    return '<path class="s ' + (cls || '') + '" style="--i:' + (i++) + '" pathLength="1" d="M' + pts.join(' L') + ' Z"/>';
+  }
+  function ray(n, r0, r1, off, cls) {
+    var out = '';
+    for (var k = 0; k < n; k++) {
+      var g = (off + k * 360 / n - 90) * Math.PI / 180;
+      out += '<path class="s ' + (cls || '') + '" style="--i:' + (i++) + '" pathLength="1" d="M' + (C + r0 * Math.cos(g)).toFixed(2) + ' ' + (C + r0 * Math.sin(g)).toFixed(2) +
+        ' L' + (C + r1 * Math.cos(g)).toFixed(2) + ' ' + (C + r1 * Math.sin(g)).toFixed(2) + '"/>';
+    }
+    return out;
+  }
+  function tri(r, up, dy, cls) {                     // triangle (pointe en haut ou en bas), décalé verticalement
+    var s = up ? -1 : 1, h = r * .5, w = r * .866;
+    return '<path class="s ' + (cls || '') + '" style="--i:' + (i++) + '" pathLength="1" d="M50 ' + (C + dy + s * r) +
+      ' L' + (C - w) + ' ' + (C + dy - s * h) + ' L' + (C + w) + ' ' + (C + dy - s * h) + ' Z"/>';
+  }
+  var forms = [
+    function () { return circ(44, 'thin') + circ(30, 'thin') + petal(8, 0, 38, 9, 0) + petal(8, 0, 24, 5, 22.5); },
+    function () { var s = circ(44, 'thin') + circ(20); for (var k = 0; k < 6; k++) { var a = k * Math.PI / 3; s += circ(20, '', (C + 20 * Math.cos(a)).toFixed(2), (C + 20 * Math.sin(a)).toFixed(2)); } return s; },
+    function () { return circ(44, 'thin') + petal(16, 30, 13, 3.6, 0) + poly(4, 28, 0) + poly(4, 28, 45) + petal(4, 0, 22, 6, 0); },
+    function () { return circ(44, 'thin') + petal(5, 4, 34, 13, 0) + petal(5, 4, 22, 8, 36) + circ(38, 'thin'); },
+    function () { return circ(26) + ray(24, 30, 42, 0, 'thin') + petal(8, 0, 22, 7, 0); },
+    function () { return circ(44, 'thin') + petal(8, 34, 9, 4, 0) + tri(30, 1, -2) + tri(22, 1, 4) + tri(30, 0, 2) + tri(22, 0, -4) + tri(13, 0, 1) + circ(33, 'thin'); },
+    function () { return circ(40) + poly(6, 40, 0, 'thin') + petal(6, 0, 40, 12, 0); },
+    function () { return circ(44, 'thin') + poly(4, 40, 0) + poly(4, 40, 45) + poly(4, 28, 22.5) + poly(4, 28, 67.5) + circ(18) + petal(8, 0, 16, 4, 0); },
+    function () { return circ(44, 'thin') + circ(36, 'thin') + petal(12, 8, 26, 6, 0) + petal(12, 8, 26, 6, 15) + circ(8); }
+  ];
+  var dot = '<circle class="dot" cx="50" cy="50" r="2.4"/>';
+  var cur = Math.floor(Math.random() * forms.length);
+  function show(n) { i = 0; svg.innerHTML = forms[n]() + dot; }
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { show(0); svg.classList.add('on'); return; }
+  // Deux calques : la forme suivante commence à se dessiner pendant que l'autre s'efface (jamais vide)
+  function cycle() {
+    svg = layers[L]; L = 1 - L;
+    show(cur);
+    svg.getBoundingClientRect();                   // force le style « non dessiné » avant la transition
+    requestAnimationFrame(function () { svg.classList.add('on'); });
+    var draw = 1200 + i * 60;
+    svg.style.setProperty('--dd', Math.max(0, draw - 700) + 'ms');
+    var me = svg;
+    setTimeout(function () { me.classList.remove('on'); }, draw + 250);              // dé-dessine
+    setTimeout(function () { var n; do { n = Math.floor(Math.random() * forms.length); } while (n === cur); cur = n; cycle(); }, draw + 250 + draw * .45); // forme suivante, en fondu enchaîné
+  }
+  cycle();
+})();
 </script>
 </body>
 </html>
