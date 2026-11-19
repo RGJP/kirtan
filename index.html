@@ -211,7 +211,7 @@
     font-size: 1.05rem; line-height: 1.75; color: var(--ink);
     text-align: justify; hyphens: none; -webkit-hyphens: none; max-width: 660px; margin: 0 auto 1.1rem;
   }
-  .lede-last { margin-bottom: 3.5rem; }
+  .lede-last { margin-bottom: 2.2rem; }
   .players {
     display: grid; gap: 2.6rem 2.4rem;
     grid-template-columns: repeat(2, 1fr);
@@ -306,6 +306,43 @@
     touch-action: manipulation; cursor: default;
   }
 
+  /* ---------- Recherche d'un chant ---------- */
+  .find { position: relative; max-width: 420px; margin: 0 auto 3.4rem; }
+  .find-box {
+    display: flex; align-items: center; gap: .6rem;
+    padding: .55rem 1.1rem; border-radius: 999px;
+    background: var(--bg); border: 1px solid var(--accent-border);
+    transition: border-color .3s, box-shadow .3s;
+  }
+  .find-box:focus-within { border-color: var(--accent); box-shadow: 0 8px 24px -16px var(--shadow); }
+  .find-box svg { width: 16px; height: 16px; flex: none; color: var(--accent); }
+  .find input {
+    flex: 1; min-width: 0; border: 0; outline: 0; background: none;
+    font: 400 1rem/1.4 "Mulish", sans-serif; color: var(--ink);
+  }
+  .find input::placeholder { color: var(--ink-soft); opacity: .8; }
+  .find input::-webkit-search-cancel-button { display: none; }
+  .find-list {
+    position: absolute; left: 0; right: 0; top: calc(100% + .45rem); z-index: 20;
+    margin: 0; padding: .35rem; list-style: none; max-height: 300px; overflow-y: auto;
+    background: var(--bg); border: 1px solid var(--accent-border); border-radius: 14px;
+    box-shadow: 0 16px 34px -18px var(--shadow); text-align: left;
+  }
+  .find-list[hidden] { display: none; }
+  .find-list li {
+    display: flex; flex-direction: column; gap: .1rem;
+    padding: .5rem .75rem; border-radius: 9px; cursor: pointer; line-height: 1.25;
+  }
+  .find-list li[aria-selected="true"] { background: var(--bg-soft); }
+  .find-list .t { font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 500; font-size: 1.15rem; color: var(--ink); }
+  .find-list .a { font-size: .66rem; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink-soft); }
+  .find-list .none { cursor: default; font-size: .9rem; color: var(--ink-soft); }
+  .chants .chant { scroll-margin: 30vh 0; }
+  .chant.found .player { animation: found 2.4s ease; }
+  @keyframes found {
+    0%, 60% { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), 0 8px 24px -14px var(--shadow); }
+  }
+  @media (max-width: 600px) { .find { margin-bottom: 2.6rem; } }
   /* ---------- Tirage secret (7 touchers sur le ॐ) ---------- */
   .roll {
     position: fixed; inset: 0; z-index: 100; display: none; overflow-y: auto; overscroll-behavior: contain;
@@ -699,6 +736,15 @@
       <p class="lede">Voici une sélection de chants de différents artistes que nous apprécions, puisés sur YouTube, afin de vous faire découvrir notre univers musical et les mantras qui nous inspirent. Cette liste, bien sûr non exhaustive, vous donnera un aperçu des mélodies et des vibrations qui nous animent.</p>
       <p class="lede">Nous nous inspirons de certaines de ces pièces en les réinterprétant à notre façon, avec nos voix et nos instruments, tout en y apportant notre touche personnelle. Notre répertoire s’enrichit également de compositions originales créées par nos musiciens.</p>
       <p class="lede lede-last">Et parce que la musique est avant tout une aventure de partage et de découverte, vos suggestions et vos coups de cœur sont toujours les bienvenus, écrivez-nous&nbsp;!</p>
+
+      <div class="find" role="search">
+        <label class="find-box">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6"/><path d="M13 13l5 5"/></svg>
+          <input type="search" id="find-input" placeholder="Trouver un chant ou un artiste" autocomplete="off" spellcheck="false"
+                 role="combobox" aria-expanded="false" aria-controls="find-list" aria-autocomplete="list" aria-label="Trouver un chant ou un artiste">
+        </label>
+        <ul class="find-list" id="find-list" role="listbox" aria-label="Chants trouvés" hidden></ul>
+      </div>
 
       <div class="players">
         <figure class="chant" data-id="F6BcPj42bUg" data-start="3:41">
@@ -1775,6 +1821,61 @@
       navigator.mediaSession.setActionHandler('pause', function () { audio.pause(); });
       try { navigator.mediaSession.setActionHandler('seekto', function (d) { audio.currentTime = d.seekTime; }); } catch (err) {}
     }
+  })();
+</script>
+<script>
+  // Recherche d'un chant : suggestions par titre ou artiste, puis défilement jusqu'à la carte
+  (function () {
+    var input = document.getElementById('find-input'), list = document.getElementById('find-list');
+    if (!input) return;
+    var norm = function (t) { return t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); };
+    var cards = Array.prototype.map.call(document.querySelectorAll('.chants .chant[data-id]'), function (c) {
+      var t = c.querySelector('.chant-title').textContent, a = c.querySelector('.chant-artist').textContent;
+      return { el: c, t: t, a: a, key: norm(t + ' ' + a) };
+    });
+    var hits = [], sel = -1;
+    function close() { list.hidden = true; input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-activedescendant'); sel = -1; }
+    function mark(i) {
+      sel = i;
+      Array.prototype.forEach.call(list.children, function (li, k) { li.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
+      if (i >= 0 && list.children[i]) { input.setAttribute('aria-activedescendant', list.children[i].id); list.children[i].scrollIntoView({ block: 'nearest' }); }
+    }
+    function render() {
+      var q = norm(input.value);
+      list.textContent = '';
+      if (!q) { close(); return; }
+      var words = q.split(' ');
+      hits = cards.filter(function (c) { return words.every(function (w) { return c.key.indexOf(w) !== -1; }); });
+      if (!hits.length) {
+        var none = document.createElement('li'); none.className = 'none'; none.textContent = 'Aucun chant trouvé';
+        list.appendChild(none);
+      }
+      hits.forEach(function (c, k) {
+        var li = document.createElement('li'); li.id = 'find-opt-' + k; li.setAttribute('role', 'option');
+        var t = document.createElement('span'); t.className = 't'; t.textContent = c.t;
+        var a = document.createElement('span'); a.className = 'a'; a.textContent = c.a;
+        li.appendChild(t); li.appendChild(a);
+        li.addEventListener('mousedown', function (e) { e.preventDefault(); go(c); });
+        list.appendChild(li);
+      });
+      list.hidden = false; input.setAttribute('aria-expanded', 'true');
+      mark(hits.length ? 0 : -1);
+    }
+    function go(c) {
+      close(); input.blur();
+      c.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      c.el.classList.remove('found'); void c.el.offsetWidth; c.el.classList.add('found');
+      setTimeout(function () { c.el.classList.remove('found'); }, 2600);
+    }
+    input.addEventListener('input', render);
+    input.addEventListener('focus', function () { if (input.value) render(); });
+    input.addEventListener('blur', close);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' && hits.length) { e.preventDefault(); if (list.hidden) render(); mark((sel + 1) % hits.length); }
+      else if (e.key === 'ArrowUp' && hits.length) { e.preventDefault(); mark((sel - 1 + hits.length) % hits.length); }
+      else if (e.key === 'Enter') { e.preventDefault(); if (hits[sel]) go(hits[sel]); }
+      else if (e.key === 'Escape') { if (list.hidden) input.value = ''; close(); }
+    });
   })();
 </script>
 </body>
