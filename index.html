@@ -1666,7 +1666,7 @@
       var i = rootIdx(m[1]), minor = /min/i.test(m[2]);
       if (i < 0) { p.textContent = ''; return; }
       i = ((i + accTr) % 12 + 12) % 12;
-      p.innerHTML = 'Tonalité : <b>' + FR[i] + (minor ? ' mineur' : ' majeur') + '</b> (' + nice(ROOTS[i] + (minor ? 'm' : '')) + ')';
+      p.innerHTML = 'Tonalité possible : <b>' + FR[i] + (minor ? ' mineur' : ' majeur') + '</b> (' + nice(ROOTS[i] + (minor ? 'm' : '')) + ')';
     }
     function accRender() {
       var seq = accData.seq, tot = {}, all = 0;
