@@ -154,6 +154,20 @@
     border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
     box-shadow: 0 16px 30px -22px color-mix(in srgb, var(--accent) 70%, transparent);
   }
+  img.deity { cursor: zoom-in; }
+  .deity-view {
+    position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 4vmin;
+    background: rgba(20, 15, 10, .86); cursor: zoom-out; opacity: 0; transition: opacity .3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .deity-view[hidden] { display: none; }
+  .deity-view.open { opacity: 1; }
+  .deity-view img {
+    max-width: 100%; max-height: 92vh; width: auto; height: auto; border-radius: 10px;
+    box-shadow: 0 24px 60px -18px rgba(0,0,0,.7); transform: scale(.96); transition: transform .3s ease;
+  }
+  .deity-view.open img { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .deity-view, .deity-view img { transition: none; } }
   .deities + section.content.about { padding-top: 3.6rem; }
   @media (max-width: 560px) {
     .deities { padding-top: 3.5rem; }
@@ -219,7 +233,7 @@
   .event-list li + li { border-top: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); }
   .cal-line { display: block; width: 36px; height: 36px; margin: 0 auto .9rem; color: var(--accent); }
   .about .events-follow { text-align: center; margin: 1rem 0 0; font-weight: 400; font-size: .97rem; line-height: 1.6; color: var(--ink); opacity: .9; }
-  .about .events-follow .and { display: inline-block; color: var(--ink-soft); font-style: italic; }
+  .about .events-follow .and { display: inline-block; color: var(--ink-soft); }
   /* Bouton Facebook : plein (l'ancien état survolé) pour être bien visible */
   .fb-btn {
     display: inline-flex; align-items: center; gap: .55em; margin-top: .8rem;
@@ -839,6 +853,26 @@
         track.insertBefore(im, dup);
         var c = im.cloneNode(); c.alt = ''; dup.appendChild(c);
       });
+    })();
+    // Clic sur une déité : elle s'affiche en grand ; un clic n'importe où (ou Échap) referme.
+    (function () {
+      var view = document.createElement('div'), big = document.createElement('img'), timer;
+      view.className = 'deity-view'; view.hidden = true; view.setAttribute('role', 'dialog'); view.setAttribute('aria-modal', 'true');
+      big.alt = ''; view.appendChild(big); document.body.appendChild(view);
+      function close() {
+        view.classList.remove('open');
+        timer = setTimeout(function () { view.hidden = true; big.removeAttribute('src'); }, 300);
+      }
+      document.querySelector('.deities').addEventListener('click', function (e) {
+        var im = e.target.closest('img.deity'); if (!im) return;
+        clearTimeout(timer);
+        big.src = im.getAttribute('src').replace('deites/', 'deites/grand/');
+        big.alt = im.alt || '';
+        view.setAttribute('aria-label', big.alt || 'Déité');
+        view.hidden = false; void view.offsetWidth; view.classList.add('open');
+      });
+      view.addEventListener('click', close);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !view.hidden) close(); });
     })();
   </script>
 
