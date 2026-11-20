@@ -141,34 +141,26 @@
 
   /* ---------- Banderole des déités ---------- */
   .deities {
-    overflow: hidden; padding: 4.5rem 0 .5rem;
+    overflow: hidden; padding: 4.5rem 0 1.4rem;
     -webkit-mask: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
     mask: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
   }
   .deities-track, .deities-dup { display: flex; gap: 1.4rem; }
   .deities-track { width: max-content; animation: deities-scroll 110s linear infinite; }
-  .deities:hover .deities-track { animation-play-state: paused; }
   @keyframes deities-scroll { to { transform: translateX(calc(-50% - .7rem)); } }
-  .deity { margin: 0; flex: none; width: 150px; text-align: center; }
-  .deity img {
-    display: block; width: 150px; height: 200px; object-fit: cover; box-sizing: border-box;
+  img.deity {
+    flex: none; display: block; width: 150px; height: 200px; object-fit: cover; box-sizing: border-box;
     padding: 4px; background: var(--bg-soft); border-radius: 75px 75px 12px 12px;
     border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
     box-shadow: 0 16px 30px -22px color-mix(in srgb, var(--accent) 70%, transparent);
-  }
-  .deity figcaption {
-    margin-top: .75rem; font-family: "Cormorant Garamond", serif; font-size: 1.05rem; line-height: 1.25;
-    color: var(--ink); letter-spacing: .3px; text-wrap: balance;
   }
   .deities + section.content.about { padding-top: 3.6rem; }
   @media (max-width: 560px) {
     .deities { padding-top: 3.5rem; }
     .deities-track, .deities-dup { gap: 1rem; }
     @keyframes deities-scroll { to { transform: translateX(calc(-50% - .5rem)); } }
-    .deity { width: 118px; }
-    .deity img { width: 118px; height: 158px; border-radius: 59px 59px 10px 10px; }
-    .deity figcaption { font-size: .95rem; }
-  }
+    img.deity { width: 118px; height: 158px; border-radius: 59px 59px 10px 10px; }
+    }
   @media (prefers-reduced-motion: reduce) {
     .deities { overflow-x: auto; -webkit-mask: none; mask: none; padding-inline: 16px; }
     .deities-track { animation: none; }
@@ -801,35 +793,35 @@
   <!-- ================= BANDEROLE DES DÉITÉS (défile en boucle ; la 2e série sert au raccord) ================= -->
   <div class="deities" role="region" aria-label="Les déités de nos chants">
     <div class="deities-track">
-      <figure class="deity"><img src="deites/ganesha.webp" alt="Ganesha" width="330" height="440" loading="lazy" decoding="async"><figcaption>Ganesha</figcaption></figure>
-      <figure class="deity"><img src="deites/saraswati.webp" alt="Saraswati" width="330" height="440" loading="lazy" decoding="async"><figcaption>Saraswati</figcaption></figure>
-      <figure class="deity"><img src="deites/shiva.webp" alt="Shiva" width="330" height="440" loading="lazy" decoding="async"><figcaption>Shiva</figcaption></figure>
-      <figure class="deity"><img src="deites/lakshmi.webp" alt="Lakshmi" width="330" height="440" loading="lazy" decoding="async"><figcaption>Lakshmi</figcaption></figure>
-      <figure class="deity"><img src="deites/krishna.webp" alt="Krishna" width="330" height="440" loading="lazy" decoding="async"><figcaption>Krishna</figcaption></figure>
-      <figure class="deity"><img src="deites/durga.webp" alt="Durga" width="330" height="440" loading="lazy" decoding="async"><figcaption>Durga</figcaption></figure>
-      <figure class="deity"><img src="deites/sita-ram.webp" alt="Sita, Rama et Hanuman" width="330" height="440" loading="lazy" decoding="async"><figcaption>Sita, Rama et Hanuman</figcaption></figure>
-      <figure class="deity"><img src="deites/tara.webp" alt="Tara" width="330" height="440" loading="lazy" decoding="async"><figcaption>Tara</figcaption></figure>
-      <figure class="deity"><img src="deites/vishnu.webp" alt="Vishnu" width="330" height="440" loading="lazy" decoding="async"><figcaption>Vishnu</figcaption></figure>
-      <figure class="deity"><img src="deites/radha-krishna.webp" alt="Radha et Krishna" width="330" height="440" loading="lazy" decoding="async"><figcaption>Radha et Krishna</figcaption></figure>
-      <figure class="deity"><img src="deites/ardhanarishvara.webp" alt="Ardhanarishvara" width="330" height="440" loading="lazy" decoding="async"><figcaption>Ardhanarishvara</figcaption></figure>
-      <figure class="deity"><img src="deites/avalokiteshvara.webp" alt="Avalokiteshvara" width="330" height="440" loading="lazy" decoding="async"><figcaption>Avalokiteshvara</figcaption></figure>
-      <figure class="deity"><img src="deites/devi.webp" alt="Devi" width="330" height="440" loading="lazy" decoding="async"><figcaption>Devi</figcaption></figure>
-      <figure class="deity"><img src="deites/bouddha.webp" alt="Bouddha" width="330" height="440" loading="lazy" decoding="async"><figcaption>Bouddha</figcaption></figure>
+      <img class="deity" src="deites/ganesha.webp" alt="Ganesha" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/saraswati.webp" alt="Saraswati" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/shiva.webp" alt="Shiva" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/lakshmi.webp" alt="Lakshmi" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/krishna.webp" alt="Krishna" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/durga.webp" alt="Durga" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/sita-ram.webp" alt="Sita, Rama et Hanuman" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/tara.webp" alt="Tara" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/vishnu.webp" alt="Vishnu" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/radha-krishna.webp" alt="Radha et Krishna" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/ardhanarishvara.webp" alt="Ardhanarishvara" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/avalokiteshvara.webp" alt="Avalokiteshvara" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/devi.webp" alt="Devi" width="330" height="440" loading="lazy" decoding="async">
+      <img class="deity" src="deites/bouddha.webp" alt="Bouddha" width="330" height="440" loading="lazy" decoding="async">
       <div class="deities-dup" aria-hidden="true">
-        <figure class="deity"><img src="deites/ganesha.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Ganesha</figcaption></figure>
-        <figure class="deity"><img src="deites/saraswati.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Saraswati</figcaption></figure>
-        <figure class="deity"><img src="deites/shiva.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Shiva</figcaption></figure>
-        <figure class="deity"><img src="deites/lakshmi.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Lakshmi</figcaption></figure>
-        <figure class="deity"><img src="deites/krishna.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Krishna</figcaption></figure>
-        <figure class="deity"><img src="deites/durga.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Durga</figcaption></figure>
-        <figure class="deity"><img src="deites/sita-ram.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Sita, Rama et Hanuman</figcaption></figure>
-        <figure class="deity"><img src="deites/tara.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Tara</figcaption></figure>
-        <figure class="deity"><img src="deites/vishnu.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Vishnu</figcaption></figure>
-        <figure class="deity"><img src="deites/radha-krishna.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Radha et Krishna</figcaption></figure>
-        <figure class="deity"><img src="deites/ardhanarishvara.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Ardhanarishvara</figcaption></figure>
-        <figure class="deity"><img src="deites/avalokiteshvara.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Avalokiteshvara</figcaption></figure>
-        <figure class="deity"><img src="deites/devi.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Devi</figcaption></figure>
-        <figure class="deity"><img src="deites/bouddha.webp" alt="" width="330" height="440" loading="lazy" decoding="async"><figcaption>Bouddha</figcaption></figure>
+        <img class="deity" src="deites/ganesha.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/saraswati.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/shiva.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/lakshmi.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/krishna.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/durga.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/sita-ram.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/tara.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/vishnu.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/radha-krishna.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/ardhanarishvara.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/avalokiteshvara.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/devi.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
+        <img class="deity" src="deites/bouddha.webp" alt="" width="330" height="440" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
