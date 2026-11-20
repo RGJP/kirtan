@@ -101,7 +101,7 @@
     opacity: .5;
   }
 
-  .ins { fill: none; stroke: var(--line); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .ins { fill: none; stroke: var(--line); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; opacity: .8; }
   .ins * { vector-effect: non-scaling-stroke; }
   .ins .wood  { fill: var(--wood); }
   .ins .brass { fill: var(--brass); }
@@ -524,175 +524,176 @@
 
       <!-- 1. Native American flute (top) -->
       <g><g class="ins" transform="translate(500 112) scale(.8) rotate(-2) scale(.58)">
-        <rect class="wood" x="-160" y="-6" width="320" height="12" rx="6"/>
-        <rect class="wood" x="-176" y="-4" width="18" height="8" rx="3"/>
-        <path class="wood" d="M -112 -6 C -110 -16 -100 -21 -90 -19 L -76 -17 C -69 -16 -67 -10 -70 -6 Z"/>
-        <line x1="-106" y1="-9" x2="-106" y2="8"/><line x1="-102" y1="-9" x2="-102" y2="8"/>
-        <line x1="138" y1="-6" x2="138" y2="6" class="fine"/><line x1="144" y1="-6" x2="144" y2="6" class="fine"/>
-        <line x1="-140" y1="-6" x2="-140" y2="6" class="fine"/>
-        <rect x="-62" y="-3" width="10" height="5" rx="1.5" class="dark"/>
-        <circle cx="8" cy="0" r="2.8" class="dark"/><circle cx="30" cy="0" r="2.8" class="dark"/><circle cx="52" cy="0" r="2.8" class="dark"/>
-        <circle cx="84" cy="0" r="2.8" class="dark"/><circle cx="106" cy="0" r="2.8" class="dark"/><circle cx="128" cy="0" r="2.8" class="dark"/>
-        <path d="M -104 6 Q -106 22 -100 36"/>
-        <path class="brass" d="M -100 36 C -110 50 -108 70 -98 84 C -88 70 -90 50 -100 36 Z"/>
-        <line x1="-100" y1="40" x2="-98" y2="82" class="fine"/>
+        <path class="wood" d="M -170 -6 L 152 -6 C 160 -6 162 6 152 6 L -170 6 Z"/>
+        <path class="wood" d="M -170 -4.5 L -184 -3.5 C -190 -3 -190 3 -184 3.5 L -170 4.5 Z"/>
+        <rect class="wood" x="-118" y="-11" width="34" height="5" rx="1.5"/>
+        <path class="wood" d="M -114 -11 C -116 -20 -106 -25 -97 -22 C -93 -27 -86 -27 -83 -23 L -76 -22 L -83 -19 C -85 -14 -90 -11 -94 -11 Z"/>
+        <circle cx="-87" cy="-23" r="1.1" class="dark"/>
+        <path class="fine" d="M -110 -11 L -110 6 M -106 -11 L -106 6"/>
+        <rect x="-70" y="-2.5" width="9" height="5" rx="1.5" class="dark"/>
+        <circle cx="6" cy="0" r="2.6" class="dark"/>
+        <circle cx="26" cy="0" r="2.6" class="dark"/>
+        <circle cx="46" cy="0" r="2.6" class="dark"/>
+        <circle cx="82" cy="0" r="2.6" class="dark"/>
+        <circle cx="102" cy="0" r="2.6" class="dark"/>
+        <circle cx="122" cy="0" r="2.6" class="dark"/>
+        <line x1="-150" y1="-6" x2="-150" y2="6" class="fine"/>
+        <line x1="-145" y1="-6" x2="-145" y2="6" class="fine"/>
+        <line x1="136" y1="-6" x2="136" y2="6" class="fine"/>
+        <line x1="141" y1="-6" x2="141" y2="6" class="fine"/>
+        <rect x="56" y="-6" width="8" height="12" class="brass"/>
+        <path class="fine" d="M -108 6 C -110 16 -104 22 -104 30"/>
+        <circle cx="-104" cy="22" r="2.6" class="brass"/><circle cx="-104" cy="29" r="2.2" class="dark"/>
+        <path class="brass" d="M -104 33 C -116 48 -114 74 -100 96 C -92 74 -92 50 -104 33 Z"/>
+        <path class="fine" d="M -104 34 C -103 56 -102 76 -100 98"/>
+        <path class="fine faint" d="M -103 50 L -110 46 M -103 60 L -111 57 M -102 70 L -110 68 M -103 50 L -97 45 M -102 60 L -96 56 M -102 70 L -95 67"/>
       </g></g>
 
       <!-- 2. Nylon (classical) guitar -->
       <g><g class="ins" transform="translate(716 158) scale(.8) rotate(12) scale(.5) translate(0 65)">
-        <rect class="wood" x="-6" y="-178" width="12" height="112"/>
-        <path class="wood" d="M -9 -178 L -10 -214 Q 0 -220 10 -214 L 9 -178 Z"/>
-        <rect x="-5" y="-208" width="3" height="24" rx="1.5" class="fine"/><rect x="2" y="-208" width="3" height="24" rx="1.5" class="fine"/>
-        <line x1="-10" y1="-202" x2="-16" y2="-202"/><line x1="-10" y1="-194" x2="-16" y2="-194"/><line x1="-10" y1="-186" x2="-16" y2="-186"/>
-        <line x1="10" y1="-202" x2="16" y2="-202"/><line x1="10" y1="-194" x2="16" y2="-194"/><line x1="10" y1="-186" x2="16" y2="-186"/>
-        <path class="wood" d="M 0 -70 C 30 -70 38 -55 36 -40 C 34 -28 26 -22 27 -10 C 28 4 46 14 46 40 C 46 68 24 80 0 80 C -24 80 -46 68 -46 40 C -46 14 -28 4 -27 -10 C -26 -22 -34 -28 -36 -40 C -38 -55 -30 -70 0 -70 Z"/>
-        <circle cx="0" cy="-14" r="15" class="fine"/><circle cx="0" cy="-14" r="12.5" class="fine" stroke-dasharray="2 2"/>
-        <circle cx="0" cy="-14" r="9.5" class="dark"/>
-        <rect x="-16" y="42" width="32" height="6" rx="2" class="wood"/>
-        <g class="fine"><line x1="-6" y1="-166" x2="6" y2="-166"/><line x1="-6" y1="-154" x2="6" y2="-154"/><line x1="-6" y1="-142" x2="6" y2="-142"/><line x1="-6" y1="-131" x2="6" y2="-131"/><line x1="-6" y1="-120" x2="6" y2="-120"/><line x1="-6" y1="-110" x2="6" y2="-110"/><line x1="-6" y1="-100" x2="6" y2="-100"/><line x1="-6" y1="-91" x2="6" y2="-91"/></g>
-        <g class="fine faint"><line x1="-3.5" y1="45" x2="-3.5" y2="-178"/><line x1="-1.2" y1="45" x2="-1.2" y2="-178"/><line x1="1.2" y1="45" x2="1.2" y2="-178"/><line x1="3.5" y1="45" x2="3.5" y2="-178"/></g>
+        <path class="wood" d="M -9 -180 L -11 -216 Q 0 -222 11 -216 L 9 -180 Z"/>
+        <rect x="-5.5" y="-210" width="3" height="24" rx="1.5" class="fine"/><rect x="2.5" y="-210" width="3" height="24" rx="1.5" class="fine"/>
+        <line x1="-10.5" y1="-204" x2="-17" y2="-204"/><circle cx="-18" cy="-204" r="1.8" class="dark"/>
+        <line x1="10.5" y1="-204" x2="17" y2="-204"/><circle cx="18" cy="-204" r="1.8" class="dark"/>
+        <line x1="-10.5" y1="-196" x2="-17" y2="-196"/><circle cx="-18" cy="-196" r="1.8" class="dark"/>
+        <line x1="10.5" y1="-196" x2="17" y2="-196"/><circle cx="18" cy="-196" r="1.8" class="dark"/>
+        <line x1="-10.5" y1="-188" x2="-17" y2="-188"/><circle cx="-18" cy="-188" r="1.8" class="dark"/>
+        <line x1="10.5" y1="-188" x2="17" y2="-188"/><circle cx="18" cy="-188" r="1.8" class="dark"/>
+        <rect class="wood" x="-6" y="-180" width="12" height="116"/>
+        <path class="wood" d="M 0 -70 C 18 -70 32 -62 32 -46 C 32 -32 23 -25 23 -12 C 23 0 45 10 45 38 C 45 66 24 82 0 82 C -24 82 -45 66 -45 38 C -45 10 -23 0 -23 -12 C -23 -25 -32 -32 -32 -46 C -32 -62 -18 -70 0 -70 Z"/>
+        <path class="fine faint" d="M 0 -66 C 15 -66 28 -59 28 -46 C 28 -33 19 -26 19 -12 C 19 2 41 12 41 38 C 41 62 22 78 0 78 C -22 78 -41 62 -41 38 C -41 12 -19 2 -19 -12 C -19 -26 -28 -33 -28 -46 C -28 -59 -15 -66 0 -66 Z"/>
+        <rect class="dark" x="-6" y="-180" width="12" height="104" style="fill-opacity:.3"/>
+        <g class="fine"><line x1="-6" y1="-168" x2="6" y2="-168"/><line x1="-6" y1="-156" x2="6" y2="-156"/><line x1="-6" y1="-145" x2="6" y2="-145"/><line x1="-6" y1="-134" x2="6" y2="-134"/><line x1="-6" y1="-124" x2="6" y2="-124"/><line x1="-6" y1="-114" x2="6" y2="-114"/><line x1="-6" y1="-105" x2="6" y2="-105"/><line x1="-6" y1="-96" x2="6" y2="-96"/><line x1="-6" y1="-88" x2="6" y2="-88"/></g>
+        <circle cx="0" cy="-20" r="17" class="fine"/><circle cx="0" cy="-20" r="14" class="fine" stroke-dasharray="2 2"/>
+        <circle cx="0" cy="-20" r="11" class="dark"/>
+        <path class="wood" d="M -17 44 L 17 44 L 15 52 L -15 52 Z"/><line x1="-12" y1="46" x2="12" y2="46" class="fine"/>
+        <g class="fine faint"><line x1="-5" y1="46" x2="-4" y2="-180"/><line x1="-3" y1="46" x2="-2.4" y2="-180"/><line x1="-1" y1="46" x2="-0.8" y2="-180"/><line x1="1" y1="46" x2="0.8" y2="-180"/><line x1="3" y1="46" x2="2.4" y2="-180"/><line x1="5" y1="46" x2="4" y2="-180"/></g>
       </g></g>
 
       <!-- 3. Sitar -->
       <g><g class="ins" transform="translate(864 282) scale(.8) rotate(20) scale(.45) translate(0 135)">
-        <circle class="wood" cx="0" cy="-300" r="20"/>
-        <rect class="wood" x="-11" y="-322" width="22" height="294" rx="3"/>
-        <path class="wood" d="M -16 -38 C -40 -36 -58 -10 -56 12 C -54 36 -30 50 0 50 C 30 50 54 36 56 12 C 58 -10 40 -36 16 -38 Z"/>
-        <ellipse cx="0" cy="12" rx="34" ry="20" class="fine" stroke-dasharray="3 3"/>
-        <rect x="-11" y="18" width="22" height="5" rx="1.5" class="wood"/>
-        <g class="fine">
-          <path d="M -11 -290 Q 0 -296 11 -290"/><path d="M -11 -270 Q 0 -276 11 -270"/><path d="M -11 -250 Q 0 -256 11 -250"/><path d="M -11 -230 Q 0 -236 11 -230"/><path d="M -11 -211 Q 0 -217 11 -211"/><path d="M -11 -192 Q 0 -198 11 -192"/><path d="M -11 -174 Q 0 -180 11 -174"/><path d="M -11 -156 Q 0 -162 11 -156"/><path d="M -11 -139 Q 0 -145 11 -139"/><path d="M -11 -122 Q 0 -128 11 -122"/><path d="M -11 -106 Q 0 -112 11 -106"/><path d="M -11 -90 Q 0 -96 11 -90"/><path d="M -11 -75 Q 0 -81 11 -75"/>
-        </g>
-        <line x1="-11" y1="-312" x2="-22" y2="-314"/><circle cx="-24" cy="-314" r="2.5" class="dark"/>
-        <line x1="-11" y1="-296" x2="-22" y2="-298"/><circle cx="-24" cy="-298" r="2.5" class="dark"/>
-        <line x1="11" y1="-306" x2="22" y2="-308"/><circle cx="24" cy="-308" r="2.5" class="dark"/>
-        <line x1="11" y1="-288" x2="22" y2="-290"/><circle cx="24" cy="-290" r="2.5" class="dark"/>
-        <g class="dark"><circle cx="14" cy="-250" r="1.6"/><circle cx="14" cy="-232" r="1.6"/><circle cx="14" cy="-214" r="1.6"/><circle cx="14" cy="-196" r="1.6"/><circle cx="14" cy="-178" r="1.6"/><circle cx="14" cy="-160" r="1.6"/></g>
-        <g class="fine faint"><line x1="-4" y1="20" x2="-4" y2="-318"/><line x1="0" y1="20" x2="0" y2="-318"/><line x1="4" y1="20" x2="4" y2="-318"/></g>
+        <circle class="wood" cx="0" cy="-266" r="24"/>
+        <path class="fine faint" d="M -20 -258 Q 0 -250 20 -258"/>
+        <rect class="wood" x="-10" y="-324" width="20" height="292" rx="3"/>
+        <path class="wood" d="M -7 -324 C -7 -334 7 -334 7 -324 Z"/>
+        <path class="wood" d="M -15 -34 C -42 -32 -60 -8 -58 18 C -56 44 -32 60 0 60 C 32 60 56 44 58 18 C 60 -8 42 -32 15 -34 Z"/>
+        <path class="wood" d="M -15 -34 C -14 -44 14 -44 15 -34 C 8 -30 -8 -30 -15 -34 Z"/>
+        <ellipse cx="0" cy="20" rx="40" ry="27" class="fine"/>
+        <ellipse cx="0" cy="20" rx="34" ry="22" class="fine faint" stroke-dasharray="3 3"/>
+        <rect x="-12" y="22" width="24" height="5" rx="1.5" class="brass"/>
+        <g class="fine"><path d="M -10 -300 Q 0 -306 10 -300"/><path d="M -10 -287 Q 0 -293 10 -287"/><path d="M -10 -274 Q 0 -280 10 -274"/><path d="M -10 -261 Q 0 -267 10 -261"/><path d="M -10 -248 Q 0 -254 10 -248"/><path d="M -10 -235 Q 0 -241 10 -235"/><path d="M -10 -222 Q 0 -228 10 -222"/><path d="M -10 -209 Q 0 -215 10 -209"/><path d="M -10 -196 Q 0 -202 10 -196"/><path d="M -10 -183 Q 0 -189 10 -183"/><path d="M -10 -170 Q 0 -176 10 -170"/><path d="M -10 -157 Q 0 -163 10 -157"/><path d="M -10 -144 Q 0 -150 10 -144"/><path d="M -10 -131 Q 0 -137 10 -131"/><path d="M -10 -118 Q 0 -124 10 -118"/><path d="M -10 -105 Q 0 -111 10 -105"/><path d="M -10 -92 Q 0 -98 10 -92"/><path d="M -10 -79 Q 0 -85 10 -79"/><path d="M -10 -66 Q 0 -72 10 -66"/></g>
+        <line x1="-10" y1="-314" x2="-22" y2="-316"/><ellipse cx="-25" cy="-316" rx="3.5" ry="2.2" class="dark"/>
+        <line x1="-10" y1="-298" x2="-22" y2="-300"/><ellipse cx="-25" cy="-300" rx="3.5" ry="2.2" class="dark"/>
+        <line x1="-10" y1="-282" x2="-22" y2="-284"/><ellipse cx="-25" cy="-284" rx="3.5" ry="2.2" class="dark"/>
+        <line x1="10" y1="-308" x2="22" y2="-310"/><ellipse cx="25" cy="-310" rx="3.5" ry="2.2" class="dark"/>
+        <line x1="10" y1="-292" x2="22" y2="-294"/><ellipse cx="25" cy="-294" rx="3.5" ry="2.2" class="dark"/>
+        <g class="dark"><circle cx="13.5" cy="-246" r="1.5"/><circle cx="13.5" cy="-230" r="1.5"/><circle cx="13.5" cy="-214" r="1.5"/><circle cx="13.5" cy="-198" r="1.5"/><circle cx="13.5" cy="-182" r="1.5"/><circle cx="13.5" cy="-166" r="1.5"/><circle cx="13.5" cy="-150" r="1.5"/><circle cx="13.5" cy="-134" r="1.5"/><circle cx="13.5" cy="-118" r="1.5"/><circle cx="13.5" cy="-102" r="1.5"/></g>
+        <g class="fine faint"><line x1="-4" y1="24" x2="-4" y2="-320"/><line x1="0" y1="24" x2="0" y2="-320"/><line x1="4" y1="24" x2="4" y2="-320"/></g>
       </g></g>
 
       <!-- 4. Djembe -->
       <g><g class="ins" transform="translate(896 443) scale(.8) rotate(-6) scale(.78)">
-        <path class="wood" d="M -40 -70 C -40 -20 -16 -5 -14 10 C -14 40 -30 60 -30 75 L 30 75 C 30 60 14 40 14 10 C 16 -5 40 -20 40 -70"/>
-        <ellipse cx="0" cy="-70" rx="40" ry="9" class="brass"/>
-        <path d="M -39 -60 Q 0 -52 39 -60"/>
-        <path d="M -30 -24 Q 0 -18 30 -24"/>
-        <polyline class="fine" points="-37,-58 -29,-23 -24,-57 -18,-21 -12,-56 -6,-20 0,-55 6,-20 12,-56 18,-21 24,-57 29,-23 37,-58"/>
-        <path d="M -14 14 Q 0 18 14 14" class="fine"/>
-        <path d="M -26 62 Q 0 66 26 62" class="fine"/>
+        <path class="wood" d="M -42 -70 C -42 -38 -30 -16 -15 -2 C -11 2 -11 10 -12 18 C -15 40 -27 58 -32 76 L 32 76 C 27 58 15 40 12 18 C 11 10 11 2 15 -2 C 30 -16 42 -38 42 -70 Z"/>
+        <ellipse cx="0" cy="-70" rx="42" ry="9" class="brass"/>
+        <ellipse cx="0" cy="-70" rx="36" ry="6.5" class="fine faint"/>
+        <path d="M -41.5 -60 Q 0 -51 41.5 -60"/>
+        <path d="M -35 -27 Q 0 -20 35 -27"/>
+        <path class="fine" d="M -40 -58.5 L -25.5 -23.7 L -20 -54 L -8.5 -21.1 L 0 -52.1 L 8.5 -21.1 L 20 -54 L 25.5 -23.7 L 40 -58.5"/>
+        <path class="fine faint" d="M -34 -25.5 L -30 -56.1 L -17 -22.1 L -10 -52.6 L 0 -20.7 L 10 -52.6 L 17 -22.1 L 30 -56.1 L 34 -25.5"/>
+        <path class="fine" d="M -13 6 Q 0 10 13 6"/><path class="fine" d="M -29 66 Q 0 71 29 66"/>
       </g></g>
 
       <!-- 5. Tibetan singing bowls -->
       <g><g class="ins" transform="translate(802 592) scale(.8) scale(.72) translate(-22 -12)">
-        <path class="faint" d="M -18 -18 Q 0 -27 18 -18"/><path class="faint" d="M -28 -30 Q 0 -43 28 -30"/>
-        <path class="brass" d="M -46 0 C -44 34 -22 46 0 46 C 22 46 44 34 46 0 Z"/>
-        <ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/>
-        <ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/>
-        <path d="M -40 14 Q 0 22 40 14" class="fine faint"/>
-        <g transform="translate(76 22) scale(.58)">
-          <path class="brass" d="M -46 0 C -44 34 -22 46 0 46 C 22 46 44 34 46 0 Z"/>
-          <ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/>
-          <ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/>
-        </g>
-        <g transform="translate(-68 22) rotate(-28)">
-          <rect class="wood" x="-4" y="-44" width="8" height="64" rx="4"/>
-          <rect x="-5" y="-44" width="10" height="16" rx="5" class="dark"/>
-        </g>
+        <path class="faint" d="M -16 -18 Q 0 -26 16 -18"/><path class="faint" d="M -28 -30 Q 0 -42 28 -30"/>
+        <ellipse cx="0" cy="45" rx="32" ry="6.5" class="wood"/><path class="fine faint" d="M -26 44 Q 0 49 26 44"/>
+        <path class="brass" d="M -46 0 C -45 30 -24 44 0 44 C 24 44 45 30 46 0 Z"/><ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/><ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/><path d="M -43 12 Q 0 21 43 12" class="fine faint"/><path d="M -38 22 Q 0 31 38 22" class="fine faint"/>
+        <g transform="translate(78 22) scale(.58)"><path class="brass" d="M -46 0 C -45 30 -24 44 0 44 C 24 44 45 30 46 0 Z"/><ellipse cx="0" cy="0" rx="46" ry="8" class="brass"/><ellipse cx="0" cy="0" rx="40" ry="5.5" class="fine"/><path d="M -43 12 Q 0 21 43 12" class="fine faint"/><path d="M -38 22 Q 0 31 38 22" class="fine faint"/></g>
+        <g transform="translate(-70 24) rotate(-28)"><rect class="wood" x="-4" y="-44" width="8" height="66" rx="4"/><rect x="-5.5" y="-44" width="11" height="18" rx="5.5" class="dark"/></g>
       </g></g>
 
       <!-- 6. Mridangam -->
       <g><g class="ins" transform="translate(198 592) scale(.8) rotate(-5) scale(.72)">
         <path class="wood" d="M -80 -36 C -40 -52 40 -54 85 -40 L 85 40 C 40 54 -40 52 -80 36 Z"/>
-        <g class="fine">
-          <path d="M -78 -28 C -30 -40 30 -42 83 -32"/>
-          <path d="M -78 -14 C -30 -20 30 -22 83 -16"/>
-          <path d="M -78 0 L 83 0"/>
-          <path d="M -78 14 C -30 20 30 22 83 16"/>
-          <path d="M -78 28 C -30 40 30 42 83 32"/>
-        </g>
+        <path class="fine" d="M -78 -30 Q 2 -37.5 83 -25.5 Q 2 -27.3 -78 -15 Q 2 -15.9 83 -8.5 Q 2 -5.7 -78 0 Q 2 5.7 83 8.5 Q 2 15.9 -78 15 Q 2 27.3 83 25.5 Q 2 37.5 -78 30"/>
+        <path d="M -2 -51 C 1 -16 1 16 -2 51" class="fine faint"/>
         <ellipse cx="-80" cy="0" rx="12" ry="36" class="wood"/>
         <ellipse cx="-80" cy="0" rx="8" ry="27" class="fine"/>
         <ellipse cx="85" cy="0" rx="14" ry="40" class="wood"/>
-        <ellipse cx="85" cy="0" rx="6" ry="16" class="dark"/>
+        <ellipse cx="85" cy="0" rx="10" ry="30" class="fine faint"/>
+        <ellipse cx="85" cy="0" rx="6" ry="15" class="dark"/>
       </g></g>
 
       <!-- 7. Kartals (hand cymbals) -->
       <g><g class="ins" transform="translate(104 443) scale(.8) rotate(8) scale(1)">
-        <path d="M -28.1 -8.3 C -20 -50 22 -48 30.3 -0.4"/>
-        <circle cx="0" cy="-40" r="2.6" class="dark"/>
-        <path d="M 0 -38 L -4 -26 M 0 -38 L 0 -25 M 0 -38 L 4 -26" class="fine"/>
-        <g transform="translate(-26 0) rotate(-14)">
-          <ellipse cx="0" cy="0" rx="26" ry="7.5" class="brass"/>
-          <path class="brass" d="M -9 -2 Q 0 -15 9 -2"/>
-          <ellipse cx="0" cy="0" rx="18" ry="4.5" class="fine faint"/>
-        </g>
-        <g transform="translate(28 8) rotate(16)">
-          <ellipse cx="0" cy="0" rx="26" ry="7.5" class="brass"/>
-          <path class="brass" d="M -9 -2 Q 0 -15 9 -2"/>
-          <ellipse cx="0" cy="0" rx="18" ry="4.5" class="fine faint"/>
-        </g>
+        <path d="M -24 -10 C -18 -46 20 -46 26 -2"/>
+        <circle cx="1" cy="-35" r="3" class="dark"/>
+        <path d="M 1 -32 L -3 -20 M 1 -32 L 1 -19 M 1 -32 L 5 -20" class="fine"/>
+        <g transform="translate(-26 -4) rotate(-16)"><path class="brass" d="M -24 0 C -24 6 24 6 24 0 L 24 2 C 24 9 -24 9 -24 2 Z"/><ellipse cx="0" cy="0" rx="24" ry="6.5" class="brass"/><path class="brass" d="M -8 -1 C -8 -11 8 -11 8 -1"/><ellipse cx="0" cy="0" rx="16" ry="4" class="fine faint"/><circle cx="0" cy="-8" r="1.3" class="dark"/></g>
+        <g transform="translate(28 6) rotate(18)"><path class="brass" d="M -24 0 C -24 6 24 6 24 0 L 24 2 C 24 9 -24 9 -24 2 Z"/><ellipse cx="0" cy="0" rx="24" ry="6.5" class="brass"/><path class="brass" d="M -8 -1 C -8 -11 8 -11 8 -1"/><ellipse cx="0" cy="0" rx="16" ry="4" class="fine faint"/><circle cx="0" cy="-8" r="1.3" class="dark"/></g>
       </g></g>
 
       <!-- 8. Bass -->
       <g><g class="ins" transform="translate(136 282) scale(.8) rotate(-20) scale(.42) translate(0 108)">
-        <rect class="wood" x="-5.5" y="-252" width="11" height="214"/>
-        <path class="wood" d="M -5.5 -252 L -8 -302 Q -2 -310 8 -303 L 11 -290 L 5.5 -252 Z"/>
-        <circle cx="-14" cy="-296" r="3.4" class="dark"/><circle cx="-14" cy="-283" r="3.4" class="dark"/><circle cx="-14" cy="-270" r="3.4" class="dark"/><circle cx="-14" cy="-257" r="3.4" class="dark"/>
-        <path class="wood" d="M -12 -50 C -20 -75 -38 -92 -46 -78 C -54 -62 -40 -44 -42 -24 C -44 -6 -60 10 -58 40 C -56 72 -30 90 0 90 C 30 90 56 74 56 44 C 56 16 40 0 42 -20 C 44 -40 56 -54 50 -66 C 44 -78 30 -70 14 -52 C 6 -46 -4 -44 -12 -50 Z"/>
-        <path d="M -30 -30 C -34 -6 -40 20 -24 30 L 26 30 C 36 10 30 -14 24 -36" class="fine faint"/>
-        <rect x="-15" y="-2" width="30" height="10" rx="3.5" class="dark"/>
-        <rect x="-14" y="52" width="28" height="9" rx="2" class="brass"/>
-        <g class="fine"><line x1="-5.5" y1="-236" x2="5.5" y2="-236"/><line x1="-5.5" y1="-218" x2="5.5" y2="-218"/><line x1="-5.5" y1="-201" x2="5.5" y2="-201"/><line x1="-5.5" y1="-185" x2="5.5" y2="-185"/><line x1="-5.5" y1="-170" x2="5.5" y2="-170"/><line x1="-5.5" y1="-156" x2="5.5" y2="-156"/><line x1="-5.5" y1="-143" x2="5.5" y2="-143"/><line x1="-5.5" y1="-131" x2="5.5" y2="-131"/></g>
-        <g class="fine faint"><line x1="-3.3" y1="56" x2="-3.3" y2="-252"/><line x1="-1.1" y1="56" x2="-1.1" y2="-252"/><line x1="1.1" y1="56" x2="1.1" y2="-252"/><line x1="3.3" y1="56" x2="3.3" y2="-252"/></g>
+        <path class="wood" d="M -6 -252 L -9 -300 C -9 -310 1 -314 5 -306 L 11 -286 C 13 -278 9 -266 6 -252 Z"/>
+        <line x1="-8" y1="-298" x2="-14" y2="-298"/><circle cx="-16" cy="-298" r="3.2" class="dark"/>
+        <line x1="-8" y1="-285" x2="-14" y2="-285"/><circle cx="-16" cy="-285" r="3.2" class="dark"/>
+        <line x1="-8" y1="-272" x2="-14" y2="-272"/><circle cx="-16" cy="-272" r="3.2" class="dark"/>
+        <line x1="-8" y1="-259" x2="-14" y2="-259"/><circle cx="-16" cy="-259" r="3.2" class="dark"/>
+        <rect class="wood" x="-6" y="-254" width="12" height="216"/>
+        <path class="wood" d="M -12 -44 C -18 -60 -28 -82 -40 -78 C -52 -74 -46 -50 -44 -34 C -42 -16 -58 -2 -58 32 C -58 70 -32 92 0 92 C 32 92 58 72 58 40 C 58 12 42 0 42 -18 C 42 -32 52 -46 46 -56 C 40 -64 28 -56 14 -44 Z"/>
+        <path class="fine faint" d="M -10 -44 C -16 -56 -26 -70 -34 -66 C -42 -62 -38 -46 -36 -34 C -34 -18 -46 -2 -46 18 L 24 18 C 32 0 30 -20 32 -32 C 34 -44 28 -50 14 -42"/>
+        <rect x="-16" y="-4" width="18" height="9" rx="3.5" class="dark"/><rect x="-2" y="8" width="18" height="9" rx="3.5" class="dark"/>
+        <rect x="-15" y="54" width="30" height="10" rx="2" class="brass"/>
+        <circle cx="34" cy="56" r="4" class="dark"/><circle cx="42" cy="70" r="4" class="dark"/>
+        <g class="fine"><line x1="-6" y1="-238" x2="6" y2="-238"/><line x1="-6" y1="-221" x2="6" y2="-221"/><line x1="-6" y1="-205" x2="6" y2="-205"/><line x1="-6" y1="-190" x2="6" y2="-190"/><line x1="-6" y1="-176" x2="6" y2="-176"/><line x1="-6" y1="-163" x2="6" y2="-163"/><line x1="-6" y1="-151" x2="6" y2="-151"/><line x1="-6" y1="-140" x2="6" y2="-140"/><line x1="-6" y1="-129" x2="6" y2="-129"/><line x1="-6" y1="-119" x2="6" y2="-119"/><line x1="-6" y1="-110" x2="6" y2="-110"/><line x1="-6" y1="-101" x2="6" y2="-101"/><line x1="-6" y1="-93" x2="6" y2="-93"/><line x1="-6" y1="-85" x2="6" y2="-85"/><line x1="-6" y1="-78" x2="6" y2="-78"/><line x1="-6" y1="-71" x2="6" y2="-71"/><line x1="-6" y1="-64" x2="6" y2="-64"/><line x1="-6" y1="-58" x2="6" y2="-58"/></g>
+        <g class="dark"><circle cx="0" cy="-197" r="1.5"/><circle cx="0" cy="-170" r="1.5"/><circle cx="0" cy="-145" r="1.5"/><circle cx="0" cy="-124" r="1.5"/></g>
+        <g class="fine faint"><line x1="-3.3" y1="58" x2="-3.3" y2="-254"/><line x1="-1.1" y1="58" x2="-1.1" y2="-254"/><line x1="1.1" y1="58" x2="1.1" y2="-254"/><line x1="3.3" y1="58" x2="3.3" y2="-254"/></g>
       </g></g>
 
       <!-- 9. Violin (with bow) -->
       <g><g class="ins" transform="translate(284 158) scale(.8) rotate(-12) scale(.55) translate(0 45)">
-        <g transform="rotate(32)">
-          <line x1="-2" y1="-150" x2="-2" y2="78"/>
-          <line x1="3" y1="-146" x2="3" y2="72" class="fine"/>
-          <rect x="-4" y="62" width="9" height="12" rx="2" class="dark"/>
-        </g>
-        <path class="wood" d="M 0 -62 C 20 -62 31 -54 31 -38 C 31 -26 24 -22 19 -16 C 15 -12 15 4 19 8 C 26 14 36 22 36 40 C 36 60 20 70 0 70 C -20 70 -36 60 -36 40 C -36 22 -26 14 -19 8 C -15 4 -15 -12 -19 -16 C -24 -22 -31 -26 -31 -38 C -31 -54 -20 -62 0 -62 Z"/>
-        <path class="fine faint" d="M 0 -57 C 16 -57 26 -50 26 -38 C 26 -28 19 -23 14 -16 M 0 -57 C -16 -57 -26 -50 -26 -38 C -26 -28 -19 -23 -14 -16 M -14 12 C -22 18 -31 26 -31 40 C -31 56 -17 65 0 65 C 17 65 31 56 31 40 C 31 26 22 18 14 12"/>
-        <path d="M 11 -6 C 7 4 15 14 11 26" class="fine"/><circle cx="11" cy="-6" r="1.4" class="dark"/><circle cx="11" cy="26" r="1.4" class="dark"/>
-        <path d="M -11 -6 C -7 4 -15 14 -11 26" class="fine"/><circle cx="-11" cy="-6" r="1.4" class="dark"/><circle cx="-11" cy="26" r="1.4" class="dark"/>
+        <g transform="rotate(32)"><line x1="-2" y1="-152" x2="-2" y2="80"/><line x1="3" y1="-146" x2="3" y2="72" class="fine"/><rect x="-4.5" y="62" width="10" height="13" rx="2" class="dark"/><circle cx="-2" cy="-152" r="2" class="dark"/></g>
+        <path class="wood" d="M 0 -64 C 18 -64 30 -56 30 -40 C 30 -28 24 -22 19 -16 C 14 -12 14 6 19 10 C 28 16 36 26 36 42 C 36 62 20 72 0 72 C -20 72 -36 62 -36 42 C -36 26 -28 16 -19 10 C -14 6 -14 -12 -19 -16 C -24 -22 -30 -28 -30 -40 C -30 -56 -18 -64 0 -64 Z"/>
+        <path class="fine faint" transform="translate(0 4) scale(.9)" d="M 0 -64 C 18 -64 30 -56 30 -40 C 30 -28 24 -22 19 -16 C 14 -12 14 6 19 10 C 28 16 36 26 36 42 C 36 62 20 72 0 72 C -20 72 -36 62 -36 42 C -36 26 -28 16 -19 10 C -14 6 -14 -12 -19 -16 C -24 -22 -30 -28 -30 -40 C -30 -56 -18 -64 0 -64 Z"/>
+        <path class="fine" d="M 12 -8 C 8 2 16 12 12 22"/><circle cx="12" cy="-8" r="1.5" class="dark"/><circle cx="12" cy="22" r="1.5" class="dark"/>
+        <path class="fine" d="M -12 -8 C -8 2 -16 12 -12 22"/><circle cx="-12" cy="-8" r="1.5" class="dark"/><circle cx="-12" cy="22" r="1.5" class="dark"/>
+        <path d="M -10 20 Q 0 16 10 20" stroke-width="2"/>
+        <path class="dark" d="M -5 38 L -7 62 Q 0 65 7 62 L 5 38 Z"/>
+        <path class="fine faint" d="M -30 58 Q -22 66 -12 66"/>
         <rect x="-4" y="-150" width="8" height="18" class="wood"/>
-        <rect x="-4.5" y="-132" width="9" height="122" rx="2" class="dark"/>
+        <path class="dark" d="M -3.5 -134 L 3.5 -134 L 5 -8 L -5 -8 Z"/>
         <path class="wood" d="M 0 -150 C -9 -152 -10 -166 -2 -169 C 6 -171 10 -163 5 -159 C 1 -157 -1 -161 1 -163"/>
-        <line x1="-4" y1="-146" x2="-11" y2="-147"/><line x1="-4" y1="-138" x2="-11" y2="-139"/>
-        <line x1="4" y1="-142" x2="11" y2="-143"/><line x1="4" y1="-134" x2="11" y2="-135"/>
-        <path d="M -11 20 Q 0 16 11 20" stroke-width="2"/>
-        <path class="dark" d="M -5 40 L -7 64 L 7 64 L 5 40 Z"/>
-        <g class="fine faint"><line x1="-3" y1="42" x2="-3" y2="-148"/><line x1="-1" y1="42" x2="-1" y2="-148"/><line x1="1" y1="42" x2="1" y2="-148"/><line x1="3" y1="42" x2="3" y2="-148"/></g>
+        <line x1="-4" y1="-146" x2="-11" y2="-147"/><circle cx="-11" cy="-147" r="1.6" class="dark"/>
+        <line x1="-4" y1="-138" x2="-11" y2="-139"/><circle cx="-11" cy="-139" r="1.6" class="dark"/>
+        <line x1="4" y1="-142" x2="11" y2="-143"/><circle cx="11" cy="-143" r="1.6" class="dark"/>
+        <line x1="4" y1="-134" x2="11" y2="-135"/><circle cx="11" cy="-135" r="1.6" class="dark"/>
+        <g class="fine faint"><line x1="-3" y1="40" x2="-2.4" y2="-148"/><line x1="-1" y1="40" x2="-0.8" y2="-148"/><line x1="1" y1="40" x2="0.8" y2="-148"/><line x1="3" y1="40" x2="2.4" y2="-148"/></g>
       </g></g>
 
       <!-- 11. Harp -->
       <g><g class="ins" transform="translate(387 680) scale(.8) rotate(-4) scale(.95) translate(0 -4)">
-        <g class="fine">
-          <line x1="-24" y1="-55" x2="-24" y2="50"/><line x1="-14" y1="-51" x2="-14" y2="34"/><line x1="-4" y1="-46" x2="-4" y2="17"/>
-          <line x1="6" y1="-45" x2="6" y2="1"/><line x1="16" y1="-48" x2="16" y2="-15"/><line x1="26" y1="-53" x2="26" y2="-32"/>
-          <line x1="-19" y1="-53" x2="-19" y2="42" class="faint"/><line x1="-9" y1="-48" x2="-9" y2="25" class="faint"/><line x1="1" y1="-45" x2="1" y2="9" class="faint"/><line x1="11" y1="-46" x2="11" y2="-7" class="faint"/><line x1="21" y1="-50" x2="21" y2="-24" class="faint"/>
-        </g>
-        <path class="wood" d="M 36 -50 L 45 -45 L -22 66 L -33 62 Z"/>
-        <circle cx="14" cy="-6" r="2.2" class="dark"/><circle cx="-4" cy="25" r="2.2" class="dark"/>
-        <path class="wood" d="M -41 -52 Q -47 4 -35 64 L -28 64 Q -40 4 -34 -50 Z"/>
-        <path class="wood" d="M -42 -54 C -24 -76 0 -50 14 -56 C 26 -61 36 -66 46 -50 L 38 -45 C 31 -56 24 -53 14 -49 C 0 -42 -20 -66 -34 -48 Z"/>
-        <circle cx="-40" cy="-56" r="3" class="dark"/>
-        <line x1="-40" y1="66" x2="-16" y2="66"/>
+        <g class="fine"><line x1="-28" y1="-54.1" x2="-28" y2="74.4"/><line x1="-23" y1="-54.6" x2="-23" y2="64.9" class="faint"/><line x1="-18" y1="-53.9" x2="-18" y2="55.4"/><line x1="-13" y1="-52.4" x2="-13" y2="45.9" class="faint"/><line x1="-8" y1="-50.6" x2="-8" y2="36.4"/><line x1="-3" y1="-48.9" x2="-3" y2="27" class="faint"/><line x1="2" y1="-47.6" x2="2" y2="17.5"/><line x1="7" y1="-47.4" x2="7" y2="8" class="faint"/><line x1="12" y1="-49" x2="12" y2="-1.5"/><line x1="17" y1="-51.4" x2="17" y2="-11" class="faint"/><line x1="22" y1="-53" x2="22" y2="-20.4"/><line x1="27" y1="-53.2" x2="27" y2="-29.9" class="faint"/></g>
+        <path class="wood" d="M 36 -46 L 46 -42 L -8 70 L -22 64 Z"/>
+        <g class="dark"><circle cx="28" cy="-27.8" r="1.4"/><circle cx="14" cy="-1.3" r="1.4"/><circle cx="0" cy="25.3" r="1.4"/><circle cx="-14" cy="51.8" r="1.4"/></g>
+        <path class="wood" d="M -42 -52 C -48 0 -44 34 -34 66 L -26 66 C -36 34 -40 0 -35 -50 Z"/>
+        <path class="wood" d="M -42 -54 C -26 -80 0 -50 14 -58 C 26 -64 38 -68 47 -44 L 36 -46 C 30 -58 22 -55 12 -50 C -2 -42 -22 -66 -36 -50 Z"/>
+        <g class="dark"><circle cx="-28" cy="-56.6" r="1"/><circle cx="-23" cy="-57.1" r="1"/><circle cx="-18" cy="-56.4" r="1"/><circle cx="-13" cy="-54.9" r="1"/><circle cx="-8" cy="-53.1" r="1"/><circle cx="-3" cy="-51.4" r="1"/><circle cx="2" cy="-50.1" r="1"/><circle cx="7" cy="-49.9" r="1"/><circle cx="12" cy="-51.5" r="1"/><circle cx="17" cy="-53.9" r="1"/><circle cx="22" cy="-55.5" r="1"/><circle cx="27" cy="-55.7" r="1"/></g>
+        <circle cx="-41" cy="-56" r="3" class="dark"/>
+        <path d="M -40 68 L -4 72"/>
       </g></g>
 
       <!-- 12. Harmonium (kirtan style) -->
       <g><g class="ins" transform="translate(613 680) scale(.8) scale(1)">
-        <path class="wood" d="M -54 -28 L 54 -28 L 50 -46 L -50 -46 Z"/>
-        <g class="fine faint"><line x1="-53" y1="-33" x2="53" y2="-33"/><line x1="-52" y1="-38" x2="52" y2="-38"/><line x1="-51" y1="-42" x2="51" y2="-42"/></g>
+        <path class="wood" d="M -52 -28 L 52 -28 L 48 -48 L -48 -48 Z"/>
+        <g class="fine faint"><line x1="-50.0" y1="-32" x2="50.0" y2="-32"/><line x1="-49.6" y1="-36" x2="49.6" y2="-36"/><line x1="-49.2" y1="-40" x2="49.2" y2="-40"/><line x1="-48.8" y1="-44" x2="48.8" y2="-44"/></g>
         <path class="wood" d="M -70 -10 L 70 -10 L 60 -28 L -60 -28 Z"/>
-        <path d="M -48 -12 L 48 -12 L 42 -25 L -42 -25 Z" style="fill:var(--keys)"/>
-        <g class="fine"><line x1="-44.8" y1="-12" x2="-39.2" y2="-25"/><line x1="-39.2" y1="-12" x2="-34.3" y2="-25"/><line x1="-33.6" y1="-12" x2="-29.4" y2="-25"/><line x1="-28.0" y1="-12" x2="-24.5" y2="-25"/><line x1="-22.4" y1="-12" x2="-19.6" y2="-25"/><line x1="-16.8" y1="-12" x2="-14.7" y2="-25"/><line x1="-11.2" y1="-12" x2="-9.8" y2="-25"/><line x1="-5.6" y1="-12" x2="-4.9" y2="-25"/><line x1="0.0" y1="-12" x2="0.0" y2="-25"/><line x1="5.6" y1="-12" x2="4.9" y2="-25"/><line x1="11.2" y1="-12" x2="9.8" y2="-25"/><line x1="16.8" y1="-12" x2="14.7" y2="-25"/><line x1="22.4" y1="-12" x2="19.6" y2="-25"/><line x1="28.0" y1="-12" x2="24.5" y2="-25"/><line x1="33.6" y1="-12" x2="29.4" y2="-25"/><line x1="39.2" y1="-12" x2="34.3" y2="-25"/><line x1="44.8" y1="-12" x2="39.2" y2="-25"/></g>
-        <g class="dark" stroke="none"><path d="M -38.4 -25 L -35.1 -25 L -37.7 -18 L -41.1 -18 Z"/><path d="M -33.5 -25 L -30.2 -25 L -32.4 -18 L -35.8 -18 Z"/><path d="M -23.7 -25 L -20.4 -25 L -21.9 -18 L -25.3 -18 Z"/><path d="M -18.8 -25 L -15.6 -25 L -16.7 -18 L -20.1 -18 Z"/><path d="M -13.8 -25 L -10.7 -25 L -11.4 -18 L -14.8 -18 Z"/><path d="M -4.1 -25 L -0.9 -25 L -0.9 -18 L -4.3 -18 Z"/><path d="M 0.9 -25 L 4.1 -25 L 4.3 -18 L 0.9 -18 Z"/><path d="M 10.7 -25 L 13.8 -25 L 14.8 -18 L 11.4 -18 Z"/><path d="M 15.6 -25 L 18.8 -25 L 20.1 -18 L 16.7 -18 Z"/><path d="M 20.4 -25 L 23.7 -25 L 25.3 -18 L 21.9 -18 Z"/><path d="M 30.2 -25 L 33.5 -25 L 35.8 -18 L 32.4 -18 Z"/><path d="M 35.1 -25 L 38.4 -25 L 41.1 -18 L 37.7 -18 Z"/></g>
+        <path d="M -50 -12 L 50 -12 L 44 -26 L -44 -26 Z" style="fill:var(--keys)"/>
+        <g class="fine"><line x1="-44.1" y1="-12" x2="-38.8" y2="-26"/><line x1="-38.2" y1="-12" x2="-33.6" y2="-26"/><line x1="-32.4" y1="-12" x2="-28.5" y2="-26"/><line x1="-26.5" y1="-12" x2="-23.3" y2="-26"/><line x1="-20.6" y1="-12" x2="-18.1" y2="-26"/><line x1="-14.7" y1="-12" x2="-12.9" y2="-26"/><line x1="-8.8" y1="-12" x2="-7.8" y2="-26"/><line x1="-2.9" y1="-12" x2="-2.6" y2="-26"/><line x1="2.9" y1="-12" x2="2.6" y2="-26"/><line x1="8.8" y1="-12" x2="7.8" y2="-26"/><line x1="14.7" y1="-12" x2="12.9" y2="-26"/><line x1="20.6" y1="-12" x2="18.1" y2="-26"/><line x1="26.5" y1="-12" x2="23.3" y2="-26"/><line x1="32.4" y1="-12" x2="28.5" y2="-26"/><line x1="38.2" y1="-12" x2="33.6" y2="-26"/><line x1="44.1" y1="-12" x2="38.8" y2="-26"/></g>
+        <g class="dark" stroke="none" style="fill-opacity:.75"><path d="M -40.5 -26 L -37.2 -26 L -39.7 -19 L -43.2 -19 Z"/><path d="M -35.3 -26 L -32 -26 L -34.2 -19 L -37.7 -19 Z"/><path d="M -25 -26 L -21.6 -26 L -23.1 -19 L -26.7 -19 Z"/><path d="M -19.8 -26 L -16.5 -26 L -17.6 -19 L -21.1 -19 Z"/><path d="M -14.6 -26 L -11.3 -26 L -12.1 -19 L -15.6 -19 Z"/><path d="M -4.2 -26 L -0.9 -26 L -1 -19 L -4.5 -19 Z"/><path d="M 0.9 -26 L 4.2 -26 L 4.5 -19 L 1 -19 Z"/><path d="M 11.3 -26 L 14.6 -26 L 15.6 -19 L 12.1 -19 Z"/><path d="M 16.5 -26 L 19.8 -26 L 21.1 -19 L 17.6 -19 Z"/><path d="M 21.6 -26 L 25 -26 L 26.7 -19 L 23.1 -19 Z"/><path d="M 32 -26 L 35.3 -26 L 37.7 -19 L 34.2 -19 Z"/><path d="M 37.2 -26 L 40.5 -26 L 43.2 -19 L 39.7 -19 Z"/></g>
         <rect class="wood" x="-70" y="-10" width="140" height="40" rx="2"/>
         <line x1="-70" y1="2" x2="70" y2="2" class="fine"/>
-        <g class="dark"><circle cx="-56" cy="-4" r="2.2"/><circle cx="-42" cy="-4" r="2.2"/><circle cx="-28" cy="-4" r="2.2"/><circle cx="-14" cy="-4" r="2.2"/><circle cx="0" cy="-4" r="2.2"/><circle cx="14" cy="-4" r="2.2"/><circle cx="28" cy="-4" r="2.2"/><circle cx="42" cy="-4" r="2.2"/><circle cx="56" cy="-4" r="2.2"/></g>
+        <g class="dark"><circle cx="-56" cy="-4" r="2.4"/><circle cx="-42" cy="-4" r="2.4"/><circle cx="-28" cy="-4" r="2.4"/><circle cx="-14" cy="-4" r="2.4"/><circle cx="0" cy="-4" r="2.4"/><circle cx="14" cy="-4" r="2.4"/><circle cx="28" cy="-4" r="2.4"/><circle cx="42" cy="-4" r="2.4"/><circle cx="56" cy="-4" r="2.4"/></g>
         <rect x="-50" y="8" width="100" height="16" rx="8" class="fine"/>
         <g class="fine faint"><path d="M -40 16 Q -30 10 -20 16 Q -10 22 0 16 Q 10 10 20 16 Q 30 22 40 16"/></g>
         <rect x="-66" y="30" width="10" height="4" rx="1" class="dark"/><rect x="56" y="30" width="10" height="4" rx="1" class="dark"/>
