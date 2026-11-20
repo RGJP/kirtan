@@ -400,6 +400,35 @@
     .roll { padding: 16px 12px; }
     .roll-panel { padding: 2.4rem 1.1rem 2rem; border-radius: 16px; }
   }
+  /* ---------- Jukebox : chants au hasard, l'un après l'autre, sans fin ---------- */
+  .jb-btn {
+    display: inline-flex; flex-direction: column; align-items: center; gap: .35rem; margin-top: 1.6rem;
+    padding: .4rem .8rem; border: 0; background: none; cursor: pointer; color: var(--accent);
+    font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2.5px; text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .jb-btn .jb-art { width: 46px; height: 58px; transition: transform .35s ease; }
+  .jb-btn span { color: var(--ink); transition: color .3s; }
+  .jb-btn:hover .jb-art, .jb-btn:focus-visible .jb-art { transform: translateY(-3px) rotate(-4deg); }
+  .jb-btn:hover span, .jb-btn:focus-visible span { color: var(--accent); }
+  .jb-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 10px; }
+  .jb-stage { position: relative; width: 92px; margin: .4rem auto 1.6rem; color: var(--accent); }
+  .jb-stage .jb-art { width: 92px; height: 115px; display: block; }
+  .jb-notes { position: absolute; inset: 0; pointer-events: none; }
+  .jb-notes i {
+    position: absolute; top: 30%; left: 50%; font-style: normal; font-size: 1.1rem; color: var(--accent); opacity: 0;
+  }
+  .jb.on .jb-notes i { animation: jb-note 3.6s ease-out infinite; }
+  .jb.on .jb-notes i:nth-child(2) { animation-delay: 1.2s; --dx: 34px; }
+  .jb.on .jb-notes i:nth-child(3) { animation-delay: 2.4s; --dx: -30px; }
+  @keyframes jb-note {
+    0% { opacity: 0; transform: translate(-50%, 0) scale(.7); }
+    20% { opacity: .9; }
+    100% { opacity: 0; transform: translate(calc(-50% + var(--dx, -38px)), -70px) scale(1.1); }
+  }
+  .jb .players { display: block; text-align: left; }
+  .jb-hint { margin: 1.4rem auto 0; max-width: 32ch; font-size: .88rem; line-height: 1.55; color: var(--ink-soft); }
+  @media (prefers-reduced-motion: reduce) { .jb.on .jb-notes i { animation: none; } .jb-btn .jb-art { transition: none; } }
   /* ---------- Accords (overlay pour les musiciens) ---------- */
   .chant-links { display: flex; align-items: center; gap: 1.2rem; margin: .65rem 0 0 .2rem; }
   .chant-links .yt { margin: 0; }
@@ -1732,6 +1761,7 @@
   <span class="f-name">Ānanda Saṅgam</span>
   <span class="f-skt">आनन्द सङ्गम</span>
   <span class="f-tag">Kirtan à Québec</span>
+  <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Écouter du kirtan en continu"><svg class="jb-art" viewBox="0 0 48 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 54 V24 A16 16 0 0 1 40 24 V54 Z"/><path d="M12.5 26 A11.5 11.5 0 0 1 35.5 26"/><path d="M16.5 27 A7.5 7.5 0 0 1 31.5 27"/><rect x="13" y="29" width="22" height="10" rx="2"/><path d="M17 43.5 V50 M21 43.5 V50 M24 43.5 V50 M27 43.5 V50 M31 43.5 V50"/><path d="M5 54 H43 M7 57.5 H41"/></g><g fill="currentColor"><ellipse cx="24" cy="34" rx="6.5" ry="2.6" opacity=".35"/><circle cx="24" cy="34" r="1.1"/><circle cx="24" cy="12" r="1.4"/></g></svg><span>Jukebox</span></button>
   <div class="f-social">
     <a href="https://www.facebook.com/share/1CHtgdt8px/" target="_blank" rel="noopener" aria-label="Notre page Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg></a>
     <a href="mailto:raffael.jomphe@gmail.com?subject=Kirtan%20%C4%80nanda%20Sa%E1%B9%85gam" aria-label="Nous écrire par courriel" title="Courriel"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.8 7 L12 13 L20.2 7" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></a>
@@ -1745,6 +1775,19 @@
     <div class="ornament" aria-hidden="true"><span></span><svg class="lotus-line" viewBox="0 0 48 32"><g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M24 3.5 C19 9.5 19 19.5 24 26 C29 19.5 29 9.5 24 3.5 Z"/><path d="M24 26 C17.5 24 12.5 18 11.5 10 C17.5 12 22 17.5 24 26"/><path d="M24 26 C30.5 24 35.5 18 36.5 10 C30.5 12 26 17.5 24 26"/><path d="M23 26.8 C15 27.2 7.5 23.5 3.5 17.5 C10.5 16.5 18 20 23 26.8"/><path d="M25 26.8 C33 27.2 40.5 23.5 44.5 17.5 C37.5 16.5 30 20 25 26.8"/><path d="M15 29.8 Q24 31.6 33 29.8"/></g></svg><span></span></div>
     <div class="players" id="roll-list"></div>
     <button class="fb-btn roll-again" type="button" aria-label="Relancer les dés" title="Relancer les dés"><svg class="die" viewBox="0 0 32 32" aria-hidden="true"><rect x="3.5" y="3.5" width="25" height="25" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><g fill="currentColor"><circle cx="10.5" cy="10.5" r="2.2"/><circle cx="21.5" cy="10.5" r="2.2"/><circle cx="16" cy="16" r="2.2"/><circle cx="10.5" cy="21.5" r="2.2"/><circle cx="21.5" cy="21.5" r="2.2"/></g></svg></button>
+  </div>
+</div>
+
+<!-- Jukebox : les chants s'enchaînent au hasard, sans fin (bouton du pied de page) -->
+<div class="roll jb" id="jb" role="dialog" aria-modal="true" aria-labelledby="jb-title" hidden>
+  <div class="roll-panel">
+    <button class="roll-close" type="button" aria-label="Fermer"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+    <p class="acc-kicker">Jukebox</p>
+    <h2 id="jb-title">Kirtan en continu</h2>
+    <div class="jb-stage"><svg class="jb-art" viewBox="0 0 48 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 54 V24 A16 16 0 0 1 40 24 V54 Z"/><path d="M12.5 26 A11.5 11.5 0 0 1 35.5 26"/><path d="M16.5 27 A7.5 7.5 0 0 1 31.5 27"/><rect x="13" y="29" width="22" height="10" rx="2"/><path d="M17 43.5 V50 M21 43.5 V50 M24 43.5 V50 M27 43.5 V50 M31 43.5 V50"/><path d="M5 54 H43 M7 57.5 H41"/></g><g fill="currentColor"><ellipse cx="24" cy="34" rx="6.5" ry="2.6" opacity=".35"/><circle cx="24" cy="34" r="1.1"/><circle cx="24" cy="12" r="1.4"/></g></svg><span class="jb-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♪</i></span></div>
+    <div class="players" id="jb-now" aria-live="polite"></div>
+    <button class="fb-btn roll-again jb-next" type="button" aria-label="Autre chant au hasard" title="Autre chant au hasard"><svg class="die" viewBox="0 0 32 32" aria-hidden="true"><rect x="3.5" y="3.5" width="25" height="25" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><g fill="currentColor"><circle cx="10.5" cy="10.5" r="2.2"/><circle cx="21.5" cy="10.5" r="2.2"/><circle cx="16" cy="16" r="2.2"/><circle cx="10.5" cy="21.5" r="2.2"/><circle cx="21.5" cy="21.5" r="2.2"/></g></svg></button>
+    <p class="jb-hint">Les chants s'enchaînent au hasard, l'un après l'autre. Le dé passe au suivant.</p>
   </div>
 </div>
 
@@ -2126,10 +2169,66 @@
     });
     lyr.querySelector('.roll-close').addEventListener('click', closeLyr);
     lyr.addEventListener('click', function (e) { if (e.target === lyr) closeLyr(); });
+    // Jukebox : un chant au hasard joué en entier, puis un autre, sans fin
+    var jb = document.getElementById('jb'), jbNow = document.getElementById('jb-now'), jbBag = [], jbLast = null;
+    function jbMine() { return cur && jb.contains(cur); }
+    function jbPick() {
+      if (!jbBag.length) {
+        // sans les démos (enregistrements bruts pour les musiciens, pas faits pour l'écoute)
+        jbBag = Array.prototype.filter.call(document.querySelectorAll('.chants .chant[data-id]'), function (c) { return !c.querySelector('.demo'); });
+        for (var i = jbBag.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = jbBag[i]; jbBag[i] = jbBag[j]; jbBag[j] = t; }
+        if (jbBag.length > 1 && jbBag[jbBag.length - 1].dataset.id === jbLast) jbBag.unshift(jbBag.pop());
+      }
+      return jbBag.pop();
+    }
+    function jbNext() {
+      var card = jbPick(), c = card.cloneNode(true);
+      jbLast = card.dataset.id;
+      c.classList.remove('active', 'playing', 'loading');
+      c.querySelector('.play').removeAttribute('aria-pressed');
+      paint(c, 0);
+      jbNow.textContent = '';
+      jbNow.appendChild(c);
+      select(c, 0);
+    }
+    function jbStop() {
+      if (jbMine()) {
+        audio.pause(); audio.removeAttribute('src'); audio.load();
+        cur.classList.remove('active', 'playing', 'loading'); cur = null;
+      }
+      jb.classList.remove('on');
+    }
+    function openJb() {
+      jb.hidden = false; jb.classList.add('open'); jb.scrollTop = 0;
+      document.documentElement.classList.add('roll-lock');
+      jbNext();
+      if ('mediaSession' in navigator) try { navigator.mediaSession.setActionHandler('nexttrack', jbNext); } catch (err) {}
+      jb.querySelector('.roll-close').focus({ preventScroll: true });
+    }
+    function closeJb() {
+      jbStop();
+      jb.classList.remove('open'); jb.hidden = true;
+      document.documentElement.classList.remove('roll-lock');
+      if ('mediaSession' in navigator) try { navigator.mediaSession.setActionHandler('nexttrack', null); } catch (err) {}
+      document.getElementById('jb-open').focus({ preventScroll: true });
+    }
+    document.getElementById('jb-open').addEventListener('click', openJb);
+    jb.querySelector('.roll-close').addEventListener('click', closeJb);
+    jb.querySelector('.jb-next').addEventListener('click', function () {
+      var b = this; b.classList.remove('spin'); void b.offsetWidth; b.classList.add('spin');
+      jbNext();
+    });
+    jb.addEventListener('click', function (e) { if (e.target === jb) closeJb(); });
+    function jbState() { jb.classList.toggle('on', jbMine() && !audio.paused); }
+    ['playing', 'pause', 'emptied'].forEach(function (ev) { audio.addEventListener(ev, jbState); });
+    audio.addEventListener('ended', function () { if (jbMine() && !jb.hidden) jbNext(); });
+    audio.addEventListener('error', function () { if (jbMine() && !jb.hidden) setTimeout(jbNext, 1500); });
+
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       if (!lyr.hidden) closeLyr();
       else if (!acc.hidden) closeAcc();
+      else if (!jb.hidden) closeJb();
       else if (!roll.hidden) closeRoll();
     });
 
