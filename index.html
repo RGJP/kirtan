@@ -827,6 +827,19 @@
       </div>
     </div>
   </div>
+  <script>
+    // Ordre des déités tiré au hasard à chaque visite ; la 2e série (raccord de la boucle) suit le même ordre.
+    (function () {
+      var track = document.querySelector('.deities-track'), dup = track.querySelector('.deities-dup');
+      var imgs = Array.prototype.slice.call(track.querySelectorAll(':scope > img.deity'));
+      for (var i = imgs.length - 1; i > 0; i--) { var k = Math.floor(Math.random() * (i + 1)), t = imgs[i]; imgs[i] = imgs[k]; imgs[k] = t; }
+      dup.textContent = '';
+      imgs.forEach(function (im) {
+        track.insertBefore(im, dup);
+        var c = im.cloneNode(); c.alt = ''; dup.appendChild(c);
+      });
+    })();
+  </script>
 
   <!-- ================= PRÉSENTATION ================= -->
   <section class="content about">
