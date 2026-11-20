@@ -212,6 +212,19 @@
   .events h2 { font-size: clamp(1.9rem, 4.6vw, 2.4rem); line-height: 1.1; margin: 0 0 1rem; }
   .events .ornament { margin: 0 auto 1.9rem; }
   .lotus-line { width: 44px; height: auto; display: block; color: var(--accent); }
+  /* Lotus de « Prochain Kirtan » : se ferme, éclot pleinement, puis se referme, sans fin */
+  .events .lotus-line path { transform-box: view-box; transform-origin: 24px 26.5px; animation: 7s ease-in-out infinite; }
+  .events .lotus-line path:nth-child(1) { animation-name: lotus-c; }
+  .events .lotus-line path:nth-child(2) { animation-name: lotus-l1; }
+  .events .lotus-line path:nth-child(3) { animation-name: lotus-r1; }
+  .events .lotus-line path:nth-child(4) { animation-name: lotus-l2; }
+  .events .lotus-line path:nth-child(5) { animation-name: lotus-r2; }
+  @keyframes lotus-c  { 0%, 12% { transform: scale(.8, .72); } 50%, 62% { transform: none; } 100% { transform: scale(.8, .72); } }
+  @keyframes lotus-l1 { 0%, 12% { transform: rotate(38deg) scale(.82); } 50%, 62% { transform: none; } 100% { transform: rotate(38deg) scale(.82); } }
+  @keyframes lotus-r1 { 0%, 12% { transform: rotate(-38deg) scale(.82); } 50%, 62% { transform: none; } 100% { transform: rotate(-38deg) scale(.82); } }
+  @keyframes lotus-l2 { 0%, 12% { transform: rotate(62deg) scale(.6); opacity: .35; } 50%, 62% { transform: none; opacity: 1; } 100% { transform: rotate(62deg) scale(.6); opacity: .35; } }
+  @keyframes lotus-r2 { 0%, 12% { transform: rotate(-62deg) scale(.6); opacity: .35; } 50%, 62% { transform: none; opacity: 1; } 100% { transform: rotate(-62deg) scale(.6); opacity: .35; } }
+  @media (prefers-reduced-motion: reduce) { .events .lotus-line path { animation: none; } }
   /* « En préparation » : petit soleil minimaliste de chaque côté */
   .event-empty { display: flex; align-items: center; justify-content: center; gap: 1.1rem; }
   .event-empty .sun { width: 26px; height: 26px; flex: none; color: var(--accent); opacity: .9; }
