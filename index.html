@@ -407,13 +407,17 @@
     font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2.5px; text-transform: uppercase;
     -webkit-tap-highlight-color: transparent;
   }
-  .jb-btn .jb-art { width: 46px; height: 58px; transition: transform .35s ease; }
+  .jb-art .jb-tri { fill: var(--bg); stroke: var(--bg); stroke-width: 1.5; stroke-linejoin: round; }
+  .jb-ring { transform-box: view-box; transform-origin: 30px 30px; transition: transform .6s ease; }
+  .jb-btn .jb-art { width: 54px; height: 54px; }
   .jb-btn span { color: var(--ink); transition: color .3s; }
-  .jb-btn:hover .jb-art, .jb-btn:focus-visible .jb-art { transform: translateY(-3px) rotate(-4deg); }
+  .jb-btn:hover .jb-ring, .jb-btn:focus-visible .jb-ring { transform: rotate(120deg); }
   .jb-btn:hover span, .jb-btn:focus-visible span { color: var(--accent); }
   .jb-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 10px; }
   .jb-stage { position: relative; width: 92px; margin: .4rem auto 1.6rem; color: var(--accent); }
-  .jb-stage .jb-art { width: 92px; height: 115px; display: block; }
+  .jb-stage .jb-art { width: 92px; height: 92px; display: block; }
+  .jb.on .jb-stage .jb-ring { animation: jb-spin 9s linear infinite; }
+  @keyframes jb-spin { to { transform: rotate(360deg); } }
   .jb-notes { position: absolute; inset: 0; pointer-events: none; }
   .jb-notes i {
     position: absolute; top: 30%; left: 50%; font-style: normal; font-size: 1.1rem; color: var(--accent); opacity: 0;
@@ -428,7 +432,7 @@
   }
   .jb .players { display: block; text-align: left; }
   .jb-hint { margin: 1.4rem auto 0; max-width: 32ch; font-size: .88rem; line-height: 1.55; color: var(--ink-soft); }
-  @media (prefers-reduced-motion: reduce) { .jb.on .jb-notes i { animation: none; } .jb-btn .jb-art { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .jb.on .jb-notes i, .jb.on .jb-stage .jb-ring { animation: none; } .jb-ring { transition: none; } }
   /* ---------- Accords (overlay pour les musiciens) ---------- */
   .chant-links { display: flex; align-items: center; gap: 1.2rem; margin: .65rem 0 0 .2rem; }
   .chant-links .yt { margin: 0; }
@@ -1797,7 +1801,7 @@
 </main>
 
 <footer>
-  <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Écouter du kirtan en continu"><svg class="jb-art" viewBox="0 0 48 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 54 V24 A16 16 0 0 1 40 24 V54 Z"/><path d="M12.5 26 A11.5 11.5 0 0 1 35.5 26"/><path d="M16.5 27 A7.5 7.5 0 0 1 31.5 27"/><rect x="13" y="29" width="22" height="10" rx="2"/><path d="M17 43.5 V50 M21 43.5 V50 M24 43.5 V50 M27 43.5 V50 M31 43.5 V50"/><path d="M5 54 H43 M7 57.5 H41"/></g><g fill="currentColor"><ellipse cx="24" cy="34" rx="6.5" ry="2.6" opacity=".35"/><circle cx="24" cy="34" r="1.1"/><circle cx="24" cy="12" r="1.4"/></g></svg><span>Écouter du kirtan en continu</span></button>
+  <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Écouter du kirtan en continu"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><path class="jb-tri" d="M26 21.5 V38.5 L39.5 30 Z"/></svg><span>Écouter du kirtan en continu</span></button>
   <span class="f-om" aria-hidden="true">ॐ</span>
   <span class="f-name">Ānanda Saṅgam</span>
   <span class="f-skt">आनन्द सङ्गम</span>
@@ -1822,9 +1826,9 @@
 <div class="roll jb" id="jb" role="dialog" aria-modal="true" aria-labelledby="jb-title" hidden>
   <div class="roll-panel">
     <button class="roll-close" type="button" aria-label="Fermer"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
-    <p class="acc-kicker">Jukebox</p>
+    <p class="acc-kicker">Au hasard</p>
     <h2 id="jb-title">Kirtan en continu</h2>
-    <div class="jb-stage"><svg class="jb-art" viewBox="0 0 48 60" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 54 V24 A16 16 0 0 1 40 24 V54 Z"/><path d="M12.5 26 A11.5 11.5 0 0 1 35.5 26"/><path d="M16.5 27 A7.5 7.5 0 0 1 31.5 27"/><rect x="13" y="29" width="22" height="10" rx="2"/><path d="M17 43.5 V50 M21 43.5 V50 M24 43.5 V50 M27 43.5 V50 M31 43.5 V50"/><path d="M5 54 H43 M7 57.5 H41"/></g><g fill="currentColor"><ellipse cx="24" cy="34" rx="6.5" ry="2.6" opacity=".35"/><circle cx="24" cy="34" r="1.1"/><circle cx="24" cy="12" r="1.4"/></g></svg><span class="jb-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♪</i></span></div>
+    <div class="jb-stage"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><path class="jb-tri" d="M26 21.5 V38.5 L39.5 30 Z"/></svg><span class="jb-notes" aria-hidden="true"><i>♪</i><i>♫</i><i>♪</i></span></div>
     <div class="players" id="jb-now" aria-live="polite"></div>
     <button class="fb-btn roll-again jb-next" type="button" aria-label="Autre chant au hasard" title="Autre chant au hasard"><svg class="die" viewBox="0 0 32 32" aria-hidden="true"><rect x="3.5" y="3.5" width="25" height="25" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><g fill="currentColor"><circle cx="10.5" cy="10.5" r="2.2"/><circle cx="21.5" cy="10.5" r="2.2"/><circle cx="16" cy="16" r="2.2"/><circle cx="10.5" cy="21.5" r="2.2"/><circle cx="21.5" cy="21.5" r="2.2"/></g></svg></button>
     <p class="jb-hint">Les chants s'enchaînent au hasard, l'un après l'autre. Le dé passe au suivant.</p>
