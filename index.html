@@ -25,16 +25,17 @@
 <meta name="twitter:image" content="https://rgjp.github.io/kirtan/og-lotus.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tiro+Devanagari+Sanskrit&family=Mulish:wght@300;400&display=block" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tiro+Devanagari+Sanskrit&family=Mulish:wght@300;400&display=swap" rel="stylesheet">
 <script>
-  // Cache la page jusqu'à ce que les polices soient prêtes, puis affiche tout d'un coup (max 3 s)
+  // Cache la page jusqu'à ce que les polices soient prêtes, puis affiche tout d'un coup.
+  // Max 1 s : sur une connexion lente, le texte apparaît en police de secours puis bascule (display=swap).
   (function () {
     var d = document.documentElement;
     d.classList.add('loading');
     function show() { d.classList.remove('loading'); }
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(show);
-      setTimeout(show, 3000);
+      setTimeout(show, 1000);
     } else { show(); }
   })();
 </script>
@@ -42,7 +43,7 @@
   /* Accents français réguliers : Cormorant dessine des accents très inclinés/irréguliers,
      on prend seulement les lettres accentuées dans EB Garamond */
   @font-face {
-    font-family: "Accents FR"; font-style: normal; font-weight: 300 450; font-display: block;
+    font-family: "Accents FR"; font-style: normal; font-weight: 300 450; font-display: swap;
     src: url(https://fonts.gstatic.com/s/ebgaramond/v33/SlGUmQSNjdsmc35JDF1K5GR1SDk.woff2) format("woff2");
     unicode-range: U+C0, U+C2, U+C8-CB, U+CE-CF, U+D4, U+D9, U+DB-DC, U+E0, U+E2, U+E8-EB, U+EE-EF, U+F4, U+F9, U+FB-FC;
   }
