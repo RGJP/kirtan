@@ -380,7 +380,7 @@
   }
 
   /* ---------- Recherche d'un chant ---------- */
-  .find { position: relative; max-width: 420px; margin: 0 auto 3.4rem; }
+  .find { position: relative; max-width: 420px; margin: 0 auto 1.6rem; }
   .find-box {
     display: flex; align-items: center; gap: .6rem;
     padding: .55rem 1.1rem; border-radius: 999px;
@@ -418,7 +418,7 @@
   @keyframes found {
     0%, 60% { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), 0 8px 24px -14px var(--shadow); }
   }
-  @media (max-width: 600px) { .find { margin-bottom: 2.6rem; } }
+  @media (max-width: 600px) { .find { margin-bottom: 1.4rem; } }
   /* ---------- Tirage secret (7 touchers sur le ॐ) ---------- */
   .roll {
     position: fixed; inset: 0; z-index: 100; display: none; overflow-y: auto; overscroll-behavior: contain;
@@ -457,7 +457,7 @@
   }
   /* ---------- Jukebox : chants au hasard, l'un après l'autre, sans fin ---------- */
   .jb-btn {
-    display: inline-flex; flex-direction: column; align-items: center; gap: .35rem; margin-bottom: 1.6rem;
+    display: flex; flex-direction: column; align-items: center; gap: .35rem; width: fit-content; margin: 0 auto 3rem;
     padding: .4rem .8rem; border: 0; background: none; cursor: pointer; color: var(--accent);
     font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2.5px; text-transform: uppercase;
     -webkit-tap-highlight-color: transparent;
@@ -469,6 +469,7 @@
   .jb-btn:hover .jb-ring, .jb-btn:focus-visible .jb-ring { transform: rotate(120deg); }
   .jb-btn:hover span, .jb-btn:focus-visible span { color: var(--accent); }
   .jb-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 10px; }
+  @media (max-width: 600px) { .jb-btn { margin-bottom: 2.2rem; } }
   .jb-stage { position: relative; width: 92px; margin: .4rem auto 1.6rem; color: var(--accent); }
   .jb-stage .jb-art { width: 92px; height: 92px; display: block; }
   .jb.on .jb-stage .jb-ring { animation: jb-spin 9s linear infinite; }
@@ -1019,6 +1020,8 @@
         </label>
         <ul class="find-list" id="find-list" role="listbox" aria-label="Chants trouvés" hidden></ul>
       </div>
+
+      <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Kirtan en continu"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><g class="jb-note"><ellipse cx="28.2" cy="36.6" rx="5" ry="3.6" transform="rotate(-22 28.2 36.6)"/><rect x="31.4" y="19.4" width="2.1" height="16.6" rx=".7"/></g></svg><span>Kirtan en continu</span></button>
 
       <div class="players">
         <figure class="chant" data-id="F6BcPj42bUg" data-start="3:41">
@@ -2009,7 +2012,6 @@
 </main>
 
 <footer>
-  <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Kirtan en continu"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><g class="jb-note"><ellipse cx="28.2" cy="36.6" rx="5" ry="3.6" transform="rotate(-22 28.2 36.6)"/><rect x="31.4" y="19.4" width="2.1" height="16.6" rx=".7"/></g></svg><span>Kirtan en continu</span></button>
   <span class="f-om" aria-hidden="true">ॐ</span>
   <span class="f-name">Ānanda Saṅgam</span>
   <span class="f-skt">आनन्द सङ्गम</span>
@@ -2053,7 +2055,7 @@
   </div>
 </div>
 
-<!-- Jukebox : les chants s'enchaînent au hasard, sans fin (bouton du pied de page) -->
+<!-- Jukebox : les chants s'enchaînent au hasard, sans fin (bouton sous la recherche) -->
 <div class="roll jb" id="jb" role="dialog" aria-modal="true" aria-labelledby="jb-title" hidden>
   <div class="roll-panel">
     <button class="roll-close" type="button" aria-label="Fermer"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1 L13 13 M13 1 L1 13" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button>
