@@ -343,6 +343,12 @@
   }
   .player input::-moz-range-thumb { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); border: 0; }
   .player input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  /* Écran tactile : la barre native ne capte plus le doigt (sinon défiler la page lance un chant) ;
+     le JS distingue défilement vertical, glissé horizontal (avance/recul) et simple toucher */
+  @media (hover: none) and (pointer: coarse) {
+    .player { touch-action: pan-y; }
+    .player input { pointer-events: none; }
+  }
   .yt {
     display: block; width: 24px; height: 16px; margin: .65rem 0 0 .2rem;
     background: var(--ink); transition: background-color .3s;
@@ -2249,6 +2255,52 @@
       audio.currentTime = +e.target.value; seeking = false;
       if (audio.paused) play();
     });
+
+    // Tactile : on ne déplace la barre que sur un glissé surtout horizontal ou un toucher net ;
+    // un geste vertical reste un défilement, et le toucher qui arrête un défilement est ignoré
+    if (window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches) {
+      var tr = null, lastScroll = 0;
+      window.addEventListener('scroll', function () { lastScroll = Date.now(); }, { passive: true, capture: true });
+      function rangeAt(t) {
+        var p = t.target.closest && t.target.closest('.player'), r = p && p.querySelector('input[type=range]');
+        if (!r || !cardOf(r)) return null;
+        var b = r.getBoundingClientRect();
+        // zone élargie verticalement : la piste ne fait que 18 px de haut
+        return (t.clientX >= b.left - 6 && t.clientX <= b.right + 6 &&
+                t.clientY >= b.top - 14 && t.clientY <= b.bottom + 14) ? r : null;
+      }
+      function setFrom(r, x, ev) {
+        var b = r.getBoundingClientRect(), f = Math.min(1, Math.max(0, (x - b.left) / (b.width || 1)));
+        r.value = Math.round(f * (+r.max || 0));
+        r.dispatchEvent(new Event(ev, { bubbles: true }));
+      }
+      document.addEventListener('touchstart', function (e) {
+        tr = null;
+        if (e.touches.length !== 1) return;
+        var t = e.touches[0], r = rangeAt(t);
+        if (r) tr = { r: r, x: t.clientX, y: t.clientY, mode: Date.now() - lastScroll < 350 ? 'scroll' : null };
+      }, { passive: true });
+      document.addEventListener('touchmove', function (e) {
+        if (!tr || tr.mode === 'scroll') return;
+        var t = e.touches[0], dx = Math.abs(t.clientX - tr.x), dy = Math.abs(t.clientY - tr.y);
+        if (!tr.mode) {
+          if (dy > 8 && dy >= dx) tr.mode = 'scroll';
+          else if (dx > 8) tr.mode = 'drag';
+        }
+        if (tr.mode === 'drag') setFrom(tr.r, t.clientX, 'input');
+      }, { passive: true });
+      document.addEventListener('touchend', function (e) {
+        if (!tr) return;
+        var s = tr; tr = null;
+        if (s.mode === 'scroll') return;
+        setFrom(s.r, e.changedTouches[0].clientX, 'input');
+        setFrom(s.r, e.changedTouches[0].clientX, 'change');
+      });
+      document.addEventListener('touchcancel', function () {
+        if (tr && tr.mode === 'drag' && cardOf(tr.r) === cur) seeking = false;
+        tr = null;
+      });
+    }
 
     // Tirage secret : 7 touchers rapprochés sur le ॐ → 7 chants au hasard
     var om = document.querySelector('.f-om'), roll = document.getElementById('roll'),
