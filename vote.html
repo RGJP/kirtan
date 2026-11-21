@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choisissons la date — Ānanda Saṅgam</title>
+<meta name="description" content="Votez pour la date du prochain kirtan d'Ānanda Saṅgam à Québec.">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="lotus.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#fbf8f2">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_CA">
+<meta property="og:site_name" content="Ānanda Saṅgam">
+<meta property="og:title" content="Choisissons la date du prochain kirtan">
+<meta property="og:description" content="Touchez les jours de décembre où vous êtes disponibles.">
+<meta property="og:url" content="https://rgjp.github.io/kirtan/vote.html">
+<meta property="og:image" content="https://rgjp.github.io/kirtan/og-lotus.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;700&family=Tiro+Devanagari+Sanskrit&family=Mulish:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: "Accents FR"; font-style: normal; font-weight: 300 450; font-display: swap;
+    src: url(https://fonts.gstatic.com/s/ebgaramond/v33/SlGUmQSNjdsmc35JDF1K5GR1SDk.woff2) format("woff2");
+    unicode-range: U+C0, U+C2, U+C8-CB, U+CE-CF, U+D4, U+D9, U+DB-DC, U+E0, U+E2, U+E8-EB, U+EE-EF, U+F4, U+F9, U+FB-FC;
+  }
+  :root {
+    --bg: #fbf8f2;
+    --ink: #3d3833;
+    --ink-soft: #6f665c;
+    --accent: #b9773a;
+    --accent-border: rgba(185,119,58,.35);
+    --tag-ink: rgba(61,56,51,.7);
+    --glow: rgba(233, 196, 140, .28);
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100svh;
+    background: var(--bg) radial-gradient(ellipse 70% 40% at 50% 0%, var(--glow), transparent 70%) no-repeat;
+    color: var(--ink);
+    font-family: "Mulish", system-ui, sans-serif; font-weight: 300; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 3rem 16px 4rem;
+  }
+  .om { font-family: "Tiro Devanagari Sanskrit", serif; font-size: 2rem; line-height: 1; color: var(--accent); opacity: .85; }
+  h1 {
+    font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 400;
+    font-size: clamp(1.9rem, 7vw, 2.4rem); letter-spacing: 1px; line-height: 1.2;
+    margin: .9rem 0 .3rem; text-align: center;
+  }
+  .tag { font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; color: var(--tag-ink); text-align: center; }
+  .hint { margin: 1.2rem 0 1.8rem; font-family: "Mulish", system-ui, sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0; line-height: 1.5; color: var(--ink); text-align: center; max-width: 24ch; text-wrap: balance; }
+
+  .cal { width: min(100%, 460px); }
+  .month {
+    font-family: "Cormorant Garamond", serif; font-size: 1.7rem; font-weight: 700; letter-spacing: .5px;
+    text-align: center; margin-bottom: .6rem; color: var(--accent); font-variant-numeric: lining-nums;
+  }
+  .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .dow { text-align: center; font-size: .7rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--tag-ink); padding-bottom: .2rem; }
+  .day {
+    -webkit-appearance: none; appearance: none; font: inherit; cursor: pointer;
+    aspect-ratio: 4 / 5; padding: 0; border-radius: 10px;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--accent-border);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .15rem;
+    transition: background .2s, border-color .2s, color .2s, transform .1s;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  .day:active { transform: scale(.95); }
+  .day .n { font-family: "Cormorant Garamond", serif; font-size: clamp(1.35rem, 5.5vw, 1.7rem); font-weight: 700; line-height: 1; font-variant-numeric: lining-nums; }
+  .day .c { font-size: .72rem; font-weight: 700; color: var(--accent); min-height: 1.1em; line-height: 1.1; }
+  .day .c:empty::before { content: "·"; opacity: .4; }
+  .day[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .day[aria-pressed="true"] .c { color: var(--bg); }
+  .day:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .day:disabled { cursor: default; opacity: .55; }
+  .day.top { border-width: 2px; border-color: var(--accent); }
+
+  .status { min-height: 1.6em; margin-top: 1.2rem; font-size: .9rem; color: var(--ink-soft); text-align: center; }
+  .status.err { color: #a23b2a; }
+  .back {
+    margin-top: 2.2rem; font-size: .78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; border: 1px solid var(--accent); border-radius: 6px; padding: .6rem 1.2rem;
+  }
+  .back:hover, .back:focus-visible { background: color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+</style>
+</head>
+<body>
+  <span class="om" aria-hidden="true">ॐ</span>
+  <h1 class="hint">Votez pour la date du prochain kirtan public</h1>
+
+  <section class="cal" aria-label="Calendrier de vote">
+    <div class="month">Décembre 2026</div>
+    <div class="grid" id="grid">
+      <span class="dow" aria-hidden="true">D</span><span class="dow" aria-hidden="true">L</span><span class="dow" aria-hidden="true">M</span><span class="dow" aria-hidden="true">M</span><span class="dow" aria-hidden="true">J</span><span class="dow" aria-hidden="true">V</span><span class="dow" aria-hidden="true">S</span>
+    </div>
+  </section>
+  <p class="status" id="status" role="status" aria-live="polite">Chargement…</p>
+  <a class="back" href="./">Site Ānanda Saṅgam</a>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, query, where, getCountFromServer, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC2xvSQXZB2mbrNo87WEgOeNpRdTscCkBA",
+    authDomain: "kirtan-vote.firebaseapp.com",
+    projectId: "kirtan-vote",
+    storageBucket: "kirtan-vote.firebasestorage.app",
+    messagingSenderId: "260867385478",
+    appId: "1:260867385478:web:e4f916ca60db3eacfdc907"
+  };
+
+  // Sondage : du 6 au 20 décembre 2026. Doit correspondre à firestore.rules.
+  const COLL = "vote-dec2026";
+  const DAYS = [];
+  for (let d = 6; d <= 20; d++) DAYS.push(`2026-12-${String(d).padStart(2, "0")}`);
+  const WEEKDAYS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+
+  const grid = document.getElementById("grid");
+  const statusEl = document.getElementById("status");
+  const setStatus = (msg, err = false) => { statusEl.textContent = msg; statusEl.classList.toggle("err", err); };
+
+  // Construire les tuiles (décalage selon le jour de la semaine du premier jour)
+  const first = new Date(2026, 11, 6).getDay();
+  for (let i = 0; i < first; i++) grid.appendChild(document.createElement("span"));
+  const tiles = {};
+  for (const iso of DAYS) {
+    const n = +iso.slice(8);
+    const wd = WEEKDAYS[new Date(2026, 11, n).getDay()];
+    const b = document.createElement("button");
+    b.className = "day"; b.type = "button"; b.disabled = true;
+    b.setAttribute("aria-pressed", "false");
+    b.dataset.day = iso; b.dataset.label = `${wd} ${n} décembre`;
+    b.innerHTML = `<span class="n">${n}</span><span class="c"></span>`;
+    grid.appendChild(b); tiles[iso] = b;
+  }
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let uid = null;
+  let mine = new Set();
+  const counts = Object.fromEntries(DAYS.map(d => [d, 0]));
+  let saving = Promise.resolve();
+
+  function render() {
+    const max = Math.max(...Object.values(counts));
+    for (const iso of DAYS) {
+      const b = tiles[iso], c = counts[iso], on = mine.has(iso);
+      b.setAttribute("aria-pressed", String(on));
+      b.querySelector(".c").textContent = c > 0 ? String(c) : "";
+      b.classList.toggle("top", max > 0 && c === max && !on);
+      b.setAttribute("aria-label", `${b.dataset.label}, ${c} vote${c > 1 ? "s" : ""}${on ? ", sélectionné" : ""}`);
+    }
+  }
+
+  async function refreshCounts() {
+    const col = collection(db, COLL);
+    const res = await Promise.all(DAYS.map(d =>
+      getCountFromServer(query(col, where("days", "array-contains", d))).then(s => s.data().count)));
+    DAYS.forEach((d, i) => counts[d] = res[i]);
+    render();
+  }
+
+  grid.addEventListener("click", e => {
+    const b = e.target.closest(".day");
+    if (!b || b.disabled || !uid) return;
+    const iso = b.dataset.day;
+    if (mine.has(iso)) { mine.delete(iso); counts[iso] = Math.max(0, counts[iso] - 1); }
+    else { mine.add(iso); counts[iso]++; }
+    render();
+    const days = DAYS.filter(d => mine.has(d));
+    saving = saving.then(() => setDoc(doc(db, COLL, uid), { days, t: serverTimestamp() }))
+      .then(() => { setStatus(days.length ? "Merci, votre choix est enregistré 🙏" : "Aucun jour sélectionné."); return refreshCounts(); })
+      .catch(err => { console.error(err); setStatus("Oups, le vote n'a pas pu être enregistré. Réessayez.", true); });
+  });
+
+  // Recompter quand on revient sur la page
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && uid) refreshCounts().catch(() => {});
+  });
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) return;
+    uid = user.uid;
+    try {
+      const snap = await getDoc(doc(db, COLL, uid));
+      if (snap.exists()) mine = new Set(snap.data().days || []);
+      await refreshCounts();
+      Object.values(tiles).forEach(b => b.disabled = false);
+      setStatus(mine.size ? "Vos choix sont en couleur. Vous pouvez les modifier." : "");
+    } catch (err) {
+      console.error(err);
+      setStatus("Impossible de charger le vote pour l'instant.", true);
+    }
+  });
+  signInAnonymously(auth).catch(err => { console.error(err); setStatus("Connexion impossible. Rechargez la page.", true); });
+</script>
+</body>
+</html>
