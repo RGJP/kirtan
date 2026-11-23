@@ -557,6 +557,8 @@
   }
   .acc-key { margin: .9rem 0 0; font-size: .9rem; color: var(--ink-soft); text-align: center; }
   .acc-key b { font-weight: 400; color: var(--ink); }
+  .acc-memo { margin: .35rem 0 0; font-size: .85rem; color: var(--ink-soft); text-align: center; font-style: italic; }
+  .acc-memo b { font-weight: 400; font-style: normal; color: var(--ink); }
   .acc-panel h3 {
     margin: 2rem 0 .8rem; font-weight: 400; font-size: .7rem; letter-spacing: 3px;
     text-transform: uppercase; color: var(--accent);
@@ -2108,6 +2110,7 @@
         <div class="acc-tr"><span>Transposer</span><button type="button" data-tr="-1" aria-label="Descendre d'un demi-ton">−</button><output aria-live="polite">0</output><button type="button" data-tr="1" aria-label="Monter d'un demi-ton">+</button></div>
       </div>
       <p class="acc-key"></p>
+      <p class="acc-memo" hidden></p>
       <h3>Les accords du chant</h3>
       <div class="acc-set"></div>
       <h3>Déroulement</h3>
@@ -2435,10 +2438,21 @@
       i = ((i + accTr) % 12 + 12) % 12;
       p.innerHTML = 'Tonalité possible : <b>' + FR[i] + (minor ? ' mineur' : ' majeur') + '</b> (' + nice(ROOTS[i] + (minor ? 'm' : '')) + ')';
     }
+    // note facultative du .lrc ([note:…]) ; les accords qu'elle cite suivent la transposition
+    function accMemo() {
+      var p = acc.querySelector('.acc-memo'), n = accData && accData.meta.note;
+      p.textContent = ''; p.hidden = !n;
+      if (!n) return;
+      n.split(/(\s+)/).forEach(function (w) {
+        if (/^[A-G][#b]?(m|maj7|m7|7|sus[24]|dim|aug|add9)?(\/[A-G][#b]?)?$/.test(w)) {
+          var b = document.createElement('b'); b.textContent = chord(w); p.appendChild(b);
+        } else p.appendChild(document.createTextNode(w));
+      });
+    }
     function accRender() {
       var seq = accData.seq, tot = {}, all = 0;
       accOut.textContent = accTr > 0 ? '+' + accTr : String(accTr);
-      accKey();
+      accKey(); accMemo();
       seq.forEach(function (s) { if (s.c !== 'N.C.') { tot[s.c] = (tot[s.c] || 0) + s.e - s.t; all += s.e - s.t; } });
       var set = acc.querySelector('.acc-set');
       set.textContent = '';
