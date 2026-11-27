@@ -2384,7 +2384,18 @@
     var acc = document.getElementById('acc'), accSeq = acc.querySelector('.acc-seq'),
         accPlay = acc.querySelector('.acc-play'), accCur = acc.querySelector('.acc-cur'),
         accNext = acc.querySelector('.acc-next'), accOut = acc.querySelector('.acc-tr output'),
-        accCache = {}, accCard = null, accData = null, accTr = 0, accOn = -1, accReq = 0;
+        accCache = {}, accCard = null, accData = null, accTr = 0, accOn = -1, accReq = 0,
+        accFollow = true, accUserAt = 0;
+    // Défilement manuel (molette, doigt, clavier, barre de défilement) : on arrête de suivre l'accord
+    // pour ne pas voler le scroll. Le suivi reprend quand l'accord en cours redevient visible,
+    // ou quand on touche un accord / le bouton lecture.
+    function accUserScroll() { accFollow = false; accUserAt = Date.now(); }
+    acc.addEventListener('wheel', accUserScroll, { passive: true });
+    acc.addEventListener('touchmove', accUserScroll, { passive: true });
+    acc.addEventListener('pointerdown', function (e) { if (e.target === acc && e.offsetX >= acc.clientWidth) accUserScroll(); });
+    acc.addEventListener('keydown', function (e) {
+      if (/^(ArrowUp|ArrowDown|PageUp|PageDown|Home|End| )$/.test(e.key) && !/^(INPUT|TEXTAREA|BUTTON)$/.test(e.target.tagName)) accUserScroll();
+    });
     var ROOTS = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'],
         FR = ['Do', 'Do♯', 'Ré', 'Mi♭', 'Mi', 'Fa', 'Fa♯', 'Sol', 'La♭', 'La', 'Si♭', 'Si'],
         ALIAS = { 'Db': 'C#', 'D#': 'Eb', 'Gb': 'F#', 'G#': 'Ab', 'A#': 'Bb', 'Cb': 'B', 'Fb': 'E', 'E#': 'F', 'B#': 'C' };
@@ -2501,8 +2512,9 @@
       accNext.innerHTML = seq[i + 1] ? 'puis <b></b>' : '';
       if (seq[i + 1]) accNext.lastChild.textContent = chord(seq[i + 1].c);
       if (on) {
-        var r = li.getBoundingClientRect();
-        if (r.top < 0 || r.bottom > window.innerHeight) li.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        var r = li.getBoundingClientRect(), seen = r.top >= 0 && r.bottom <= window.innerHeight;
+        if (!accFollow && seen && Date.now() - accUserAt > 1500) accFollow = true;
+        if (accFollow && !seen) li.scrollIntoView({ block: 'center', behavior: 'smooth' });
       }
     }
     function accState(msg) {
@@ -2512,7 +2524,7 @@
     }
     function openAcc(card) {
       var id = card.dataset.id, req = ++accReq;
-      accCard = card; accData = null;
+      accCard = card; accData = null; accFollow = true;
       try { accTr = +localStorage.getItem('acc-tr-' + id) || 0; } catch (err) { accTr = 0; }
       document.getElementById('acc-title').textContent = card.querySelector('.chant-title').textContent;
       acc.querySelector('.acc-artist').textContent = card.querySelector('.chant-artist').textContent;
@@ -2548,13 +2560,14 @@
     acc.addEventListener('click', function (e) { if (e.target === acc) closeAcc(); });
     accPlay.addEventListener('click', function () {
       if (!accCard) return;
+      accFollow = true;
       if (!mine()) select(accCard);
       else if (audio.paused) play();
       else audio.pause();
     });
     accSeq.addEventListener('click', function (e) {
       var b = e.target.closest('button');
-      if (b && accData) accSeek(accData.seq[+b.dataset.i].t);
+      if (b && accData) { accFollow = true; accSeek(accData.seq[+b.dataset.i].t); }
     });
     acc.querySelector('.acc-tr').addEventListener('click', function (e) {
       var b = e.target.closest('button[data-tr]');
