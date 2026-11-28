@@ -287,7 +287,40 @@
   .chant figcaption {
     display: flex; flex-direction: column; gap: .1rem;
     padding: 0 .2rem .75rem; line-height: 1.3;
+    position: relative; padding-right: 2.6rem;
   }
+  /* ---------- Favoris (cœur, mémorisé dans le navigateur) ---------- */
+  .fav {
+    position: absolute; top: .05rem; right: 0; width: 34px; height: 34px; padding: 0;
+    border: 0; border-radius: 50%; background: none; cursor: pointer; color: var(--ink-soft);
+    display: grid; place-items: center; -webkit-tap-highlight-color: transparent;
+    transition: color .25s, transform .25s;
+  }
+  .fav svg { width: 19px; height: 19px; overflow: visible; }
+  .fav path { fill: transparent; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; transition: fill .25s; }
+  .fav:hover, .fav:focus-visible { color: var(--accent); }
+  .fav:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .fav[aria-pressed="true"] { color: var(--accent); }
+  .fav[aria-pressed="true"] path { fill: currentColor; }
+  .fav.pop { animation: fav-pop .4s ease; }
+  @keyframes fav-pop { 40% { transform: scale(1.3); } }
+  .fav-filter {
+    display: flex; align-items: center; gap: .5em; width: fit-content; margin: -.4rem auto 1.6rem;
+    padding: .45rem 1rem; border: 1px solid var(--accent-border); border-radius: 999px;
+    background: none; cursor: pointer; color: var(--ink);
+    font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2px; text-transform: uppercase;
+    transition: background .25s, color .25s, border-color .25s;
+  }
+  .fav-filter[hidden] { display: none; }
+  .fav-filter svg { width: 13px; height: 13px; }
+  .fav-filter path { fill: var(--accent); }
+  .fav-filter:hover, .fav-filter:focus-visible { border-color: var(--accent); }
+  .fav-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .fav-filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .fav-filter[aria-pressed="true"] path { fill: var(--bg); }
+  .players.fav-only .chant:not(.is-fav) { display: none; }
+  .players.fav-only .chant:last-child:nth-child(odd) { grid-column: auto; justify-self: stretch; width: auto; }
+  @media (prefers-reduced-motion: reduce) { .fav.pop { animation: none; } }
   .chant-title {
     font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 500;
     font-size: 1.35rem; color: var(--ink);
@@ -1035,6 +1068,8 @@
         </label>
         <ul class="find-list" id="find-list" role="listbox" aria-label="Chants trouvés" hidden></ul>
       </div>
+
+      <button class="fav-filter" id="fav-filter" type="button" aria-pressed="false" title="N'afficher que mes chants favoris" hidden><svg viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20.5 C5 15.6 1.5 11.9 1.5 7.6 1.5 4.3 4 1.8 7.1 1.8 c2 0 3.7 1.1 4.9 2.8 1.2-1.7 2.9-2.8 4.9-2.8 3.1 0 5.6 2.5 5.6 5.8 0 4.3-3.5 8-10.5 12.9z"/></svg><span>Mes favoris</span> · <span class="fav-n">0</span></button>
 
       <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Kirtan en continu"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><g class="jb-note"><ellipse cx="28.2" cy="36.6" rx="5" ry="3.6" transform="rotate(-22 28.2 36.6)"/><rect x="31.4" y="19.4" width="2.1" height="16.6" rx=".7"/></g></svg><span>Kirtan en continu</span></button>
 
@@ -2191,6 +2226,24 @@
         mini.classList.toggle('playing', on);
         miniPlay.setAttribute('aria-pressed', on);
       }
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = on ? 'playing' : 'paused';
+      msPos();
+    }
+    // Écran verrouillé / écouteurs Bluetooth : barre de progression du système
+    function msPos() {
+      if (!('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+      var d = audio.duration;
+      if (!cur || !isFinite(d) || d <= 0) return;
+      try { navigator.mediaSession.setPositionState({ duration: d, playbackRate: audio.playbackRate || 1, position: Math.min(Math.max(audio.currentTime, 0), d) }); } catch (err) {}
+    }
+    // Chant précédent / suivant dans la liste où joue le chant (liste principale, favoris filtrés, tirage)
+    function step(dir) {
+      if (!cur) return;
+      var box = cur.closest('.players') || cur.parentNode;
+      var list = Array.prototype.filter.call(box.querySelectorAll('.chant[data-id]'), function (c) { return c === cur || c.offsetParent !== null; });
+      var i = list.indexOf(cur), n = list[i + dir];
+      if (dir < 0 && (audio.currentTime - (+audio.dataset.start || 0) > 5 || !n)) { audio.currentTime = +audio.dataset.start || 0; play(); return; }
+      if (n) select(n);
     }
 
     function select(card, at) {
@@ -2213,7 +2266,10 @@
           title: card.querySelector('.chant-title').textContent,
           artist: card.querySelector('.chant-artist').textContent,
           album: 'Ānanda Saṅgam',
-          artwork: [{ src: 'lotus.png', type: 'image/png' }]
+          artwork: [
+            { src: 'apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+            { src: 'lotus.png', sizes: '512x512', type: 'image/png' }
+          ]
         });
       }
     }
@@ -2227,6 +2283,7 @@
         cur = null;
       }
       miniHide();
+      if ('mediaSession' in navigator) { navigator.mediaSession.metadata = null; navigator.mediaSession.playbackState = 'none'; }
     }
     function findMainCard(id) {
       var cards = document.querySelectorAll('.chants .chant[data-id]');
@@ -2235,6 +2292,7 @@
     }
     function jumpToCard(card) {
       if (!card) return;
+      if (card.closest('.fav-only') && !card.classList.contains('is-fav')) favShowAll();
       card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
       card.classList.remove('found'); void card.offsetWidth; card.classList.add('found');
       setTimeout(function () { card.classList.remove('found'); }, 2600);
@@ -2422,7 +2480,49 @@
       b.type = 'button'; b.className = 'acc-btn link-btn'; b.textContent = 'Lien'; b.title = 'Copier le lien vers ce chant';
       b.setAttribute('aria-label', 'Copier le lien de ' + card.querySelector('.chant-title').textContent);
       row.appendChild(b);
+      b = document.createElement('button');
+      b.type = 'button'; b.className = 'fav'; b.setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-label', 'Ajouter ' + card.querySelector('.chant-title').textContent + ' aux favoris');
+      b.title = 'Ajouter aux favoris';
+      b.innerHTML = '<svg viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20.5 C5 15.6 1.5 11.9 1.5 7.6 1.5 4.3 4 1.8 7.1 1.8 c2 0 3.7 1.1 4.9 2.8 1.2-1.7 2.9-2.8 4.9-2.8 3.1 0 5.6 2.5 5.6 5.8 0 4.3-3.5 8-10.5 12.9z"/></svg>';
+      card.querySelector('figcaption').appendChild(b);
     });
+
+    // Favoris : liste d'ids dans localStorage, cœurs synchronisés (aussi dans le tirage et le kirtan en continu)
+    var favs = [], favFilter = document.getElementById('fav-filter'),
+        mainPlayers = document.querySelector('.chants .players');
+    try { favs = JSON.parse(localStorage.getItem('favs') || '[]'); if (!Array.isArray(favs)) favs = []; } catch (err) { favs = []; }
+    function favPaint() {
+      document.querySelectorAll('.chant[data-id]').forEach(function (card) {
+        var on = favs.indexOf(card.dataset.id) >= 0, h = card.querySelector('.fav');
+        card.classList.toggle('is-fav', on);
+        if (!h) return;
+        var title = card.querySelector('.chant-title').textContent;
+        h.setAttribute('aria-pressed', on);
+        h.setAttribute('aria-label', (on ? 'Retirer ' + title + ' des favoris' : 'Ajouter ' + title + ' aux favoris'));
+        h.title = on ? 'Retirer des favoris' : 'Ajouter aux favoris';
+      });
+      var n = document.querySelectorAll('.chants .chant.is-fav').length;
+      favFilter.querySelector('.fav-n').textContent = n;
+      if (!n && mainPlayers.classList.contains('fav-only')) favShowAll();
+      favFilter.hidden = !n;
+    }
+    function favShowAll() { mainPlayers.classList.remove('fav-only'); favFilter.setAttribute('aria-pressed', 'false'); }
+    document.addEventListener('click', function (e) {
+      var h = e.target.closest && e.target.closest('.fav'), card = h && cardOf(h);
+      if (!card) return;
+      var id = card.dataset.id, i = favs.indexOf(id);
+      if (i >= 0) favs.splice(i, 1); else favs.push(id);
+      try { localStorage.setItem('favs', JSON.stringify(favs)); } catch (err) {}
+      favPaint();
+      if (i < 0) { h.classList.remove('pop'); void h.offsetWidth; h.classList.add('pop'); }
+    });
+    favFilter.addEventListener('click', function () {
+      var on = !mainPlayers.classList.contains('fav-only');
+      if (on) { mainPlayers.classList.add('fav-only'); favFilter.setAttribute('aria-pressed', 'true'); }
+      else favShowAll();
+    });
+    favPaint();
 
     function rootIdx(r) { var i = ROOTS.indexOf(ALIAS[r] || r); return i; }
     function shift(r, n) { var i = rootIdx(r); return i < 0 ? r : ROOTS[((i + n) % 12 + 12) % 12]; }
@@ -2666,16 +2766,17 @@
       jb.hidden = false; jb.classList.add('open'); jb.scrollTop = 0;
       syncLock();
       jbNext();
-      if ('mediaSession' in navigator) try { navigator.mediaSession.setActionHandler('nexttrack', jbNext); } catch (err) {}
       jb.querySelector('.roll-close').focus({ preventScroll: true });
     }
     function closeJb() {
       jbStop();
       jb.classList.remove('open'); jb.hidden = true;
       syncLock();
-      if ('mediaSession' in navigator) try { navigator.mediaSession.setActionHandler('nexttrack', null); } catch (err) {}
       document.getElementById('jb-open').focus({ preventScroll: true });
     }
+    // Boutons précédent / suivant de l'écran verrouillé : tirage au sort en mode continu, sinon la liste
+    function msNext() { if (jbMine() && !jb.hidden) jbNext(); else step(1); }
+    function msPrev() { if (jbMine()) { audio.currentTime = 0; play(); } else step(-1); }
     document.getElementById('jb-open').addEventListener('click', openJb);
     jb.querySelector('.roll-close').addEventListener('click', closeJb);
     jb.querySelector('.jb-next').addEventListener('click', function () {
@@ -2757,8 +2858,15 @@
     if ('mediaSession' in navigator) {
       navigator.mediaSession.setActionHandler('play', play);
       navigator.mediaSession.setActionHandler('pause', function () { audio.pause(); });
-      try { navigator.mediaSession.setActionHandler('seekto', function (d) { audio.currentTime = d.seekTime; }); } catch (err) {}
+      var ms = function (action, fn) { try { navigator.mediaSession.setActionHandler(action, fn); } catch (err) {} };
+      ms('seekto', function (d) { audio.currentTime = d.seekTime; msPos(); });
+      ms('seekbackward', function (d) { audio.currentTime = Math.max(0, audio.currentTime - (d.seekOffset || 10)); msPos(); });
+      ms('seekforward', function (d) { audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + (d.seekOffset || 10)); msPos(); });
+      ms('previoustrack', msPrev);
+      ms('nexttrack', msNext);
+      ms('stop', stopCurrent);
     }
+    ['loadedmetadata', 'durationchange', 'seeked', 'ratechange'].forEach(function (ev) { audio.addEventListener(ev, msPos); });
   })();
 </script>
 <script>
@@ -2823,6 +2931,8 @@
     }
     function go(c) {
       close(); input.blur();
+      var ff = document.getElementById('fav-filter');
+      if (ff && ff.getAttribute('aria-pressed') === 'true' && !c.el.classList.contains('is-fav')) ff.click();
       c.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
       c.el.classList.remove('found'); void c.el.offsetWidth; c.el.classList.add('found');
       setTimeout(function () { c.el.classList.remove('found'); }, 2600);
