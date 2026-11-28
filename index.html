@@ -304,22 +304,6 @@
   .fav[aria-pressed="true"] path { fill: currentColor; }
   .fav.pop { animation: fav-pop .4s ease; }
   @keyframes fav-pop { 40% { transform: scale(1.3); } }
-  .fav-filter {
-    display: flex; align-items: center; gap: .5em; width: fit-content; margin: -.4rem auto 1.6rem;
-    padding: .45rem 1rem; border: 1px solid var(--accent-border); border-radius: 999px;
-    background: none; cursor: pointer; color: var(--ink);
-    font: 400 .66rem/1 "Mulish", sans-serif; letter-spacing: 2px; text-transform: uppercase;
-    transition: background .25s, color .25s, border-color .25s;
-  }
-  .fav-filter[hidden] { display: none; }
-  .fav-filter svg { width: 13px; height: 13px; }
-  .fav-filter path { fill: var(--accent); }
-  .fav-filter:hover, .fav-filter:focus-visible { border-color: var(--accent); }
-  .fav-filter:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .fav-filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-  .fav-filter[aria-pressed="true"] path { fill: var(--bg); }
-  .players.fav-only .chant:not(.is-fav) { display: none; }
-  .players.fav-only .chant:last-child:nth-child(odd) { grid-column: auto; justify-self: stretch; width: auto; }
   @media (prefers-reduced-motion: reduce) { .fav.pop { animation: none; } }
   .chant-title {
     font-family: "Accents FR", "Cormorant Garamond", serif; font-weight: 500;
@@ -638,6 +622,16 @@
     text-transform: uppercase; color: var(--accent);
   }
   .lyr-text h3:first-child { margin-top: 0; }
+  .lyr-sens {
+    margin: 2.6rem auto 0; padding: 1.4rem 1.4rem 1.2rem; max-width: 32rem; text-align: left;
+    border-top: 1px solid var(--accent-border); border-radius: 0 0 14px 14px;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--wood) 45%, transparent), transparent);
+  }
+  .lyr-text .lyr-sens h3 { margin: 0 0 .7rem; text-align: center; font-size: .64rem; }
+  .lyr-sens p {
+    margin: 0 0 .7rem; font-size: .95rem; line-height: 1.7; color: var(--ink-soft);
+  }
+  .lyr-sens p:last-child { margin-bottom: 0; }
   @media (max-width: 600px) {
     .lyr-panel { padding: 2.4rem 1rem 1.8rem; }
     .lyr-text .st { font-size: 1.05rem; }
@@ -1068,8 +1062,6 @@
         </label>
         <ul class="find-list" id="find-list" role="listbox" aria-label="Chants trouvés" hidden></ul>
       </div>
-
-      <button class="fav-filter" id="fav-filter" type="button" aria-pressed="false" title="N'afficher que mes chants favoris" hidden><svg viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20.5 C5 15.6 1.5 11.9 1.5 7.6 1.5 4.3 4 1.8 7.1 1.8 c2 0 3.7 1.1 4.9 2.8 1.2-1.7 2.9-2.8 4.9-2.8 3.1 0 5.6 2.5 5.6 5.8 0 4.3-3.5 8-10.5 12.9z"/></svg><span>Mes favoris</span> · <span class="fav-n">0</span></button>
 
       <button class="jb-btn" id="jb-open" type="button" aria-haspopup="dialog" title="Kirtan en continu"><svg class="jb-art" viewBox="0 0 60 60" aria-hidden="true"><g class="jb-ring" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M36.73 4.89 A26 26 0 0 1 36.73 55.11"/><path d="M41.99 57.32 L36.73 55.11 L40.17 50.56"/><path d="M23.27 55.11 A26 26 0 0 1 23.27 4.89"/><path d="M19.83 9.44 L23.27 4.89 L18.01 2.68"/></g><circle cx="30" cy="30" r="16" fill="currentColor"/><g class="jb-note"><ellipse cx="28.2" cy="36.6" rx="5" ry="3.6" transform="rotate(-22 28.2 36.6)"/><rect x="31.4" y="19.4" width="2.1" height="16.6" rx=".7"/></g></svg><span>Kirtan en continu</span></button>
 
@@ -2236,7 +2228,7 @@
       if (!cur || !isFinite(d) || d <= 0) return;
       try { navigator.mediaSession.setPositionState({ duration: d, playbackRate: audio.playbackRate || 1, position: Math.min(Math.max(audio.currentTime, 0), d) }); } catch (err) {}
     }
-    // Chant précédent / suivant dans la liste où joue le chant (liste principale, favoris filtrés, tirage)
+    // Chant précédent / suivant dans la liste où joue le chant (liste principale, tirage)
     function step(dir) {
       if (!cur) return;
       var box = cur.closest('.players') || cur.parentNode;
@@ -2292,7 +2284,6 @@
     }
     function jumpToCard(card) {
       if (!card) return;
-      if (card.closest('.fav-only') && !card.classList.contains('is-fav')) favShowAll();
       card.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
       card.classList.remove('found'); void card.offsetWidth; card.classList.add('found');
       setTimeout(function () { card.classList.remove('found'); }, 2600);
@@ -2489,8 +2480,7 @@
     });
 
     // Favoris : liste d'ids dans localStorage, cœurs synchronisés (aussi dans le tirage et le kirtan en continu)
-    var favs = [], favFilter = document.getElementById('fav-filter'),
-        mainPlayers = document.querySelector('.chants .players');
+    var favs = [];
     try { favs = JSON.parse(localStorage.getItem('favs') || '[]'); if (!Array.isArray(favs)) favs = []; } catch (err) { favs = []; }
     function favPaint() {
       document.querySelectorAll('.chant[data-id]').forEach(function (card) {
@@ -2502,12 +2492,7 @@
         h.setAttribute('aria-label', (on ? 'Retirer ' + title + ' des favoris' : 'Ajouter ' + title + ' aux favoris'));
         h.title = on ? 'Retirer des favoris' : 'Ajouter aux favoris';
       });
-      var n = document.querySelectorAll('.chants .chant.is-fav').length;
-      favFilter.querySelector('.fav-n').textContent = n;
-      if (!n && mainPlayers.classList.contains('fav-only')) favShowAll();
-      favFilter.hidden = !n;
     }
-    function favShowAll() { mainPlayers.classList.remove('fav-only'); favFilter.setAttribute('aria-pressed', 'false'); }
     document.addEventListener('click', function (e) {
       var h = e.target.closest && e.target.closest('.fav'), card = h && cardOf(h);
       if (!card) return;
@@ -2516,11 +2501,6 @@
       try { localStorage.setItem('favs', JSON.stringify(favs)); } catch (err) {}
       favPaint();
       if (i < 0) { h.classList.remove('pop'); void h.offsetWidth; h.classList.add('pop'); }
-    });
-    favFilter.addEventListener('click', function () {
-      var on = !mainPlayers.classList.contains('fav-only');
-      if (on) { mainPlayers.classList.add('fav-only'); favFilter.setAttribute('aria-pressed', 'true'); }
-      else favShowAll();
     });
     favPaint();
 
@@ -2680,7 +2660,8 @@
       audio.addEventListener(ev, function () { accSync(ev === 'seeked'); });
     });
     // Paroles : overlay qui lit paroles/<id>.txt
-    // Format : ligne vide = nouvelle strophe ; « # titre » = intertitre ; **texte** = gras
+    // Format : ligne vide = nouvelle strophe ; « # titre » = intertitre ; **texte** = gras ;
+    // « > texte » = signification générale du chant (encadré en fin de carte, hors recherche)
     var lyr = document.getElementById('lyr'), lyrText = lyr.querySelector('.lyr-text'), lyrCache = {}, lyrReq = 0;
     function lyrState(msg) {
       var st = lyr.querySelector('.acc-status');
@@ -2689,11 +2670,18 @@
     function lyrRender(txt) {
       lyrText.textContent = '';
       var st = null;
+      var sens = null;
       function el(tag, cls, parent) { var e = document.createElement(tag); if (cls) e.className = cls; (parent || lyrText).appendChild(e); return e; }
       txt.split(/\r?\n/).forEach(function (l) {
         l = l.replace(/\s+$/, '');
         if (!l) { st = null; return; }
         var m;
+        if ((m = l.match(/^>\s?(.*)$/))) {
+          st = null;
+          if (!sens) { sens = el('aside', 'lyr-sens'); el('h3', '', sens).textContent = 'Signification générale du chant'; }
+          el('p', '', sens).textContent = m[1];
+          return;
+        }
         if ((m = l.match(/^#\s*(.*)$/))) { st = null; el('h3').textContent = m[1]; return; }
         if (!st) st = el('p', 'st'); else st.appendChild(document.createElement('br'));
         l.split('**').forEach(function (part, i) {
@@ -2885,7 +2873,7 @@
       if (loading) return; loading = true;
       cards.forEach(function (c) {
         fetch('paroles/' + c.id + '.txt').then(function (r) { return r.ok ? r.text() : ''; }).then(function (txt) {
-          c.lines = txt.replace(/\*\*/g, '').split('\n').filter(function (l) { return l.trim() && l.charAt(0) !== '#'; });
+          c.lines = txt.replace(/\*\*/g, '').split('\n').filter(function (l) { return l.trim() && l.charAt(0) !== '#' && l.charAt(0) !== '>'; });
           c.lyr = norm(c.lines.join(' '));
           if (input.value && document.activeElement === input) render();
         }).catch(function () {});
@@ -2931,8 +2919,6 @@
     }
     function go(c) {
       close(); input.blur();
-      var ff = document.getElementById('fav-filter');
-      if (ff && ff.getAttribute('aria-pressed') === 'true' && !c.el.classList.contains('is-fav')) ff.click();
       c.el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
       c.el.classList.remove('found'); void c.el.offsetWidth; c.el.classList.add('found');
       setTimeout(function () { c.el.classList.remove('found'); }, 2600);
